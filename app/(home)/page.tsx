@@ -1,11 +1,14 @@
-import { ModeToggle } from "@/components/themeSwitcher";
-import Image from "next/image";
+import Main from '@/components/landing/Main';
+import MainFeatures from '@/components/landing/MainFeatures';
+import Features from '@/components/landing/Features';
+import AOSComponent from '@/components/AOSComponent';
 
 export default function Home() {
-    return (
-        <div className="flex container p-6 justify-between">
-            <h1>hellllo world</h1>
-            <ModeToggle />
-        </div>
-    );
+  return (
+    <AOSComponent>
+      <Main />
+      <MainFeatures />
+      <Features />
+    </AOSComponent>
+  );
 }
