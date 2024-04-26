@@ -7,7 +7,7 @@ export default function RankingIcon() {
       <svg
         stroke="currentColor"
         fill="currentColor"
-        stroke-width="0"
+        strokeWidth="0"
         viewBox="0 0 512 512"
         aria-hidden="true"
         className="absolute z-10 left-0 right-0 m-auto bottom-0 top-0 stroke-current text-purple-100"

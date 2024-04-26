@@ -23,7 +23,7 @@ const RoomTags = ({ tags }: Props) => {
           stroke="currentColor"
           fill={tag.isFav ? '#ffb100' : '#aaaaaa'}
           aria-hidden="true"
-          stroke-width="0"
+          strokeWidth="0"
           height="12"
           width="12"
         >

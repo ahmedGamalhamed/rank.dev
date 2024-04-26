@@ -51,7 +51,7 @@ const RoomCard = ({
                   stroke="currentColor"
                   fill="#5046e5"
                   aria-hidden="true"
-                  stroke-width="0"
+                  strokeWidth="0"
                   height="15"
                   width="15"
                 >
