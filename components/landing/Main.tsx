@@ -4,7 +4,7 @@ import TagIcon from './svgIcons/TagIcon';
 const Main = () => {
   return (
     <main
-      className={`relative section bg-gradient-to-b from-10% from-[hsl(var(--banner-background))] to-100% to-[transparent] pt-16 -mt-16`}
+      className={`relative section bg-gradient-to-b from-80% from-[hsl(var(--banner-background))] to-[transparent] pt-16 -mt-16`}
     >
       <div className="bg-images absolute inset-0 z-10 flex items-center justify-center overflow-hidden">
         <Image
@@ -30,7 +30,7 @@ const Main = () => {
       <div className="container pt-16 lg:pt-16 relative z-20">
         <div className="flex justify-center">
           <div className="flex flex-col items-start md:items-center justify-center text-start md:text-center lg:col-7">
-            <div className="h-20"></div>
+            <div className="h-[100px] md:h-[150px]"></div>
             <header>
               <h4 className="text-2xl md:text-4xl">
                 Ready to gain experience?
@@ -48,13 +48,13 @@ const Main = () => {
             </p>
             <a className="px-10 ps-0 md:ps-10 py-3" href="#">
               <button
-                className={`bg-gradient-to-tl from-30% from-[#4e059d] to-[#5046e5] bg-[#5046e5] flex gap-3 rounded-3xl font-medium text-xl py-2 px-10 text-center text-white`}
+                className={`shadow-lg bg-gradient-to-l from-10% from-[#4e059d] via-[74%] via-[#40b7ff] to-[100%] to-[#5046e5] bg-[#5046e5] flex gap-3 rounded-3xl font-medium text-xl py-2 px-10 text-center text-white`}
               >
                 <TagIcon />
                 Join Now
               </button>
             </a>
-            <div className="h-60"></div>
+            <div className="h-[200px] md:h-[300px]"></div>
           </div>
         </div>
       </div>
