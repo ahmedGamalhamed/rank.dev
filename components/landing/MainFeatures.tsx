@@ -67,7 +67,7 @@ const MainFeatures = () => {
   });
 
   return (
-    <section className="main-features max-w-6xl mx-auto py-10 border-t border-neutral-800">
+    <section className="main-features max-w-6xl mx-auto py-10 border-t  border-neutral-200 dark:border-neutral-600">
       <header className="flex flex-col items-center max-w-3xl mx-auto text-left md:text-center md:pb-16 px-6">
         <h4 className="inline-flex text-sm font-semibold py-1 px-3 m-2 bg-[#4e059d] text-violet-100 rounded-full mb-4">
           Reach developers like you
