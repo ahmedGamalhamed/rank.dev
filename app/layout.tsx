@@ -21,7 +21,7 @@ export default function RootLayout({
       <html lang='en' suppressHydrationWarning>
         <body className={inter.className}>
           <SocketProvider />
-          <ThemeProvider attribute='class' defaultTheme='dark' enableSystem disableTransitionOnChange>
+          <ThemeProvider attribute='class' defaultTheme='system' enableSystem disableTransitionOnChange>
             {children}
           </ThemeProvider>
         </body>
