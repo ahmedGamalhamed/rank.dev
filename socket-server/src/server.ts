@@ -14,7 +14,7 @@ export const io = new Server(server, {
   },
 });
 
-app.use(cors);
+app.use(cors());
 
 io.on("connection", (socket) => {
   const socketId = socket.id;
@@ -31,6 +31,11 @@ io.on("connection", (socket) => {
     const room = Room.joinUser(roomId, userId, socket);
     if ("error" in room) return sendResponse({ error: room.error });
     sendResponse({ data: room.data });
+    Room.updateStatus(roomId);
+  });
+
+  socket.on("leaveRoom", () => {
+    Room.kickBySocket(socket);
   });
 
   socket.on("message", ({ userId, roomId, text }) => {
@@ -40,14 +45,10 @@ io.on("connection", (socket) => {
 
   socket.on("disconnect", (reason) => {
     console.log(`- socketId: `, socketId);
-    const userId = socket_user_table[socket.id];
-    const roomId = socket_room_table[socketId];
-    Room.kickUser(roomId, userId, socket);
-    delete socket_user_table[socket.id];
-    delete socket_room_table[socketId];
+    Room.kickBySocket(socket);
   });
 });
 
-server.listen(4000, () => {
+server.listen(process.env.PORT || 4000, () => {
   console.log("listening on *:4000");
 });
