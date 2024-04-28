@@ -3,49 +3,65 @@ import Image from 'next/image';
 import Link from 'next/link';
 import React, { use, useEffect, useState } from 'react';
 import { Search, X, AlignJustify } from 'lucide-react';
-import { Switch } from '../ui/switch';
 import { ModeToggle } from '../themeSwitcher';
 import {
   SignInButton,
   SignOutButton,
   SignUpButton,
+  UserButton,
   useAuth,
 } from '@clerk/nextjs';
 import { usePathname } from 'next/navigation';
+import { socket } from '@/app/(socket)/socket';
+import { useRouter } from 'next/navigation';
 
 export default function Navbar() {
-  const [isOpen, setIsOpen] = useState(true);
-  const { isLoaded, userId, sessionId, getToken } = useAuth();
+  const [isOpen, setIsOpen] = useState(false);
+  const { userId, isLoaded } = useAuth();
+  const router = useRouter();
 
   const buttonCN =
-    '  border-black dark:border-black lg:block cursor-pointer border-2 lg:border-black lg:dark:border-white rounded-full border-inherit text-sm font-semibold py-1 px-3 uppercase hover:scale-105 active:scale-100 transition duration-200';
+    '  border-black lg:block cursor-pointer border-2 rounded-full text-sm font-semibold py-1 px-3 uppercase hover:scale-105 active:scale-100 transition duration-200';
 
   const UnAuthed = () => (
     <div className="flex gap-2">
       <SignUpButton mode="modal">
-        <button className={buttonCN}>Sign-up</button>
+        <button className={`${buttonCN} border-black dark:border-white `}>
+          Sign-up
+        </button>
       </SignUpButton>
       <SignInButton mode="modal">
-        <button className={buttonCN}>Sign-In</button>
+        <button className={`${buttonCN} text-fuchsia-500 border-fuchsia-500`}>
+          Sign-In
+        </button>
       </SignInButton>
     </div>
   );
 
-  const Authed = () => (
-    <div>
-      <div className="flex gap-2">
-        <button
-          // className="btn btn-outline-primary btn-sm hidden lg:inline-block rounded-xl"
-          className={`   ${buttonCN}`}
-        >
-          Create Room
-        </button>
-        <SignOutButton>
-          <button className={buttonCN}>Sign-out</button>
-        </SignOutButton>
+  const Authed = () => {
+    if (!userId || !isLoaded) return null;
+    return (
+      <div>
+        <div className="flex gap-2 justify-center">
+          <button
+            onClick={(e) => {
+              socket.emit(
+                'createRoom',
+                { userId },
+                (response: { roomId: string }) => {
+                  router.push(`/rooms/${response.roomId}`);
+                }
+              );
+            }}
+            className={`${buttonCN} text-fuchsia-500 dark:text-fuchsia-200 dark:border-fuchsia-200 border-fuchsia-500`}
+          >
+            Create Room
+          </button>
+          <UserButton afterSignOutUrl="/sign-out" />
+        </div>
       </div>
-    </div>
-  );
+    );
+  };
 
   return (
     <header
@@ -69,6 +85,8 @@ export default function Navbar() {
         {/* routes */}
         <ul
           className={`
+          dark:text-white
+          dark:bg-black
           transition-transform ease-in-out
           ${isOpen ? 'translate-x-0 duration-300' : 'translate-x-80'}
           lg:duration-0 

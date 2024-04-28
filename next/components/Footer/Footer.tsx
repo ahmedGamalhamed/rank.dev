@@ -40,7 +40,7 @@ export default function Footer() {
       </div>
       <div>
         <p className="text-center font-semibold text-sm py-5">
-          All rights reserved. BeFriendsWith LTD.
+          All rights reserved. Rank.Dev LTD.
         </p>
       </div>
     </footer>

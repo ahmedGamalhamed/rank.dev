@@ -35,18 +35,18 @@ const Main = () => {
               <h4 className="text-2xl md:text-4xl">
                 Ready to gain experience?
               </h4>
-              <h1 className="mb-4 mt-4 text-5xl md:text-7xl font-bold">
+              <h1 className="mb-4 mt-4 text-5xl md:text-7xl font-bold ">
                 Join a Room!
               </h1>
             </header>
-            <p className="text-[hsl(var(--muted-foreground))] max-w-sm md:max-w-2xl md:mx-auto">
+            <p className="text-[hsl(var(--muted-foreground))] max-w-sm md:max-w-2xl md:mx-auto ">
               Create or join a room, solve problems in live video chats and
               screen shares.
             </p>
             <p className="pb-8 text-[hsl(var(--muted-foreground))] max-w-sm md:max-w-2xl md:mx-auto">
               Connect, collaborate, and conquer coding hurdles together.
             </p>
-            <a className="px-10 ps-0 md:ps-10 py-3" href="#">
+            <a className="px-10 py-3 mx-auto" href="#">
               <button
                 className={`shadow-lg hover:scale-110 active:scale-100 bg-gradient-to-l from-10% from-[#4e059d] via-[74%] via-[#40b7ff] to-[100%] to-[#5046e5] bg-[#5046e5] flex gap-3 rounded-3xl font-medium text-xl py-2 px-10 text-center text-white`}
               >

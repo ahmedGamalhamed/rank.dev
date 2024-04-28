@@ -90,3 +90,14 @@
     @apply bg-background text-foreground;
   }
 }
+
+.str-video {
+  background-color: #272a30;
+  color: #ffffff;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  max-width: 100%;
+}
