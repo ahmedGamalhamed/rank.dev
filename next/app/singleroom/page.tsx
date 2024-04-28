@@ -1,5 +1,5 @@
-import Video from "@/app/singleroom/components/room/Video";
-import Chat from "@/app/singleroom/components/room/Chat";
+import Video from '@/app/singleroom/components/room/Video';
+import Chat from '@/app/singleroom/components/room/Chat';
 
 const Room = () => {
   return (
