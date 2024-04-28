@@ -1,43 +1,39 @@
-'use client';
-
+import React from 'react';
 import { Autocomplete, AutocompleteItem } from '@nextui-org/react';
-import { useState } from 'react';
+
+interface TechnologyFilterProps {
+  technologies: Array<{ value: string; label: string }>;
+  selectedTechnologies: string[];
+  setSelectedTechnologies: Function;
+}
 
 export default function TechnologyFilter({
   technologies,
   setSelectedTechnologies,
-}: {
-  technologies: string[];
-  setSelectedTechnologies: React.Dispatch<React.SetStateAction<any[]>>;
-}) {
-  const [value, setValue] = useState('');
-  const handleValueChange = (selectedTechnology: string) => {
-    setSelectedTechnologies((prevSelectedTechnologies: any) => [
-      ...prevSelectedTechnologies,
-      selectedTechnology,
-    ]);
-  };
+  selectedTechnologies,
+}: TechnologyFilterProps) {
+  const [value, setValue] = React.useState<string>('');
 
   return (
-    <div>
+    <div className="flex w-full max-w-xs flex-col gap-2">
       <Autocomplete
-        aria-label="Select Technology"
-        placeholder="Select Technology"
-        className="w-56"
+        variant="bordered"
         defaultItems={technologies}
+        placeholder="Search Technology"
+        className="max-w-xs"
         selectedKey={value}
-        // onSelectionChange={(selectedTechnology) =>
-        //   handleValueChange(selectedTechnology)
-        // }
-        onSelectionChange={(e) => {
-          handleValueChange(e);
+        aria-label="adf"
+        disabledKeys={[...selectedTechnologies]}
+        onSelectionChange={(key) => {
+          setValue('');
+          if (key != null) {
+            setSelectedTechnologies((prev: string[]) => [...prev, key]);
+          }
         }}
       >
-        {technologies.map((technology) => (
-          <AutocompleteItem key={technology} value={technology}>
-            {technology}
-          </AutocompleteItem>
-        ))}
+        {(item: { value: string; label: string }) => (
+          <AutocompleteItem key={item.value}>{item.label}</AutocompleteItem>
+        )}
       </Autocomplete>
     </div>
   );

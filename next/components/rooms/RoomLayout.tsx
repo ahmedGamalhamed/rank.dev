@@ -7,7 +7,16 @@ import TechnologyChip from './RoomsFilter/TechnologyChip';
 import TechnologyFilter from './RoomsFilter/TechnologyFilter';
 
 export default function RoomLayout() {
-  const [technologies, setTechnologies] = useState(['js', 'ts', 'React']);
+  const [technologies, setTechnologies] = useState([
+    { label: 'js', value: 'js' },
+    { label: 'react', value: 'react' },
+  ]);
+
+  const [levels, setLevels] = useState([
+    { label: 'level 1', value: 'level 1' },
+    { label: 'level 2', value: 'level 2' },
+  ]);
+
   const [selectedTechnologies, setSelectedTechnologies] = useState([]);
 
   return (
@@ -16,9 +25,10 @@ export default function RoomLayout() {
         <div className="flex items-center justify-center gap-5">
           <TechnologyFilter
             technologies={technologies}
+            selectedTechnologies={selectedTechnologies}
             setSelectedTechnologies={setSelectedTechnologies}
           />
-          <LevelsFilter />
+          <LevelsFilter levels={levels} setLevels={setLevels} />
         </div>
         <div>
           <SearchRoom />

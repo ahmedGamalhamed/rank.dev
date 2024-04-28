@@ -1,24 +1,30 @@
-'use client';
-
-import { Autocomplete, AutocompleteItem } from '@nextui-org/react';
 import React from 'react';
+import { Autocomplete, AutocompleteItem } from '@nextui-org/react';
 
-const levels = ['level 1', 'level 2', 'level 3', 'level 4'];
+interface levelsFilterProps {
+  levels: string[];
+  setLevels: Function;
+}
 
-export default function LevelsFilter() {
+export default function LevelFilter({ levels, setLevels }: levelsFilterProps) {
+  const [value, setValue] = React.useState<string>('');
+
   return (
-    <div>
+    <div className="flex w-full max-w-xs flex-col gap-2">
       <Autocomplete
-        aria-label="Select Level"
-        placeholder="Select Level"
-        className="w-56"
+        variant="bordered"
         defaultItems={levels}
+        placeholder="Select level"
+        className="max-w-xs"
+        selectedKey={value}
+        aria-label="adf"
+        onSelectionChange={(key) => {
+          setValue(key as string);
+        }}
       >
-        {levels.map((level) => (
-          <AutocompleteItem key={level} value={level}>
-            {level}
-          </AutocompleteItem>
-        ))}
+        {(item: { value: string; label: string }) => (
+          <AutocompleteItem key={item.value}>{item.label}</AutocompleteItem>
+        )}
       </Autocomplete>
     </div>
   );
