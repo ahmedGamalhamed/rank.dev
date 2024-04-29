@@ -19,45 +19,41 @@ import ErrorMsg from '@/components/ErrorMsg';
 
 const apiKey = process.env.NEXT_PUBLIC_GET_STREAM_API_KEY!;
 
+let sent = false;
+let call: any;
+let client: any;
+
+const getCall = ({ userId, roomId, user }) => {
+  if (sent) return { call, client };
+  client = new StreamVideoClient({
+    apiKey,
+    user: {
+      id: userId,
+      name: user?.fullName ?? undefined,
+      image: user?.imageUrl ?? undefined,
+    },
+    tokenProvider: () => generateTokenAction(),
+  });
+  call = client.call('default', roomId);
+  sent = true;
+  return { call, client };
+};
+
 export function VideoIO({ roomId }: { roomId: string }) {
   const { user } = useUser();
   const { userId } = useAuth();
-
-  const [client, setClient] = useState<StreamVideoClient | null>(null);
-  const [call, setCall] = useState<Call | null>(null);
   const router = useRouter();
 
   useEffect(() => {
-    try {
-      if (!roomId) return;
-      if (!userId) {
-        return;
-      }
-      const client = new StreamVideoClient({
-        apiKey,
-        user: {
-          id: userId,
-          name: user?.fullName ?? undefined,
-          image: user?.imageUrl ?? undefined,
-        },
-        tokenProvider: () => generateTokenAction(),
-      });
-      const call = client.call('default', roomId);
-      // call.camera.disable().then(() => {
-      call.join({ create: true });
-      // });
-      setClient(client);
-      setCall(call);
-
-      return () => {
-        try {
-          call
-            .leave()
-            .then(() => client.disconnectUser())
-            .catch(console.error);
-        } catch {}
-      };
-    } catch {}
+    if (!roomId || !userId) return;
+    const { call, client } = getCall({ user, userId, roomId });
+    call.join({ create: true });
+    return () => {
+      call
+        .leave()
+        .then(() => client.disconnectUser())
+        .catch(console.error);
+    };
   }, [roomId, userId]);
 
   if (!call || !client) return <ErrorMsg msg="Connecting..." />;
