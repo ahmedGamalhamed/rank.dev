@@ -28,42 +28,60 @@ export function VideoIO({ roomId }: { roomId: string }) {
     if (!roomId || !user || !user.id) return;
     if (typeof window == 'undefined') return;
 
-    const { call, client } = getCallClient(
-      { fullName: user?.fullName!, userId: user.id, imageUrl: user.imageUrl },
-      roomId
-    );
-
-    call.join();
-    call.camera.disable();
-    setCall(call);
-    setClient(client);
     return () => {
       try {
-        call
-          .leave()
-          .then(() => client.disconnectUser())
-          .catch(console.log);
+        if (call)
+          call
+            .leave()
+            .then(() => client.disconnectUser())
+            .catch(console.log);
       } catch (e) {}
     };
-  }, [user, roomId]);
+  }, [user, roomId, user]);
 
-  if (!call || !client) return <ErrorMsg msg="Connecting..." />;
+  if (!call || !client)
+    return (
+      <div>
+        <button
+          onClick={(e) => {
+            const { call, client } = getCallClient(
+              {
+                fullName: user?.fullName!,
+                userId: user!.id,
+                imageUrl: user!.imageUrl,
+              },
+              roomId
+            );
+
+            call.join();
+            call.camera.disable();
+            setCall(call);
+            setClient(client);
+          }}
+        >
+          Connect
+        </button>
+        <ErrorMsg msg="Connecting..." />
+      </div>
+    );
 
   return (
-    <StreamVideo client={client}>
-      <StreamTheme>
-        <StreamCall call={call}>
-          <SpeakerLayout />
-          <CallControls
-            onLeave={() => {
-              router.push('/rooms');
-            }}
-          />
-          <div className="p-4">
-            <CallParticipantsList onClose={() => {}} />
-          </div>
-        </StreamCall>
-      </StreamTheme>
-    </StreamVideo>
+    <>
+      <StreamVideo client={client}>
+        <StreamTheme>
+          <StreamCall call={call}>
+            <SpeakerLayout />
+            <CallControls
+              onLeave={() => {
+                router.push('/rooms');
+              }}
+            />
+            <div className="p-4">
+              <CallParticipantsList onClose={() => {}} />
+            </div>
+          </StreamCall>
+        </StreamTheme>
+      </StreamVideo>
+    </>
   );
 }
