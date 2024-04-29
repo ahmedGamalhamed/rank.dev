@@ -17,7 +17,6 @@ export default function Page({ params }: { params: { roomId: string } }) {
   const { user } = useUser();
 
   useEffect(() => {
-    if (typeof window == 'undefined') return;
     if (user) {
       const { call } = getCallClient(
         {
@@ -36,7 +35,7 @@ export default function Page({ params }: { params: { roomId: string } }) {
     }
   }, [user]);
 
-  if (dialog) return dialog;
+  // if (dialog) return dialog;
   if (joinError) return <ErrorMsg msg={joinError} />;
 
   return (

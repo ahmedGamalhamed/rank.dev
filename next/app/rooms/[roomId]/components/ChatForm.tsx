@@ -39,19 +39,16 @@ export default function ChatForm({
   }, [messages]);
 
   const onSubmit = (
-    e:
-      | React.KeyboardEvent<HTMLTextAreaElement>
-      | React.MouseEvent<HTMLButtonElement>
+    e: React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement>
   ) => {
-    //@ts-ignore
-    if (e.keyCode && e.keyCode != 13) return;
+    e.preventDefault();
     if (currentMessage.trim()) {
+      setCurrentMessage('');
       socket.emit('message', {
         text: currentMessage.trim(),
         userId,
         roomId,
       });
-      setCurrentMessage('');
     }
   };
 
@@ -69,13 +66,15 @@ export default function ChatForm({
           </div>
         ))}
       </div>
-      <div className="p-2 bottom-0 w-full bg-white dark:bg-black bg-opacity-10 dark:bg-opacity-10 flex gap-2 justify-center items-center">
-        <Textarea
+      <form
+        onSubmit={onSubmit}
+        className="p-2 bottom-0 w-full bg-white dark:bg-black bg-opacity-10 dark:bg-opacity-10 flex gap-2 justify-center items-center"
+      >
+        <Input
           className="resize-none"
           placeholder="Send a message..."
           value={currentMessage}
           onChange={(e) => setCurrentMessage(e.target.value)}
-          onKeyDown={onSubmit}
         />
         <button
           className="w-8 h-8 p-2 grid place-content-center rounded-full hover:bg-white hover:bg-opacity-10 hover:scale-105 active:scale-100"
@@ -83,7 +82,7 @@ export default function ChatForm({
         >
           <SendHorizontal width={'100%'} className="" color="lightblue" />
         </button>
-      </div>
+      </form>
     </div>
   );
 }

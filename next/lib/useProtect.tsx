@@ -1,5 +1,3 @@
-'use client';
-
 import ErrorMsg from '@/components/ErrorMsg';
 import { SignIn, useAuth } from '@clerk/nextjs';
 import React from 'react';
