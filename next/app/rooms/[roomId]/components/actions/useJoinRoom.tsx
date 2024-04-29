@@ -1,17 +1,16 @@
 'use client';
 import { socket } from '@/app/(socket)/socket';
-import { IJoinRoomResponse, IMessage } from '@/app/rooms/[roomId]/page';
-import { useAuth, useUser } from '@clerk/nextjs';
-import React, { useEffect, useRef, useState } from 'react';
+import { IJoinRoomResponse } from '@/app/rooms/[roomId]/page';
+import { useAuth } from '@clerk/nextjs';
+import { useEffect, useState } from 'react';
 
 export default function useJoinRoom(roomId: string) {
   const [joinError, setJoinError] = useState('');
   const [joinData, setJoinData] = useState<IJoinRoomResponse | null>(null);
-  const { userId, isLoaded } = useAuth();
-  const sent = useRef(false);
+  const { userId } = useAuth();
 
   useEffect(() => {
-    if (!userId || !isLoaded) return;
+    if (!userId) return;
     socket.emit(
       'joinRoom',
       { roomId, userId },
@@ -26,7 +25,7 @@ export default function useJoinRoom(roomId: string) {
     return () => {
       socket.emit('leaveRoom');
     };
-  }, [userId]);
+  }, [userId, roomId]);
 
   return { joinError, joinData };
 }

@@ -49,7 +49,8 @@ export default function Navbar() {
                 'createRoom',
                 { userId },
                 (response: { roomId: string }) => {
-                  router.push(`/rooms/${response.roomId}`);
+                  console.log('pushing');
+                  router.push(`/rooms/create/${response.roomId}`);
                 }
               );
             }}

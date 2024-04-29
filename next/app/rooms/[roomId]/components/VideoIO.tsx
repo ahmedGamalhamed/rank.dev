@@ -7,54 +7,45 @@ import {
   CallParticipantsList,
   SpeakerLayout,
   StreamCall,
+  StreamCallProvider,
   StreamTheme,
   StreamVideo,
   StreamVideoClient,
 } from '@stream-io/video-react-sdk';
 import { useEffect, useRef, useState } from 'react';
-import { generateTokenAction } from './actions/actions';
 import { useRouter } from 'next/navigation';
-import { useAuth, useUser } from '@clerk/nextjs';
+import { useUser } from '@clerk/nextjs';
 import ErrorMsg from '@/components/ErrorMsg';
-
-const apiKey = process.env.NEXT_PUBLIC_GET_STREAM_API_KEY!;
-
-const getCall = ({ userId, roomId, user }: any) => {
-  const client = new StreamVideoClient({
-    apiKey,
-    user: {
-      id: userId,
-      name: user?.fullName ?? undefined,
-      image: user?.imageUrl ?? undefined,
-    },
-    tokenProvider: () => generateTokenAction(),
-  });
-  const call = client.call('default', roomId);
-  call.join({ create: true });
-  return { call, client };
-};
+import { getCallClient } from '../../getCallClient';
 
 export function VideoIO({ roomId }: { roomId: string }) {
   const { user } = useUser();
-  const { userId } = useAuth();
-  const router = useRouter();
   const [client, setClient] = useState<any>(null);
   const [call, setCall] = useState<any>(null);
+  const router = useRouter();
+
   useEffect(() => {
-    if (!roomId || !userId) return;
+    if (!roomId || !user || !user.id) return;
     if (typeof window == 'undefined') return;
 
-    const { call, client } = getCall({ user, userId, roomId });
+    const { call, client } = getCallClient(
+      { fullName: user?.fullName!, userId: user.id, imageUrl: user.imageUrl },
+      roomId
+    );
+
+    call.join();
+    call.camera.disable();
     setCall(call);
     setClient(client);
-
     return () => {
-      call
-        .leave()
-        .then(() => client.disconnectUser())
-        .catch(console.error);
+      try {
+        call
+          .leave()
+          .then(() => client.disconnectUser())
+          .catch(console.log);
+      } catch (e) {}
     };
-  }, [roomId, userId]);
+  }, [user, roomId]);
 
   if (!call || !client) return <ErrorMsg msg="Connecting..." />;
 
@@ -65,9 +56,13 @@ export function VideoIO({ roomId }: { roomId: string }) {
           <SpeakerLayout />
           <CallControls
             onLeave={() => {
-              router.push('/');
+              router.push('/rooms');
             }}
           />
+
+          <div className="p-4">
+            <CallParticipantsList onClose={() => {}} />
+          </div>
         </StreamCall>
       </StreamTheme>
     </StreamVideo>

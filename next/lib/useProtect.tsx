@@ -1,6 +1,5 @@
 import ErrorMsg from '@/components/ErrorMsg';
 import { SignIn, useAuth } from '@clerk/nextjs';
-import { usePathname } from 'next/navigation';
 import React from 'react';
 
 export function useProtect(redirectURL: string) {

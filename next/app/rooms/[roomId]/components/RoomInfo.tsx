@@ -4,7 +4,7 @@ import { IJoinRoomResponse } from '../page';
 
 export default function RoomInfo({ info }: { info: IJoinRoomResponse | null }) {
   return (
-    <div className="col-span-1 rounded-b-xl mb-2 row-span-2">
+    <div className="col-span-1 mb-2 row-span-2">
       <div className="text-2xl"> Typescript help</div>
       <Link
         href={''}

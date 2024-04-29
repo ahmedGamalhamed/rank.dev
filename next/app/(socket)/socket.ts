@@ -1,7 +1,8 @@
 import { io } from 'socket.io-client';
 
-console.log('SOCKET URL: ', process.env.SOCKET_SERVER_URL);
+const socketURL = 'http://localhost:4000';
+console.log('SOCKET URL: ', socketURL);
 
-export const socket = io('https://rank-dev.onrender.com', {
+export const socket = io(socketURL, {
   autoConnect: false,
 });
