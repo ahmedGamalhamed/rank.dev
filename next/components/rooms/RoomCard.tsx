@@ -1,5 +1,8 @@
 import Image from 'next/image';
 import React from 'react';
+import Participants from './cardComponents/Participants';
+import JoinButton from './cardComponents/JoinButton';
+import RoomTags from './cardComponents/RoomTags';
 
 type Owner = {
   name: string;
@@ -7,21 +10,30 @@ type Owner = {
 };
 
 type Props = {
+  roomId: string;
   owner: Owner;
   targetRank: number;
   description: string;
-  tags: React.ReactNode;
-  participants: React.ReactNode;
-  joinBtn: React.ReactNode;
+  tags: {
+    name: string;
+    isFav: boolean;
+  }[];
+  participants: {
+    id: string;
+    name: string;
+    avatarUrl: string;
+  }[];
+  maximumParticipants: number;
 };
 
 const RoomCard = ({
+  roomId,
   owner,
   targetRank,
   description,
   tags,
   participants,
-  joinBtn,
+  maximumParticipants,
 }: Props) => {
   return (
     <div className="bg-[hsl(var(--card))] drop-shadow-md rounded w-[100%] max-w-[300px] p-5 dark:border-none border-solid border border-gray-200 flex flex-col grow">
@@ -66,16 +78,24 @@ const RoomCard = ({
           </div>
         </header>
         <div className="text-[hsl(var(--muted-foreground))] text-center flex justify-center text-sm gap-1 mt-4">
-          {tags}
+          <RoomTags tags={tags} />
         </div>
       </div>
       <div className="description text-[hsl(var(--muted-foreground))] py-6">
         {description}
       </div>
       <div className="participants flex justify-center items-center gap-3 mb-3 mt-auto">
-        {participants}
+        <Participants
+          participants={participants}
+          maximumParticipants={maximumParticipants}
+        />
       </div>
-      <div className="cta text-center">{joinBtn}</div>
+      <div className="cta text-center">
+        <JoinButton
+          roomId={roomId}
+          isFull={participants.length >= maximumParticipants}
+        />
+      </div>
     </div>
   );
 };

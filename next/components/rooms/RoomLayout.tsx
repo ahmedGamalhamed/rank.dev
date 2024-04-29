@@ -7,9 +7,6 @@ import TechnologyChip from './RoomsFilter/TechnologyChip';
 import TechnologyFilter from './RoomsFilter/TechnologyFilter';
 import RoomCard from './RoomCard';
 import { Rooms } from '@/rooms-data';
-import RoomTags from './cardComponents/RoomTags';
-import Participants from './cardComponents/Participants';
-import JoinButton from './cardComponents/JoinButton';
 
 export default function RoomLayout() {
   const [technologies, setTechnologies] = useState([
@@ -53,25 +50,14 @@ export default function RoomLayout() {
           {Rooms.map((room) => {
             return (
               <RoomCard
+                roomId={room.id}
                 key={room.id}
                 owner={room.owner}
                 targetRank={room.targetRank}
                 description={room.description}
-                tags={<RoomTags tags={room.tags} />}
-                participants={
-                  <Participants
-                    participants={room.participants}
-                    maximumParticipants={room.maximumParticipants}
-                  />
-                }
-                joinBtn={
-                  <JoinButton
-                    roomId={room.id}
-                    isFull={
-                      room.participants.length >= room.maximumParticipants
-                    }
-                  />
-                }
+                tags={room.tags}
+                participants={room.participants}
+                maximumParticipants={room.maximumParticipants}
               />
             );
           })}
