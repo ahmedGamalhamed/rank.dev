@@ -28,7 +28,7 @@ export default function Page({ params }: { params: { roomId: string } }) {
         roomId
       );
       call
-        .join({ create: true })
+        .create()
         .then((e) => {
           router.push(`/rooms/${roomId}`);
         })
