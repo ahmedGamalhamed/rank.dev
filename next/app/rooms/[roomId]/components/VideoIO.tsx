@@ -23,7 +23,7 @@ let sent = false;
 let call: any;
 let client: any;
 
-const getCall = ({ userId, roomId, user }) => {
+const getCall = ({ userId, roomId, user }: any) => {
   if (sent) return { call, client };
   client = new StreamVideoClient({
     apiKey,
