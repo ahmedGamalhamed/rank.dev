@@ -20,6 +20,7 @@ export default function LevelFilter({ levels, setLevels }: levelsFilterProps) {
         aria-label="adf"
         onSelectionChange={(key) => {
           setValue(key as string);
+          setLevels(key as string);
         }}
       >
         {(item: { value: string; label: string }) => (

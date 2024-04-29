@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import LevelsFilter from './RoomsFilter/LevelFilter';
 import SearchRoom from './RoomsFilter/SearchRoom';
 import TechnologyChip from './RoomsFilter/TechnologyChip';
@@ -18,9 +18,11 @@ export default function RoomLayout() {
   ]);
 
   const [levels, setLevels] = useState([
-    { label: 'level 1', value: 'level 1' },
-    { label: 'level 2', value: 'level 2' },
+    { label: 'Level 1', value: 'level 1' },
+    { label: 'Level 2', value: 'level 2' },
   ]);
+
+  const [selectedLevel, setSelectedLevel] = useState();
 
   const [selectedTechnologies, setSelectedTechnologies] = useState([]);
 
@@ -33,14 +35,14 @@ export default function RoomLayout() {
             selectedTechnologies={selectedTechnologies}
             setSelectedTechnologies={setSelectedTechnologies}
           />
-          <LevelsFilter levels={levels} setLevels={setLevels} />
+          <LevelsFilter levels={levels} setLevels={setSelectedLevel} />
         </div>
         <div>
           <SearchRoom />
         </div>
       </div>
 
-      <div className="flex justify-center mb-8">
+      <div className="flex justify-center mb-8 min-h-[30px]">
         <TechnologyChip
           selectedTechnologies={selectedTechnologies}
           setSelectedTechnologies={setSelectedTechnologies}
