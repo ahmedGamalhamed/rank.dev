@@ -28,6 +28,20 @@ export function VideoIO({ roomId }: { roomId: string }) {
     if (!roomId || !user || !user.id) return;
     if (typeof window == 'undefined') return;
 
+    const { call, client } = getCallClient(
+      {
+        fullName: user?.fullName!,
+        userId: user!.id,
+        imageUrl: user!.imageUrl,
+      },
+      roomId
+    );
+
+    call.join();
+    call.camera.disable();
+    setCall(call);
+    setClient(client);
+
     return () => {
       try {
         if (call)
@@ -39,31 +53,7 @@ export function VideoIO({ roomId }: { roomId: string }) {
     };
   }, [user, roomId, user]);
 
-  if (!call || !client)
-    return (
-      <div>
-        <button
-          onClick={(e) => {
-            const { call, client } = getCallClient(
-              {
-                fullName: user?.fullName!,
-                userId: user!.id,
-                imageUrl: user!.imageUrl,
-              },
-              roomId
-            );
-
-            call.join();
-            call.camera.disable();
-            setCall(call);
-            setClient(client);
-          }}
-        >
-          Connect
-        </button>
-        <ErrorMsg msg="Connecting..." />
-      </div>
-    );
+  if (!call || !client) return <ErrorMsg msg="Connecting..." />;
 
   return (
     <>
