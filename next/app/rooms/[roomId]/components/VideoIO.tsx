@@ -19,7 +19,14 @@ import ErrorMsg from '@/components/ErrorMsg';
 import { getCallClient } from '../../getCallClient';
 
 export function VideoIO({ roomId }: { roomId: string }) {
-  const { user } = useUser();
+  // const { user } = useUser();
+
+  const user = {
+    fullName: 'Ahmed',
+    id: 'UUID',
+    imageUrl: '',
+  };
+
   const [client, setClient] = useState<any>(null);
   const [call, setCall] = useState<any>(null);
   const router = useRouter();
@@ -54,6 +61,8 @@ export function VideoIO({ roomId }: { roomId: string }) {
   }, [user, roomId, user]);
 
   if (!call || !client) return <ErrorMsg msg="Connecting..." />;
+
+  if (typeof window == 'undefined') return null;
 
   return (
     <>
