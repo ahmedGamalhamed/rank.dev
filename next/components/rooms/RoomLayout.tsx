@@ -5,6 +5,11 @@ import LevelsFilter from './RoomsFilter/LevelFilter';
 import SearchRoom from './RoomsFilter/SearchRoom';
 import TechnologyChip from './RoomsFilter/TechnologyChip';
 import TechnologyFilter from './RoomsFilter/TechnologyFilter';
+import RoomCard from './RoomCard';
+import { Rooms } from '@/rooms-data';
+import RoomTags from './cardComponents/RoomTags';
+import Participants from './cardComponents/Participants';
+import JoinButton from './cardComponents/JoinButton';
 
 export default function RoomLayout() {
   const [technologies, setTechnologies] = useState([
@@ -40,6 +45,35 @@ export default function RoomLayout() {
           selectedTechnologies={selectedTechnologies}
           setSelectedTechnologies={setSelectedTechnologies}
         />
+      </div>
+      <div className="container flex">
+        <div className=" rooms inline-flex flex-wrap justify-center gap-5 pb-5">
+          {Rooms.map((room) => {
+            return (
+              <RoomCard
+                key={room.id}
+                owner={room.owner}
+                targetRank={room.targetRank}
+                description={room.description}
+                tags={<RoomTags tags={room.tags} />}
+                participants={
+                  <Participants
+                    participants={room.participants}
+                    maximumParticipants={room.maximumParticipants}
+                  />
+                }
+                joinBtn={
+                  <JoinButton
+                    roomId={room.id}
+                    isFull={
+                      room.participants.length >= room.maximumParticipants
+                    }
+                  />
+                }
+              />
+            );
+          })}
+        </div>
       </div>
     </div>
   );

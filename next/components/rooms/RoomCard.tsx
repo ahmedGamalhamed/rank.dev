@@ -24,7 +24,7 @@ const RoomCard = ({
   joinBtn,
 }: Props) => {
   return (
-    <div className="bg-[hsl(var(--card))] drop-shadow-md rounded max-w-[300px] min-w-[300px] p-5 dark:border-none border-solid border border-gray-200">
+    <div className="bg-[hsl(var(--card))] drop-shadow-md rounded w-[100%] max-w-[300px] p-5 dark:border-none border-solid border border-gray-200 flex flex-col grow">
       <div className="header">
         <header className="flex items-center gap-4">
           <div className="image">
@@ -39,7 +39,11 @@ const RoomCard = ({
             />
           </div>
           <div className="flex">
-            <h5 className="inline-flex pr-3 font-bold">{owner.name}</h5>
+            <h5 title={owner.name} className="inline-flex pr-3 font-bold">
+              {owner.name.length > 10
+                ? `${owner.name.slice(0, 10)}...`
+                : `${owner.name}`}
+            </h5>
             <div className="inline-flex gap-2 items-center">
               <span className="text-sm italic text-[hsl(var(--muted-foreground))]">
                 Level {targetRank}
@@ -68,7 +72,7 @@ const RoomCard = ({
       <div className="description text-[hsl(var(--muted-foreground))] py-6">
         {description}
       </div>
-      <div className="participants flex justify-center items-center gap-3 mb-3">
+      <div className="participants flex justify-center items-center gap-3 mb-3 mt-auto">
         {participants}
       </div>
       <div className="cta text-center">{joinBtn}</div>

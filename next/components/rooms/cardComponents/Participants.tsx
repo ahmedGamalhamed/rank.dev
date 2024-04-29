@@ -9,9 +9,10 @@ type Participant = {
 
 type Props = {
   participants: Participant[];
+  maximumParticipants: number;
 };
 
-const Participants = ({ participants }: Props) => {
+const Participants = ({ participants, maximumParticipants }: Props) => {
   const participantsAvatars = participants.map((participant) => {
     return (
       <div key={participant.id} className="mb-3">
@@ -28,8 +29,8 @@ const Participants = ({ participants }: Props) => {
     );
   });
 
-  if (participantsAvatars.length < 3) {
-    const emptyParticipants = 3 - participantsAvatars.length;
+  if (participants.length < maximumParticipants) {
+    const emptyParticipants = maximumParticipants - participants.length;
     for (let i = 0; i < emptyParticipants; i++) {
       participantsAvatars.push(
         <div

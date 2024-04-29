@@ -2,7 +2,7 @@ import React from 'react';
 import { Autocomplete, AutocompleteItem } from '@nextui-org/react';
 
 interface levelsFilterProps {
-  levels: string[];
+  levels: { label: string; value: string }[];
   setLevels: Function;
 }
 
