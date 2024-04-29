@@ -19,13 +19,8 @@ import ErrorMsg from '@/components/ErrorMsg';
 
 const apiKey = process.env.NEXT_PUBLIC_GET_STREAM_API_KEY!;
 
-let sent = false;
-let call: any;
-let client: any;
-
 const getCall = ({ userId, roomId, user }: any) => {
-  if (sent) return { call, client };
-  client = new StreamVideoClient({
+  const client = new StreamVideoClient({
     apiKey,
     user: {
       id: userId,
@@ -34,8 +29,8 @@ const getCall = ({ userId, roomId, user }: any) => {
     },
     tokenProvider: () => generateTokenAction(),
   });
-  call = client.call('default', roomId);
-  sent = true;
+  const call = client.call('default', roomId);
+  call.join({ create: true });
   return { call, client };
 };
 
@@ -43,13 +38,16 @@ export function VideoIO({ roomId }: { roomId: string }) {
   const { user } = useUser();
   const { userId } = useAuth();
   const router = useRouter();
-
+  const [client, setClient] = useState<any>(null);
+  const [call, setCall] = useState<any>(null);
   useEffect(() => {
     if (!roomId || !userId) return;
     if (typeof window == 'undefined') return;
 
     const { call, client } = getCall({ user, userId, roomId });
-    call.join({ create: true });
+    setCall(call);
+    setClient(client);
+
     return () => {
       call
         .leave()
