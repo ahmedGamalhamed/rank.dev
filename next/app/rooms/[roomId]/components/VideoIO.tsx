@@ -43,16 +43,19 @@ export function VideoIO({ roomId }: { roomId: string }) {
         tokenProvider: () => generateTokenAction(),
       });
       const call = client.call('default', roomId);
-      // call.camera.disable();
-      call.join({ create: true });
+      call.camera.disable().then(() => {
+        call.join({ create: true });
+      });
       setClient(client);
       setCall(call);
 
       return () => {
-        call
-          .leave()
-          .then(() => client.disconnectUser())
-          .catch(console.error);
+        try {
+          call
+            .leave()
+            .then(() => client.disconnectUser())
+            .catch(console.error);
+        } catch {}
       };
     } catch {}
   }, [roomId, userId]);
