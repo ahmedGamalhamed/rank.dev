@@ -46,6 +46,8 @@ export function VideoIO({ roomId }: { roomId: string }) {
 
   useEffect(() => {
     if (!roomId || !userId) return;
+    if (typeof window == 'undefined') return;
+
     const { call, client } = getCall({ user, userId, roomId });
     call.join({ create: true });
     return () => {
