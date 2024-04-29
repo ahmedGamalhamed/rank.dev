@@ -49,7 +49,6 @@ export default function Navbar() {
                 'createRoom',
                 { userId },
                 (response: { roomId: string }) => {
-                  console.log('pushing');
                   router.push(`/rooms/create/${response.roomId}`);
                 }
               );
@@ -58,7 +57,12 @@ export default function Navbar() {
           >
             Create Room
           </button>
-          <UserButton afterSignOutUrl="/sign-out" />
+          {/* <UserButton afterSignOutUrl="/sign-out" /> */}
+          <SignOutButton>
+            <button className={`${buttonCN} border-black dark:border-white `}>
+              Sign-out
+            </button>
+          </SignOutButton>
         </div>
       </div>
     );

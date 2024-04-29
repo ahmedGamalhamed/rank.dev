@@ -59,7 +59,6 @@ export function VideoIO({ roomId }: { roomId: string }) {
               router.push('/rooms');
             }}
           />
-
           <div className="p-4">
             <CallParticipantsList onClose={() => {}} />
           </div>
