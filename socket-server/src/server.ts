@@ -10,7 +10,7 @@ const app = express();
 const server = createServer(app);
 export const io = new Server(server, {
   cors: {
-    origin: process.env.SERVER_URL,
+    origin: [process.env.SERVER_URL! || "", "http://localhost:3000"],
   },
 });
 
@@ -22,9 +22,9 @@ io.on("connection", (socket) => {
   const socketId = socket.id;
   console.log("+ socketId: ", socketId);
 
-  socket.on("createRoom", ({ userId }, sendResponse) => {
+  socket.on("createRoom", ({ userId, user }, sendResponse) => {
     const room = new Room({ ownerId: userId });
-
+    console.log(user);
     Room.joinUser(room.id, userId, socket);
     sendResponse({ roomId: room.id });
   });
@@ -40,8 +40,8 @@ io.on("connection", (socket) => {
     Room.kickBySocket(socket);
   });
 
-  socket.on("message", ({ userId, roomId, text }) => {
-    const message = new Message({ text, roomId, authorId: userId });
+  socket.on("message", ({ userId, roomId, text, ...rest }) => {
+    const message = new Message({ text, roomId, authorId: userId, ...rest });
     io.to(roomId).emit("message", message);
   });
 

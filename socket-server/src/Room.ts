@@ -7,6 +7,10 @@ interface IRoom {
   id?: string;
   ownerId: string;
   createdAt?: number;
+  level?: number;
+  userLimit?: number;
+  title?: string;
+  description?: string;
 }
 
 export class Room {
