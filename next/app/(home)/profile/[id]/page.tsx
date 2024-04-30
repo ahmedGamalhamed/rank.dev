@@ -1,12 +1,16 @@
+"use client"
 import React from 'react'
-import { CardWithAvatar } from '../../../components/profile/avatarcard'
-import { CardWithAbout } from '../../../components/profile/aboutcard'
+import { CardWithAvatar } from '../../../../components/profile/avatarcard'
+import { CardWithAbout } from '../../../../components/profile/aboutcard'
 import { CardWithProgressbar } from '@/components/profile/progresscard'
 import { CardWithTechnologies } from '@/components/profile/technologiescard'
 import { CardWithSocials } from '@/components/profile/socialscard'
 import { CardWithFollowers } from '@/components/profile/followers'
 import { CardWithFollowing } from '@/components/profile/following'
-export default function Profile() {
+import { useAuth } from '@clerk/nextjs'
+export default function Profile({params}:{params:{id:string}}) {
+  const {userId}=useAuth();
+  const ownProfile =  params.id == userId ;
   return (
    <>
    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col sm:flex-row gap-5 justify-center">
