@@ -154,7 +154,7 @@ export default function Navbar() {
             </Link>
           </li>
           <li className="w-full pl-5 hover:bg-gray-200 lg:pl-0 lg:w-auto lg:hover:bg-transparent lg:hidden py-3  px-2  opacity-80 hover:opacity-100 hover:scale-105 active:scale-100 transition duration-200">
-            {userId ? <Authed /> : <UnAuthed />}
+            {dbUser && dbUser.id ? <Authed /> : <UnAuthed />}
           </li>
           <li
             onClick={() => setIsOpen(false)}
@@ -180,7 +180,7 @@ export default function Navbar() {
             <ModeToggle />
           </div>
           <div className="hidden lg:block">
-            {userId ? <Authed /> : <UnAuthed />}
+            {dbUser && dbUser.id ? <Authed /> : <UnAuthed />}
           </div>
           <button
             onClick={() => setIsOpen(true)}
