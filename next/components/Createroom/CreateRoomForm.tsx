@@ -20,6 +20,16 @@ import { socket } from '@/app/(socket)/socket';
 import { useGlobalContext } from '@/app/(context)/GlobalContext';
 import { useRouter } from 'next/navigation';
 import RoomInfo from '@/app/rooms/[roomId]/components/RoomInfo';
+import { Textarea } from '../ui/textarea';
+import {
+  Select,
+  SelectItem,
+  SelectLabel,
+  SelectValue,
+  SelectContent,
+  SelectGroup,
+  SelectTrigger,
+} from '../ui/select';
 
 const formSchema = z.object({
   roomName: z.string().min(2, {
@@ -40,6 +50,9 @@ const formSchema = z.object({
     .max(20, {
       message: 'Max Rank is 20',
     }),
+  maximumParticipants: z.coerce.number({
+    required_error: 'This field is required',
+  }),
 });
 
 export function CreateRoomForm({
@@ -92,22 +105,51 @@ export function CreateRoomForm({
         </button>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
-            <FormField
-              control={form.control}
-              name="roomName"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Room Name</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="What Name to Set this Room ?"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            <div className="flex gap-2 items-center">
+              <FormField
+                control={form.control}
+                name="roomName"
+                render={({ field }) => (
+                  <FormItem className="flex-grow basis-4/6">
+                    <FormLabel>Room Name</FormLabel>
+                    <FormControl>
+                      <Input
+                        className=""
+                        placeholder="What Name to Set this Room ?"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="maximumParticipants"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Participants count</FormLabel>
+                    <Select onValueChange={field.onChange} defaultValue={'2'}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {Array(5)
+                          .fill(2)
+                          .map((n, i) => (
+                            <SelectItem key={i} value={i + 1 + ''}>
+                              {i + 1}
+                            </SelectItem>
+                          ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
             <FormField
               control={form.control}
               name="roomDescription"
@@ -115,7 +157,8 @@ export function CreateRoomForm({
                 <FormItem>
                   <FormLabel>Room Description</FormLabel>
                   <FormControl>
-                    <Input
+                    <Textarea
+                      className="resize-none"
                       placeholder="Brefily descripe what you need help with."
                       {...field}
                     />

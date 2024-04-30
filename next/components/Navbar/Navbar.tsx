@@ -30,29 +30,13 @@ import { CreateRoomForm } from '../Createroom/CreateRoomForm';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
-  const { userId, isLoaded } = useAuth();
-  const { user } = useUser();
   const { dbUser, setDBUser } = useGlobalContext();
   const [showCreateRoomForm, setShowCreateRoomForm] = useState(false);
-  useEffect(() => {
-    if (user && user.id && isLoaded) {
-      getOrCreateUser({
-        fullName: user.fullName,
-        id: user.id,
-        imageUrl: user.imageUrl,
-      }).then((dbUser) => {
-        setDBUser(dbUser as User);
-      });
-    } else {
-      setDBUser(null);
-    }
-  }, [user, isLoaded, setDBUser]);
 
   const buttonCN =
     '  border-black lg:block cursor-pointer border-2 rounded-full text-sm font-semibold py-1 px-3 uppercase hover:scale-105 active:scale-100 transition duration-200';
 
   const UnAuthed = () => {
-    if (!isLoaded || userId) return null;
     return (
       <div className="flex gap-2">
         <SignUpButton mode="modal">
@@ -70,7 +54,7 @@ export default function Navbar() {
   };
 
   const Authed = () => {
-    if (!userId || !dbUser || !isLoaded) return null;
+    if (!dbUser) return null;
     return (
       <div>
         <div className="flex gap-2 justify-center">
