@@ -13,6 +13,43 @@ interface IRoom {
   description?: string;
 }
 
+export interface _IRoom {
+  id: string;
+  messages: {
+    text: string;
+    authorId: string;
+    userImage: string;
+    fullName: string;
+  }[];
+  roomInfo: {
+    ownerId: string;
+    roomData: {
+      roomName: string;
+      roomDescription: string;
+      repo: string;
+      tags: string;
+      roomLevel: number;
+    };
+    id: string;
+    createdAt: number;
+  };
+  participatns: {
+    authId: string;
+    isAdmin: boolean;
+    fullName: string;
+    imageUrl: string;
+    followers: any[];
+    following: any[];
+    technologies: any[];
+    socials: any[];
+    createdAt: Date;
+    updatedAt: Date;
+    id: string;
+  }[];
+}
+
+export interface RoomData {}
+
 export class Room {
   static roomList: { [k: string]: InstanceType<typeof Room> } = {};
   public id: string;
