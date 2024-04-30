@@ -23,7 +23,7 @@ import RoomInfo from '@/app/rooms/[roomId]/components/RoomInfo';
 
 const formSchema = z.object({
   roomName: z.string().min(2, {
-    message: 'roomName must be at least 2 characters.',
+    message: 'ٌRoom Name must be at least 2 characters.',
   }),
   roomDescription: z.string().min(10, {
     message: 'Desrcription must be at least 10 characters.',
@@ -32,6 +32,14 @@ const formSchema = z.object({
   tags: z.string().min(1, {
     message: 'Please add at least 1 tag',
   }),
+  talentRank: z
+    .number()
+    .min(1, {
+      message: 'Min Rank is 1',
+    })
+    .max(20, {
+      message: 'Max Rank is 20',
+    }),
 });
 
 export function CreateRoomForm({
@@ -50,6 +58,7 @@ export function CreateRoomForm({
       roomDescription: '',
       repo: '',
       tags: '',
+      talentRank: 5,
     },
   });
 
@@ -115,22 +124,41 @@ export function CreateRoomForm({
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name="repo"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Share Your Repo.</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="Share a link to your repo if you like."
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            <div className="flex gap-2 justify-center flex-wrap">
+              <FormField
+                control={form.control}
+                name="repo"
+                render={({ field }) => (
+                  <FormItem className="flex-grow">
+                    <FormLabel>Share Your Repo.{'(Optional)'}</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Share a link to your repo if you like."
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="talentRank"
+                render={({ field }) => (
+                  <FormItem className="flex-grow">
+                    <FormLabel>Talent level</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Select a level between 1 and 20"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
             <FormField
               control={form.control}
               name="tags"
