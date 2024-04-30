@@ -101,3 +101,7 @@
   min-width: 0;
   max-width: 100%;
 }
+
+.text-destructive{
+  color:rgb(231, 22, 22)
+}

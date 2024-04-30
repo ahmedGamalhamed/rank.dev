@@ -4,11 +4,8 @@ import useJoinRoom from '@/app/rooms/[roomId]/components/actions/useJoinRoom';
 import ErrorMsg from '@/components/ErrorMsg';
 import RoomInfo from './components/RoomInfo';
 import ChatForm from './components/ChatForm';
-import Participants from './components/Participants';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import { VideoIO } from './components/VideoIO';
-import { getCallClient } from '../getCallClient';
-import { useUser } from '@clerk/nextjs';
 import { User } from '@/app/(db)/Schema';
 
 interface IProps {
@@ -24,6 +21,12 @@ export interface IJoinRoomResponse {
     ownerId: string;
     id: string;
     createdAt: number;
+    roomData: {
+      repo: string;
+      roomDescription: string;
+      roomName: string;
+      tags: string;
+    };
   };
 }
 
@@ -40,7 +43,7 @@ const Room = ({ params }: IProps) => {
   const { roomId } = params;
   const dialog = useProtect(pathname);
   const { joinError, joinData } = useJoinRoom(roomId);
-
+  console.log(joinData);
   if (dialog) return dialog;
   if (joinError) return <ErrorMsg msg={joinError} />;
 

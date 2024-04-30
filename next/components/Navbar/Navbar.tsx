@@ -24,6 +24,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { getUserByAuthId } from '@/app/actions/userActions';
 import { User } from '@/app/(db)/Schema';
 import { useGlobalContext } from '@/app/(context)/GlobalContext';
+import { CreateRoomForm } from '../Createroom/CreateRoomForm';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -31,6 +32,7 @@ export default function Navbar() {
   const { user } = useUser();
   const router = useRouter();
   const { dbUser, setDBUser } = useGlobalContext();
+  const [showCreateRoomForm, setShowCreateRoomForm] = useState(false);
   useEffect(() => {
     if (user) {
       getUserByAuthId(user.id).then((user) => {
@@ -65,15 +67,9 @@ export default function Navbar() {
       <div>
         <div className="flex gap-2 justify-center">
           <button
-            onClick={(e) =>
-              socket.emit(
-                'createRoom',
-                { userId: dbUser.id, user: dbUser },
-                (response: { roomId: string }) => {
-                  router.push(`/rooms/create/${response.roomId}`);
-                }
-              )
-            }
+            onClick={(e) => {
+              setShowCreateRoomForm(!showCreateRoomForm);
+            }}
             className={`${buttonCN} text-fuchsia-500 dark:text-fuchsia-200 dark:border-fuchsia-200 border-fuchsia-500`}
           >
             Create Room
@@ -195,6 +191,11 @@ export default function Navbar() {
           </button>
         </div>
       </nav>
+
+      <CreateRoomForm
+        isOpen={showCreateRoomForm}
+        setOpen={setShowCreateRoomForm}
+      />
     </header>
   );
 }
