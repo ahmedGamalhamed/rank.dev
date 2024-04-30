@@ -22,9 +22,8 @@ io.on("connection", (socket) => {
   const socketId = socket.id;
   console.log("+ socketId: ", socketId);
 
-  socket.on("createRoom", ({ userId, user }, sendResponse) => {
-    const room = new Room({ ownerId: userId });
-    console.log(user);
+  socket.on("createRoom", ({ userId, user, ...rest }, sendResponse) => {
+    const room = new Room({ ownerId: userId, ...rest });
     Room.joinUser(room.id, userId, socket);
     sendResponse({ roomId: room.id });
   });
