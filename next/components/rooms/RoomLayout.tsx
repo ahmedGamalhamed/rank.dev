@@ -46,7 +46,7 @@ export default function RoomLayout() {
         />
       </div>
       <div className="container flex">
-        <div className=" rooms inline-flex flex-wrap justify-center gap-5 pb-5">
+        <div className=" rooms grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 m-auto gap-5 pb-5">
           {Rooms.map((room) => {
             return (
               <RoomCard
