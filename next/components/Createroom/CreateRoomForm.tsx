@@ -121,7 +121,7 @@ export function CreateRoomForm({
                     <FormControl>
                       <Input
                         className=""
-                        placeholder="What Name to Set this Room ?"
+                        placeholder="Give this room a name."
                         {...field}
                       />
                     </FormControl>
@@ -198,6 +198,8 @@ export function CreateRoomForm({
                     <FormLabel>Talent level</FormLabel>
                     <FormControl>
                       <Input
+                        min={1}
+                        max={20}
                         placeholder="Select a level between 1 and 20"
                         {...field}
                         type="number"
