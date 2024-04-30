@@ -24,12 +24,12 @@ io.on("connection", (socket) => {
 
   socket.on("createRoom", ({ userId, user, ...rest }, sendResponse) => {
     const room = new Room({ ownerId: userId, ...rest });
-    Room.joinUser(room.id, userId, socket);
+    Room.joinUser(room.id, userId, user, socket);
     sendResponse({ roomId: room.id });
   });
 
-  socket.on("joinRoom", ({ userId, roomId }, sendResponse) => {
-    const room = Room.joinUser(roomId, userId, socket);
+  socket.on("joinRoom", ({ userId, roomId, user }, sendResponse) => {
+    const room = Room.joinUser(roomId, userId, user, socket);
     if ("error" in room) return sendResponse({ error: room.error });
     sendResponse({ data: room.data });
     Room.updateStatus(roomId);

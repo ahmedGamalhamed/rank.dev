@@ -8,8 +8,10 @@ import {
   SignInButton,
   SignOutButton,
   SignUpButton,
+  SignedOut,
   UserButton,
   useAuth,
+  useClerk,
   useUser,
 } from '@clerk/nextjs';
 import { usePathname } from 'next/navigation';
@@ -29,6 +31,7 @@ import { CreateRoomForm } from '../Createroom/CreateRoomForm';
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const { userId, isLoaded } = useAuth();
+  const { signOut } = useClerk();
   const { user } = useUser();
   const router = useRouter();
   const { dbUser, setDBUser } = useGlobalContext();
@@ -39,6 +42,7 @@ export default function Navbar() {
         if (dbUser) setDBUser(dbUser as User);
       });
     } else {
+      signOut(() => {});
       setDBUser(null);
     }
   }, [user, setDBUser]);
