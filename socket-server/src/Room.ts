@@ -84,7 +84,11 @@ export class Room {
     socket_user_table[socket.id] = userId;
     socket_room_table[socket.id] = roomId;
     const room = this.getById(roomId);
+
     if (!room) return { error: "This room doesnt exist" };
+    const roomSize = this.getSocketRoom(socket.id)!.size;
+    if (roomSize >= +room.roomInfo.roomData.maximumParticipants) return { error: "Room is at Maximum Capacity" };
+
     // room.participatns.push(userId);
     room.participatns[userId] = user;
     socket.join(roomId);
