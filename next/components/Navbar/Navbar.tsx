@@ -30,7 +30,7 @@ import { CreateRoomForm } from '../Createroom/CreateRoomForm';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
-  const { dbUser, setDBUser } = useGlobalContext();
+  const { dbUser } = useGlobalContext();
   const [showCreateRoomForm, setShowCreateRoomForm] = useState(false);
 
   const buttonCN =
@@ -156,12 +156,12 @@ export default function Navbar() {
           </li>
         </ul>
         <div className="order-1 ml-auto flex items-center md:order-2 lg:ml-0  ">
-          <Link
+          {/* <Link
             href="/"
             className="h-9 flex items-center mr-2 sm:mr-5 border-r border-border pr-2 sm:pr-5 text-xl text-dark hover:text-primary dark:border-darkmode-border dark:text-white"
           >
             <Search />
-          </Link>
+          </Link> */}
           {/* <Link
             href="/"
             className=" mr-5 inline-block border-r border-border pr-5 text-xl text-dark hover:text-primary dark:border-darkmode-border dark:text-white"
