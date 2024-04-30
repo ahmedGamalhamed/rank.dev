@@ -9,7 +9,7 @@ export default function useJoinRoom(roomId: string) {
   const [joinError, setJoinError] = useState('');
   const [joinData, setJoinData] = useState<IJoinRoomResponse | null>(null);
   const { dbUser } = useGlobalContext();
-  console.log(joinData);
+
   useEffect(() => {
     if (!dbUser) return;
     socket.emit(
@@ -23,8 +23,14 @@ export default function useJoinRoom(roomId: string) {
         }
       }
     );
+
+    socket.on('roomClosed', (d) => {
+      setJoinError('This Room Has Been Closed!');
+    });
+
     return () => {
       socket.emit('leaveRoom');
+      socket.off('roomClosed');
     };
   }, [dbUser, roomId]);
 

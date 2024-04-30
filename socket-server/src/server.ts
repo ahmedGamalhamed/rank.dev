@@ -37,6 +37,12 @@ io.on("connection", (socket) => {
     Room.updateStatus(roomId);
   });
 
+  socket.on("closeRoom", ({ roomId }) => {
+    io.in(roomId).emit("roomClosed");
+    io.in(roomId).socketsLeave(roomId);
+    delete Room.roomList[roomId];
+  });
+
   socket.on("leaveRoom", () => {
     Room.kickBySocket(socket);
   });
@@ -53,5 +59,10 @@ io.on("connection", (socket) => {
 });
 
 server.listen(process.env.PORT || 4000, () => {
+  setInterval(() => {
+    const data = Object.values(Room.roomList).filter((room) => Object.values(room.participatns).length > 0);
+    io.emit("roomsData", data);
+  }, 5000);
+
   console.log("listening on *:4000");
 });

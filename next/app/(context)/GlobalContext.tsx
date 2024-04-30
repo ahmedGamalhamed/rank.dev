@@ -3,6 +3,7 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import { User } from '../(db)/Schema';
 import { useAuth } from '@clerk/nextjs';
 import { getUserByAuthId } from '../actions/userActions';
+import useRoomsData from '../rooms/[roomId]/components/actions/useRoomsData';
 
 type TStateChange<T> = React.Dispatch<React.SetStateAction<T>>;
 

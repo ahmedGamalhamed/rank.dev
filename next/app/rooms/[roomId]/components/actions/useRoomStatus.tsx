@@ -2,7 +2,7 @@
 import { socket } from '@/app/(socket)/socket';
 import React, { useEffect, useState } from 'react';
 
-interface IRoomStatus {
+export interface IRoomStatus {
   count: number;
   clients: { id: string; fullName: string; imageUrl: string }[];
 }

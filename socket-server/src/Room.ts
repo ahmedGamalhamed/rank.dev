@@ -1,24 +1,16 @@
 import { v4 as uuidv4, validate } from "uuid";
-import { IMessage } from "./Message";
 import { io } from "./server";
 import { Socket } from "socket.io";
 import { socket_room_table, socket_user_table } from "./tables";
 
-interface IRoom {
-  id?: string;
-  ownerId: string;
-  createdAt?: number;
-  level?: number;
-  userLimit?: number;
-  title?: string;
-  description?: string;
-}
-
 export interface IMessage {
+  roomId: string;
   text: string;
   authorId: string;
   userImage: string;
   fullName: string;
+  createdAt: number;
+  id: string;
 }
 
 export interface _IRoom {
@@ -32,6 +24,7 @@ export interface _IRoom {
       repo: string;
       tags: string[];
       roomLevel: number;
+      maximumParticipants: number;
     };
     id: string;
     createdAt: number;

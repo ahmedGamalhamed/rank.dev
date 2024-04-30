@@ -50,9 +50,17 @@ const formSchema = z.object({
     .max(20, {
       message: 'Max Rank is 20',
     }),
-  maximumParticipants: z.coerce.number({
-    required_error: 'This field is required',
-  }),
+  maximumParticipants: z.coerce
+    .number({
+      required_error: 'This field is required',
+      message: 'Please select a limit',
+    })
+    .min(1, {
+      message: 'Please Select A number Between 1 and 5',
+    })
+    .max(5, {
+      message: 'Please Select A number Between 1 and 5',
+    }),
 });
 
 export function CreateRoomForm({
@@ -85,14 +93,12 @@ export function CreateRoomForm({
         router.push(`/rooms/create/${response.roomId}`);
       }
     );
-    // console.log(values);
   }
 
   if (!isOpen) return null;
-  // ... \
 
   return (
-    <div className="modal-overlay fixed inset-0 flex justify-center items-center bg-black bg-opacity-20 backdrop-blur-sm">
+    <div className="modal-overlay fixed inset-0 flex justify-center items-center bg-black bg-opacity-20 backdrop-blur-md">
       <div className="modal-content bg-black bg-opacity-80 backdrop-blur-lg w-full max-w-2xl  px-20 py-10 border rounded-xl relative">
         <h4 className="text-center text-2xl text-fuchsia-300 font-bold py-4">
           Create A Room
@@ -104,13 +110,13 @@ export function CreateRoomForm({
           ✕
         </button>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <div className="flex gap-2 items-center">
               <FormField
                 control={form.control}
                 name="roomName"
                 render={({ field }) => (
-                  <FormItem className="flex-grow basis-4/6">
+                  <FormItem className="flex-grow">
                     <FormLabel>Room Name</FormLabel>
                     <FormControl>
                       <Input
@@ -127,9 +133,9 @@ export function CreateRoomForm({
                 control={form.control}
                 name="maximumParticipants"
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className="flex-grow">
                     <FormLabel>Participants count</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={'2'}>
+                    <Select onValueChange={field.onChange}>
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue placeholder="Select" />
@@ -139,7 +145,7 @@ export function CreateRoomForm({
                         {Array(5)
                           .fill(2)
                           .map((n, i) => (
-                            <SelectItem key={i} value={i + 1 + ''}>
+                            <SelectItem key={i} value={(i + 1).toString()}>
                               {i + 1}
                             </SelectItem>
                           ))}
