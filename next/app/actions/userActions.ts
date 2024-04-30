@@ -2,6 +2,29 @@
 
 import { UserModel } from '../(db)/Schema';
 
+export const getOrCreateUser = async (currentUser: {
+  id: string;
+  fullName: string | null;
+  imageUrl: string | null;
+}) => {
+  if (!currentUser) return {};
+  const { fullName, imageUrl, id } = currentUser;
+
+  const dbUser = await UserModel.findOne({
+    authId: id,
+  });
+
+  console.log(dbUser);
+  if (dbUser) return JSON.parse(JSON.stringify(dbUser?.toObject() || {}));
+  const createdUser = await UserModel.create({
+    authId: id,
+    fullName,
+    imageUrl,
+  });
+
+  return JSON.parse(JSON.stringify(createdUser?.toObject() || {}));
+};
+
 export const getUserByAuthId = async (authId: string) => {
   if (!authId) return;
   const user = await UserModel.findOne({ authId });

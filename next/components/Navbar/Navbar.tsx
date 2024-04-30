@@ -23,7 +23,7 @@ import {
   DropdownMenuTrigger,
 } from '../ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
-import { getUserByAuthId } from '@/app/actions/userActions';
+import { getOrCreateUser, getUserByAuthId } from '@/app/actions/userActions';
 import { User } from '@/app/(db)/Schema';
 import { useGlobalContext } from '@/app/(context)/GlobalContext';
 import { CreateRoomForm } from '../Createroom/CreateRoomForm';
@@ -31,33 +31,34 @@ import { CreateRoomForm } from '../Createroom/CreateRoomForm';
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const { userId, isLoaded } = useAuth();
-  const { signOut } = useClerk();
   const { user } = useUser();
-  const router = useRouter();
   const { dbUser, setDBUser } = useGlobalContext();
   const [showCreateRoomForm, setShowCreateRoomForm] = useState(false);
   useEffect(() => {
-    if (user) {
-      getUserByAuthId(user.id).then((dbUser) => {
-        if (dbUser) setDBUser(dbUser as User);
+    if (user && user.id && isLoaded) {
+      getOrCreateUser({
+        fullName: user.fullName,
+        id: user.id,
+        imageUrl: user.imageUrl,
+      }).then((dbUser) => {
+        setDBUser(dbUser as User);
       });
     } else {
-      signOut(() => {});
       setDBUser(null);
     }
-  }, [user, setDBUser]);
+  }, [user, isLoaded, setDBUser]);
 
   const buttonCN =
     '  border-black lg:block cursor-pointer border-2 rounded-full text-sm font-semibold py-1 px-3 uppercase hover:scale-105 active:scale-100 transition duration-200';
 
   const UnAuthed = () => (
     <div className="flex gap-2">
-      <SignUpButton forceRedirectUrl={'/post-sign-up'} mode="modal">
+      <SignUpButton mode="modal">
         <button className={`${buttonCN} border-black dark:border-white `}>
           Sign-up
         </button>
       </SignUpButton>
-      <SignInButton forceRedirectUrl={'/post-sign-up'} mode="modal">
+      <SignInButton mode="modal">
         <button className={`${buttonCN} text-fuchsia-500 border-fuchsia-500`}>
           Sign-In
         </button>
