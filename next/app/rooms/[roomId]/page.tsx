@@ -9,6 +9,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { VideoIO } from './components/VideoIO';
 import { getCallClient } from '../getCallClient';
 import { useUser } from '@clerk/nextjs';
+import { User } from '@/app/(db)/Schema';
 
 interface IProps {
   params: {
@@ -26,10 +27,11 @@ export interface IJoinRoomResponse {
   };
 }
 
-export interface IMessage {
+export interface IMessage extends Omit<User, 'createdAt'> {
   id: string;
   text: string;
   authorId: string;
+  userImage: string;
   createdAt: number;
 }
 

@@ -14,22 +14,26 @@ import {
 } from '@stream-io/video-react-sdk';
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useUser } from '@clerk/nextjs';
 import ErrorMsg from '@/components/ErrorMsg';
 import { getCallClient } from '../../getCallClient';
+import { useGlobalContext } from '@/app/(context)/GlobalContext';
 
 export function VideoIO({ roomId }: { roomId: string }) {
-  const { user } = useUser();
   const [client, setClient] = useState<any>(null);
   const [call, setCall] = useState<any>(null);
   const router = useRouter();
+  const { dbUser } = useGlobalContext();
 
   useEffect(() => {
-    if (!roomId || !user || !user.id) return;
+    if (!roomId || !dbUser || !dbUser.id) return;
     if (typeof window == 'undefined') return;
 
     const { call, client } = getCallClient(
-      { fullName: user?.fullName!, userId: user.id, imageUrl: user.imageUrl },
+      {
+        fullName: dbUser?.fullName!,
+        userId: dbUser.id,
+        imageUrl: dbUser.imageUrl,
+      },
       roomId
     );
 
@@ -45,7 +49,7 @@ export function VideoIO({ roomId }: { roomId: string }) {
           .catch(console.log);
       } catch (e) {}
     };
-  }, [user, roomId]);
+  }, [dbUser, roomId]);
 
   if (!call || !client) return <ErrorMsg msg="Connecting..." />;
 

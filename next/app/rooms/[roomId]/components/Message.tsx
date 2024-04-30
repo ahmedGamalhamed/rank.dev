@@ -17,17 +17,22 @@ const Message = ({ message }: { message: IMessage }) => {
               width={40}
               height={40}
               className="inline-block h-6 w-6 rounded-full ring-2 ring-white"
-              src={`https://getstream.imgix.net/images/random_svg/${message.authorId
-                .at(-1)
-                ?.toUpperCase()}.svg`}
+              src={message.userImage}
               alt=""
             />
           </Link>
         </abbr>
       </div>
-      <span className="text-sm break-words whitespace-break-spaces w-5/6 mx-auto">
-        {message.text}
-      </span>
+      <div className="text-sm break-words whitespace-break-spaces w-5/6 mx-auto">
+        <div className="flex justify-between">
+          <span className="font-bold text-fuchsia-500">{message.fullName}</span>
+          <span className="text-xs  text-slate-200 italic">
+            {new Date(message.createdAt).toLocaleTimeString()}
+          </span>
+        </div>
+
+        <div className="mt-2">{message.text}</div>
+      </div>
     </div>
   );
 };

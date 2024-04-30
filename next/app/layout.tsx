@@ -6,6 +6,7 @@ import Navbar from '@/components/Navbar/Navbar';
 import Footer from '@/components/Footer/Footer';
 import { ClerkProvider } from '@clerk/nextjs';
 import SocketProvider from './(socket)/SocketProvider';
+import ContextProvider from './(context)/GlobalContext';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
@@ -21,23 +22,25 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html className="h-full" lang="en" suppressHydrationWarning>
-        <body
-          className={`${inter.className} flex flex-col justify-between min-h-screen`}
-        >
-          <SocketProvider />
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
+        <ContextProvider>
+          <body
+            className={`${inter.className} flex flex-col justify-between min-h-screen`}
           >
-            <div className="w-full">
-              <Navbar />
-            </div>
-            <div className="flex-grow">{children}</div>
-            <Footer />
-          </ThemeProvider>
-        </body>
+            <SocketProvider />
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
+              <div className="w-full">
+                <Navbar />
+              </div>
+              <div className="flex-grow">{children}</div>
+              <Footer />
+            </ThemeProvider>
+          </body>
+        </ContextProvider>
       </html>
     </ClerkProvider>
   );

@@ -10,15 +10,36 @@ import {
   SignUpButton,
   UserButton,
   useAuth,
+  useUser,
 } from '@clerk/nextjs';
 import { usePathname } from 'next/navigation';
 import { socket } from '@/app/(socket)/socket';
 import { useRouter } from 'next/navigation';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from '../ui/dropdown-menu';
+import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
+import { getUserByAuthId } from '@/app/actions/userActions';
+import { User } from '@/app/(db)/Schema';
+import { useGlobalContext } from '@/app/(context)/GlobalContext';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const { userId, isLoaded } = useAuth();
+  const { user } = useUser();
   const router = useRouter();
+  const { dbUser, setDBUser } = useGlobalContext();
+  useEffect(() => {
+    if (user) {
+      getUserByAuthId(user.id).then((user) => {
+        setDBUser(user as User);
+      });
+    } else {
+      setDBUser(null);
+    }
+  }, [user, setDBUser]);
 
   const buttonCN =
     '  border-black lg:block cursor-pointer border-2 rounded-full text-sm font-semibold py-1 px-3 uppercase hover:scale-105 active:scale-100 transition duration-200';
@@ -39,30 +60,42 @@ export default function Navbar() {
   );
 
   const Authed = () => {
-    if (!userId || !isLoaded) return null;
+    if (!dbUser || !isLoaded) return null;
     return (
       <div>
         <div className="flex gap-2 justify-center">
           <button
-            onClick={(e) => {
+            onClick={(e) =>
               socket.emit(
                 'createRoom',
-                { userId },
+                { userId: dbUser.id, user: dbUser },
                 (response: { roomId: string }) => {
                   router.push(`/rooms/create/${response.roomId}`);
                 }
-              );
-            }}
+              )
+            }
             className={`${buttonCN} text-fuchsia-500 dark:text-fuchsia-200 dark:border-fuchsia-200 border-fuchsia-500`}
           >
             Create Room
           </button>
-          {/* <UserButton afterSignOutUrl="/sign-out" /> */}
-          <SignOutButton>
-            <button className={`${buttonCN} border-black dark:border-white `}>
-              Sign-out
-            </button>
-          </SignOutButton>
+          <span className="grid place-content-center">
+            <DropdownMenu>
+              <DropdownMenuTrigger>
+                <Avatar>
+                  <AvatarImage src={dbUser.imageUrl} />
+                </Avatar>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="p-4">
+                <SignOutButton>
+                  <span
+                    className={`${buttonCN} border-black dark:border-white mx-auto`}
+                  >
+                    Sign-out
+                  </span>
+                </SignOutButton>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </span>
         </div>
       </div>
     );

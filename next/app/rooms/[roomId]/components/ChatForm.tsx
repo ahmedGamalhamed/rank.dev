@@ -8,6 +8,7 @@ import Message from './Message';
 import { Textarea } from '@/components/ui/textarea';
 import { SendHorizontal } from 'lucide-react';
 import { IconButton } from '@stream-io/video-react-sdk';
+import { useGlobalContext } from '@/app/(context)/GlobalContext';
 
 export default function ChatForm({
   roomId,
@@ -16,10 +17,10 @@ export default function ChatForm({
   roomId: string;
   initialMessages: IMessage[];
 }) {
-  const { userId } = useAuth();
   const [messages, setMessages] = useState<IMessage[]>([]);
   const [currentMessage, setCurrentMessage] = useState('');
   const messageContainer = useRef<HTMLDivElement | null>(null);
+  const { dbUser } = useGlobalContext();
 
   useEffect(() => {
     socket.on('message', ({ info }: { info: IMessage }) => {
@@ -29,7 +30,7 @@ export default function ChatForm({
     return () => {
       socket.off('message');
     };
-  }, [roomId, userId]);
+  }, [roomId, dbUser]);
 
   useEffect(() => {
     if (messageContainer.current) {
@@ -46,8 +47,10 @@ export default function ChatForm({
       setCurrentMessage('');
       socket.emit('message', {
         text: currentMessage.trim(),
-        userId,
+        userId: dbUser!.id,
+        userImage: dbUser?.imageUrl,
         roomId,
+        ...dbUser,
       });
     }
   };
