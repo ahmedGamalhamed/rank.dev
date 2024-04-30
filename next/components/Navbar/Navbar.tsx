@@ -35,8 +35,8 @@ export default function Navbar() {
   const [showCreateRoomForm, setShowCreateRoomForm] = useState(false);
   useEffect(() => {
     if (user) {
-      getUserByAuthId(user.id).then((user) => {
-        setDBUser(user as User);
+      getUserByAuthId(user.id).then((dbUser) => {
+        if (dbUser) setDBUser(dbUser as User);
       });
     } else {
       setDBUser(null);
@@ -48,7 +48,7 @@ export default function Navbar() {
 
   const UnAuthed = () => (
     <div className="flex gap-2">
-      <SignUpButton mode="modal">
+      <SignUpButton forceRedirectUrl={'/post-sign-up'} mode="modal">
         <button className={`${buttonCN} border-black dark:border-white `}>
           Sign-up
         </button>

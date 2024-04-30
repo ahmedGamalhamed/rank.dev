@@ -7,6 +7,7 @@ import ChatForm from './components/ChatForm';
 import { usePathname } from 'next/navigation';
 import { VideoIO } from './components/VideoIO';
 import { User } from '@/app/(db)/Schema';
+import Participants from './components/Participants';
 
 interface IProps {
   params: {
@@ -26,6 +27,7 @@ export interface IJoinRoomResponse {
       roomDescription: string;
       roomName: string;
       tags: string;
+      roomLevel: string;
     };
   };
 }
@@ -43,7 +45,6 @@ const Room = ({ params }: IProps) => {
   const { roomId } = params;
   const dialog = useProtect(pathname);
   const { joinError, joinData } = useJoinRoom(roomId);
-  console.log(joinData);
   if (dialog) return dialog;
   if (joinError) return <ErrorMsg msg={joinError} />;
 
@@ -54,13 +55,15 @@ const Room = ({ params }: IProps) => {
           <div className="aspect-video w-full md:h-[90vh] h-[60vh]  rounded-t-lg">
             <VideoIO roomId={roomId} />
           </div>
-          {/* <div className="p-4"><Participants /></div> */}
+          <div className="p-4">
+            <Participants />
+          </div>
         </div>
-        <div className="col-span-12 md:col-span-3">
+        <div className="col-span-12 md:col-span-3 flex flex-col gap-1">
           <div className="bg-white bg-opacity-5 p-4 mb-4 rounded-lg">
             <RoomInfo info={joinData} />
           </div>
-          <div className="h-[80vh] sticky bottom-0">
+          <div className="max-h-[80vh] flex-grow sticky bottom-0">
             <ChatForm
               roomId={roomId}
               initialMessages={joinData?.messages || []}

@@ -1,4 +1,5 @@
 'use client';
+import { useGlobalContext } from '@/app/(context)/GlobalContext';
 import { socket } from '@/app/(socket)/socket';
 import { IJoinRoomResponse } from '@/app/rooms/[roomId]/page';
 import { useAuth } from '@clerk/nextjs';
@@ -7,13 +8,13 @@ import { useEffect, useState } from 'react';
 export default function useJoinRoom(roomId: string) {
   const [joinError, setJoinError] = useState('');
   const [joinData, setJoinData] = useState<IJoinRoomResponse | null>(null);
-  const { userId } = useAuth();
+  const { dbUser } = useGlobalContext();
 
   useEffect(() => {
-    if (!userId) return;
+    if (!dbUser) return;
     socket.emit(
       'joinRoom',
-      { roomId, userId },
+      { roomId, userId: dbUser!.id, user: dbUser },
       (response: { data: IJoinRoomResponse } | { error: string }) => {
         if ('data' in response) {
           setJoinData(response.data);
@@ -25,7 +26,7 @@ export default function useJoinRoom(roomId: string) {
     return () => {
       socket.emit('leaveRoom');
     };
-  }, [userId, roomId]);
+  }, [dbUser, roomId]);
 
   return { joinError, joinData };
 }

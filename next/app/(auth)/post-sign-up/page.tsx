@@ -9,6 +9,7 @@ export default async function Page() {
   const user = await currentUser();
   if (!user) redirect('/');
 
+  // return;
   const { fullName, imageUrl, id } = user;
 
   const dbUser = await UserModel.findOne({

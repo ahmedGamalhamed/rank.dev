@@ -4,8 +4,13 @@ import { IJoinRoomResponse } from '../page';
 
 export default function RoomInfo({ info }: { info: IJoinRoomResponse | null }) {
   return (
-    <div className="col-span-1 mb-2 row-span-2">
-      <div className="text-2xl">{info?.roomInfo.roomData.roomName}</div>
+    <div className="col-span-1 mb-2 row-span-2 whitespace-break-spaces">
+      <div className="text-2xl mb-1">
+        <span className="text-fuchsia-500 text-sm mr-2">
+          {info?.roomInfo.roomData.roomLevel}
+        </span>
+        {info?.roomInfo.roomData.roomName}
+      </div>
       {info?.roomInfo.roomData.repo && (
         <Link
           href={info?.roomInfo.roomData.repo}

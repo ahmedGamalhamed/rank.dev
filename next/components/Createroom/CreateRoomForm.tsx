@@ -32,7 +32,7 @@ const formSchema = z.object({
   tags: z.string().min(1, {
     message: 'Please add at least 1 tag',
   }),
-  talentRank: z
+  roomLevel: z.coerce
     .number()
     .min(1, {
       message: 'Min Rank is 1',
@@ -58,7 +58,7 @@ export function CreateRoomForm({
       roomDescription: '',
       repo: '',
       tags: '',
-      talentRank: 5,
+      roomLevel: 5,
     },
   });
 
@@ -143,7 +143,7 @@ export function CreateRoomForm({
               />
               <FormField
                 control={form.control}
-                name="talentRank"
+                name="roomLevel"
                 render={({ field }) => (
                   <FormItem className="flex-grow">
                     <FormLabel>Talent level</FormLabel>
@@ -151,6 +151,7 @@ export function CreateRoomForm({
                       <Input
                         placeholder="Select a level between 1 and 20"
                         {...field}
+                        type="number"
                       />
                     </FormControl>
                     <FormMessage />

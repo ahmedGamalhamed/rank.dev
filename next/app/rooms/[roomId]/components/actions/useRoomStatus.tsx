@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 
 interface IRoomStatus {
   count: number;
-  clients: string[];
+  clients: { id: string; fullName: string; imageUrl: string }[];
 }
 
 export function useRoomStatus() {
