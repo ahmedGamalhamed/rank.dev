@@ -53,7 +53,7 @@ export default function Navbar() {
           Sign-up
         </button>
       </SignUpButton>
-      <SignInButton mode="modal">
+      <SignInButton forceRedirectUrl={'/post-sign-up'} mode="modal">
         <button className={`${buttonCN} text-fuchsia-500 border-fuchsia-500`}>
           Sign-In
         </button>
