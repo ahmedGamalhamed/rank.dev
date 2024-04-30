@@ -51,23 +51,26 @@ export default function Navbar() {
   const buttonCN =
     '  border-black lg:block cursor-pointer border-2 rounded-full text-sm font-semibold py-1 px-3 uppercase hover:scale-105 active:scale-100 transition duration-200';
 
-  const UnAuthed = () => (
-    <div className="flex gap-2">
-      <SignUpButton mode="modal">
-        <button className={`${buttonCN} border-black dark:border-white `}>
-          Sign-up
-        </button>
-      </SignUpButton>
-      <SignInButton mode="modal">
-        <button className={`${buttonCN} text-fuchsia-500 border-fuchsia-500`}>
-          Sign-In
-        </button>
-      </SignInButton>
-    </div>
-  );
+  const UnAuthed = () => {
+    if (!isLoaded || userId) return null;
+    return (
+      <div className="flex gap-2">
+        <SignUpButton mode="modal">
+          <button className={`${buttonCN} border-black dark:border-white `}>
+            Sign-up
+          </button>
+        </SignUpButton>
+        <SignInButton mode="modal">
+          <button className={`${buttonCN} text-fuchsia-500 border-fuchsia-500`}>
+            Sign-In
+          </button>
+        </SignInButton>
+      </div>
+    );
+  };
 
   const Authed = () => {
-    if (!dbUser || !isLoaded) return null;
+    if (!userId || !dbUser || !isLoaded) return null;
     return (
       <div>
         <div className="flex gap-2 justify-center">
