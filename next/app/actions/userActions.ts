@@ -1,6 +1,6 @@
 'use server';
 
-import { UserModel } from '../(db)/Schema';
+import { User, UserModel } from '../(db)/Schema';
 
 export const getOrCreateUser = async (currentUser: {
   id: string;
@@ -42,4 +42,19 @@ export const updateUserRanks = async (rank: number, idsArr: string[]) => {
   }
 
   return true;
+};
+
+export const updateUserFavorites = async (
+  tag: string,
+  favorite: boolean | null,
+  dbUser: User
+) => {
+  const user = await UserModel.findOne({ authId: dbUser.authId });
+  if (!user) return;
+  if (favorite) {
+    user.favorites?.push(tag);
+  } else {
+    user.favorites = user.favorites.filter((fav) => fav !== tag);
+  }
+  user.save();
 };

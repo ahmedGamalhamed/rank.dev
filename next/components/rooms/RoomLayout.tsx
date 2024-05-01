@@ -6,9 +6,11 @@ import SearchRoom from './RoomsFilter/SearchRoom';
 import TechnologyChip from './RoomsFilter/TechnologyChip';
 import TechnologyFilter from './RoomsFilter/TechnologyFilter';
 import RoomCard from './RoomCard';
-import { Rooms } from '@/rooms-data';
+import useRoomsData, {
+  _IRoom,
+} from '@/app/rooms/[roomId]/components/actions/useRoomsData';
 
-export default function RoomLayout() {
+export default function RoomLayout({ rooms }: { rooms: _IRoom[] }) {
   const [technologies, setTechnologies] = useState([
     { label: 'js', value: 'js' },
     { label: 'react', value: 'react' },
@@ -22,6 +24,9 @@ export default function RoomLayout() {
   const [selectedLevel, setSelectedLevel] = useState();
 
   const [selectedTechnologies, setSelectedTechnologies] = useState([]);
+
+  const roomsData: { roomsData: _IRoom[] | any } = useRoomsData();
+  console.log(roomsData?.roomsData);
 
   return (
     <div>
@@ -46,16 +51,20 @@ export default function RoomLayout() {
         />
       </div>
       <div className="px-3 rooms grid justify-items-center grid-cols-1 md:grid-cols-2 lg:grid-cols-3  m-auto gap-[10px] pb-5">
-        {Rooms.map((room) => {
+        {roomsData?.roomsData?.map((room: _IRoom) => {
           return (
             <RoomCard
               roomId={room.id}
+              ownerFullName={room.roomInfo.ownerFullName ?? 'No Name'}
+              ownerImageUrl={room.roomInfo.ownerImageUrl ?? '/images/user.png'}
               key={room.id}
               ownerId={room.roomInfo.ownerId}
               targetRank={room.roomInfo.roomData.roomLevel}
               description={room.roomInfo.roomData.roomDescription}
               tags={room.roomInfo.roomData.tags}
-              participants={room.participants}
+              participants={
+                room.participants ? Object.values(room.participants) : []
+              }
               maximumParticipants={room.roomInfo.roomData.maximumParticipants}
             />
           );

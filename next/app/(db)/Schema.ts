@@ -22,6 +22,7 @@ export type User = {
   followers: string[];
   following: string[];
   technologies: string[];
+  favorites: string[];
   rank: string;
   socials: {
     name: string;
@@ -42,6 +43,7 @@ const UserSchema = new Schema<User>(
     isAdmin: { type: Boolean, default: false },
     fullName: String,
     jobTitle: String,
+    favorites: { type: [String], default: [] },
     imageUrl: String,
     about: String,
     problems_solved: {
