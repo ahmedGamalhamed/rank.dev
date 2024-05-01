@@ -20,6 +20,16 @@ import { socket } from '@/app/(socket)/socket';
 import { useGlobalContext } from '@/app/(context)/GlobalContext';
 import { useRouter } from 'next/navigation';
 import RoomInfo from '@/app/rooms/[roomId]/components/RoomInfo';
+import { Textarea } from '../ui/textarea';
+import {
+  Select,
+  SelectItem,
+  SelectLabel,
+  SelectValue,
+  SelectContent,
+  SelectGroup,
+  SelectTrigger,
+} from '../ui/select';
 
 const formSchema = z.object({
   roomName: z.string().min(2, {
@@ -39,6 +49,17 @@ const formSchema = z.object({
     })
     .max(20, {
       message: 'Max Rank is 20',
+    }),
+  maximumParticipants: z.coerce
+    .number({
+      required_error: 'This field is required',
+      message: 'Please select a limit',
+    })
+    .min(1, {
+      message: 'Please Select A number Between 1 and 5',
+    })
+    .max(5, {
+      message: 'Please Select A number Between 1 and 5',
     }),
 });
 
@@ -72,14 +93,12 @@ export function CreateRoomForm({
         router.push(`/rooms/create/${response.roomId}`);
       }
     );
-    // console.log(values);
   }
 
   if (!isOpen) return null;
-  // ... \
 
   return (
-    <div className="modal-overlay fixed inset-0 flex justify-center items-center">
+    <div className="modal-overlay fixed inset-0 flex justify-center items-center bg-black bg-opacity-20 backdrop-blur-md">
       <div className="modal-content bg-black bg-opacity-80 backdrop-blur-lg w-full max-w-2xl  px-20 py-10 border rounded-xl relative">
         <h4 className="text-center text-2xl text-fuchsia-300 font-bold py-4">
           Create A Room
@@ -91,23 +110,52 @@ export function CreateRoomForm({
           ✕
         </button>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
-            <FormField
-              control={form.control}
-              name="roomName"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Room Name</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="What Name to Set this Room ?"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <div className="flex gap-2 items-center">
+              <FormField
+                control={form.control}
+                name="roomName"
+                render={({ field }) => (
+                  <FormItem className="flex-grow">
+                    <FormLabel>Room Name</FormLabel>
+                    <FormControl>
+                      <Input
+                        className=""
+                        placeholder="Give this room a name."
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="maximumParticipants"
+                render={({ field }) => (
+                  <FormItem className="flex-grow">
+                    <FormLabel>Participants count</FormLabel>
+                    <Select onValueChange={field.onChange}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {Array(5)
+                          .fill(2)
+                          .map((n, i) => (
+                            <SelectItem key={i} value={(i + 1).toString()}>
+                              {i + 1}
+                            </SelectItem>
+                          ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
             <FormField
               control={form.control}
               name="roomDescription"
@@ -115,7 +163,8 @@ export function CreateRoomForm({
                 <FormItem>
                   <FormLabel>Room Description</FormLabel>
                   <FormControl>
-                    <Input
+                    <Textarea
+                      className="resize-none"
                       placeholder="Brefily descripe what you need help with."
                       {...field}
                     />
@@ -149,6 +198,8 @@ export function CreateRoomForm({
                     <FormLabel>Talent level</FormLabel>
                     <FormControl>
                       <Input
+                        min={1}
+                        max={20}
                         placeholder="Select a level between 1 and 20"
                         {...field}
                         type="number"

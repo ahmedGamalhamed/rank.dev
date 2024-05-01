@@ -1,12 +1,5 @@
 import { v4 as uuidv4 } from "uuid";
-import { Room } from "./Room";
-export interface IMessage {
-  id?: string;
-  authorId: string;
-  text: string;
-  createdAt?: number;
-  roomId: string;
-}
+import { IMessage, Room } from "./Room";
 
 export class Message {
   public info = {} as IMessage;

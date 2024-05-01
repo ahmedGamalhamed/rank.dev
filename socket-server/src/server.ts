@@ -1,4 +1,4 @@
-import express from "express";
+import express, { Request, Response } from "express";
 import cors from "cors";
 import { Server } from "socket.io";
 import { createServer } from "http";
@@ -16,7 +16,9 @@ export const io = new Server(server, {
 
 app.use(cors());
 
-app.get("");
+app.get("/", (req: Request, res: Response) => {
+  res.send({ data: Room.roomList });
+});
 
 io.on("connection", (socket) => {
   const socketId = socket.id;
@@ -35,6 +37,12 @@ io.on("connection", (socket) => {
     Room.updateStatus(roomId);
   });
 
+  socket.on("closeRoom", ({ roomId }) => {
+    io.in(roomId).emit("roomClosed");
+    io.in(roomId).socketsLeave(roomId);
+    delete Room.roomList[roomId];
+  });
+
   socket.on("leaveRoom", () => {
     Room.kickBySocket(socket);
   });
@@ -51,5 +59,10 @@ io.on("connection", (socket) => {
 });
 
 server.listen(process.env.PORT || 4000, () => {
+  setInterval(() => {
+    const data = Object.values(Room.roomList).filter((room) => Object.values(room.participatns).length > 0);
+    io.emit("roomsData", data);
+  }, 5000);
+
   console.log("listening on *:4000");
 });

@@ -14,7 +14,6 @@ export const getOrCreateUser = async (currentUser: {
     authId: id,
   });
 
-  console.log(dbUser);
   if (dbUser) return JSON.parse(JSON.stringify(dbUser?.toObject() || {}));
   const createdUser = await UserModel.create({
     authId: id,
@@ -33,7 +32,7 @@ export const getUserByAuthId = async (authId: string) => {
   return JSON.parse(JSON.stringify(json));
 };
 
-export const updateUserRanks = async (rank: string, idsArr: string[]) => {
+export const updateUserRanks = async (rank: number, idsArr: string[]) => {
   for await (let id of idsArr) {
     const user = await UserModel.findOne({ id });
     if (!user) return;

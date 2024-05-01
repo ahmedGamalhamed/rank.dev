@@ -1,74 +1,68 @@
 'use client';
-import React, { FormEvent, ReactEventHandler, useState } from 'react';
+import React, { useState } from 'react';
 import User from './User';
-import { useRoomStatus } from './actions/useRoomStatus';
-import Link from 'next/link';
-import { Toggle } from '@/components/ui/toggle';
+import { IRoomStatus, useRoomStatus } from './actions/useRoomStatus';
 import { Switch } from '@/components/ui/switch';
-import { Button } from '@/components/ui/button';
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from '@/components/ui/alert-dialog';
+import EndCallForm from './EndCallForm';
+import { cn } from '@/lib/utils';
+import { IJoinRoomResponse } from '../page';
 
-export default function Participants() {
+export default function Participants({
+  roomInfo,
+}: {
+  roomInfo: IJoinRoomResponse;
+}) {
   const { status } = useRoomStatus();
-  const [toReward, setToReward] = useState<Record<string, boolean>>({});
-  const [showAlertDialog, setShowAlertDialog] = useState(false);
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault();
-  };
+  const [toReward, setToReward] = useState<
+    Record<string, IRoomStatus['clients'][0] | null>
+  >({});
+
   return (
     <div>
       <h1 className="text-fuchsia-500 text-2xl font-bold mb-4">Reward</h1>
       <div className="">
-        <form onSubmit={handleSubmit} className="">
-          {status?.clients.map((client) => (
+        {status?.clients.map((client) => {
+          if (client.id == roomInfo.roomInfo.ownerId) return null;
+          return (
             <div
               className={`flex gap-8 items-center rounded-lg px-4 ${
-                toReward[client.id] ? 'bg-yellow-300 bg-opacity-10' : ''
+                toReward[client.id]
+                  ? 'bg-yellow-300 bg-opacity-10 transition-colors duration-300'
+                  : ''
               }`}
               key={client.id}
             >
               <Switch
                 name={client.id}
-                checked={toReward[client.id]}
+                checked={!!toReward[client.id]}
                 onCheckedChange={(e) => {
-                  setToReward((prev) => {
-                    return {
-                      ...prev,
-                      [client.id]: e,
-                    };
-                  });
+                  if (e) {
+                    setToReward((prev) => ({ ...prev, [client.id]: client }));
+                  } else {
+                    setToReward((prev) => {
+                      return {
+                        ...prev,
+                        [client.id]: null,
+                      };
+                    });
+                  }
                 }}
               />
               <User user={client} />
             </div>
-          ))}
-          <AlertDialog>
-            <AlertDialogTrigger>Open</AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                <AlertDialogDescription>
-                  This action cannot be undone. This will permanently delete
-                  your account and remove your data from our servers.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction>Continue</AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
-        </form>
+          );
+        })}
+        <div
+          className={cn(
+            Object.values(toReward).find((n) => n) ? '' : 'opacity-0',
+            'duration-300 transition-all'
+          )}
+        >
+          <EndCallForm
+            usersToReward={toReward}
+            roomLevel={+roomInfo.roomInfo.roomData.roomLevel}
+          />
+        </div>
       </div>
     </div>
   );

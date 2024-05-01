@@ -1,26 +1,60 @@
 import { v4 as uuidv4, validate } from "uuid";
-import { IMessage } from "./Message";
 import { io } from "./server";
 import { Socket } from "socket.io";
 import { socket_room_table, socket_user_table } from "./tables";
-interface IRoom {
-  id?: string;
-  ownerId: string;
-  createdAt?: number;
-  level?: number;
-  userLimit?: number;
-  title?: string;
-  description?: string;
+
+export interface IMessage {
+  roomId: string;
+  text: string;
+  authorId: string;
+  userImage: string;
+  fullName: string;
+  createdAt: number;
+  id: string;
+}
+
+export interface _IRoom {
+  id: string;
+  messages: IMessage[];
+  roomInfo: {
+    ownerId: string;
+    roomData: {
+      roomName: string;
+      roomDescription: string;
+      repo: string;
+      tags: string[];
+      roomLevel: number;
+      maximumParticipants: number;
+    };
+    id: string;
+    createdAt: number;
+  };
+  participatns: Record<
+    string,
+    {
+      authId: string;
+      isAdmin: boolean;
+      fullName: string;
+      imageUrl: string;
+      followers: any[];
+      following: any[];
+      technologies: any[];
+      socials: any[];
+      createdAt: Date;
+      updatedAt: Date;
+      id: string;
+    }
+  >;
 }
 
 export class Room {
-  static roomList: { [k: string]: InstanceType<typeof Room> } = {};
+  static roomList: { [k: string]: _IRoom } = {};
   public id: string;
-  public messages: IMessage[] = [];
-  public roomInfo = {} as IRoom;
-  public participatns = {} as { [k: string]: Record<string, string> };
+  public messages = [];
+  public roomInfo = {} as _IRoom["roomInfo"];
+  public participatns = {};
 
-  constructor(info: IRoom) {
+  constructor(info: _IRoom["roomInfo"]) {
     this.id = uuidv4();
     this.roomInfo = {
       ...info,
@@ -45,11 +79,16 @@ export class Room {
     socket.leave(roomId);
     this.updateStatus(roomId);
   }
-  static joinUser(roomId: string, userId: string, user: Record<string, string>, socket: Socket) {
+
+  static joinUser(roomId: string, userId: string, user: _IRoom["participatns"][""], socket: Socket) {
     socket_user_table[socket.id] = userId;
     socket_room_table[socket.id] = roomId;
     const room = this.getById(roomId);
+
     if (!room) return { error: "This room doesnt exist" };
+    const roomSize = this.getSocketRoom(socket.id)!.size;
+    if (roomSize >= +room.roomInfo.roomData.maximumParticipants) return { error: "Room is at Maximum Capacity" };
+
     // room.participatns.push(userId);
     room.participatns[userId] = user;
     socket.join(roomId);
