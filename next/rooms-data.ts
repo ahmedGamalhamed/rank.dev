@@ -1,282 +1,564 @@
-type RoomsType = {
+type RoomType = {
   id: string;
-  owner: {
-    name: string;
-    avatarUrl: string;
-  };
-  targetRank: number;
-  description: string;
-  tags: {
-    name: string;
-    isFav: boolean;
+  messages: {
+    text: string;
+    authorId: string;
+    userImage: string;
+    fullName: string;
   }[];
-  participants: {
+  roomInfo: {
+    ownerId: string;
+    roomData: {
+      roomName: string;
+      roomDescription: string;
+      repo: string;
+      tags: string;
+      roomLevel: number;
+      maximumParticipants: number;
+    };
     id: string;
-    name: string;
-    avatarUrl: string;
+    createdAt: number;
+  };
+  participants: {
+    authId: string;
+    isAdmin: boolean;
+    fullName: string;
+    imageUrl: string;
+    followers: any[];
+    following: any[];
+    technologies: any[];
+    socials: any[];
+    createdAt: Date;
+    updatedAt: Date;
+    id: string;
   }[];
-  maximumParticipants: number;
 };
 
-export const Rooms: RoomsType[] = [
+export const Rooms: RoomType[] = [
   {
-    id: 'asdfasdfasdf',
-    owner: {
-      name: 'ahmed redaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-      avatarUrl: '/images/user.png',
-    },
-    targetRank: 17,
-    description:
-      'Write a Javascript function that takes an array of numbers and returns the sum of all the positive numbers in the array.',
-    tags: [
-      { name: 'JS', isFav: true },
-      { name: 'React', isFav: false },
-      { name: 'CPP', isFav: true },
+    id: 'room3id',
+    messages: [
+      {
+        text: 'React makes UI development fun!',
+        authorId: 'reactdev',
+        userImage: '/images/user.png',
+        fullName: 'Rebecca React',
+      },
     ],
+    roomInfo: {
+      ownerId: 'ownerid3',
+      roomData: {
+        roomName: 'React Room',
+        roomDescription: 'Exploring the world of React and its ecosystem.',
+        repo: 'www.github.com/facebook/react',
+        tags: 'React JavaScript UI fasfasdfsaf safsdfsfsdfsdaf',
+        roomLevel: 7,
+        maximumParticipants: 4,
+      },
+      id: 'room3info',
+      createdAt: Date.now(),
+    },
     participants: [
       {
-        id: '1',
-        name: 'John Doe',
-        avatarUrl: '/images/user2.png',
+        authId: 'reactdev',
+        isAdmin: true,
+        fullName: 'Rebecca React',
+        imageUrl: '/images/user.png',
+        followers: [],
+        following: [],
+        technologies: [],
+        socials: [],
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        id: 'reactdevid',
       },
       {
-        id: '2',
-        name: 'Smith Smith',
-        avatarUrl: '/images/user2.png',
+        authId: 'reactdevvv',
+        isAdmin: true,
+        fullName: 'Rebecca React',
+        imageUrl: '/images/user.png',
+        followers: [],
+        following: [],
+        technologies: [],
+        socials: [],
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        id: 'reactdevid',
       },
     ],
-    maximumParticipants: 3,
   },
   {
-    id: 'asdfasdfasdfrr',
-    owner: {
-      name: 'ahmed reda',
-      avatarUrl: '/images/user.png',
-    },
-    targetRank: 17,
-    description:
-      'Write a Javascript function that takes an array of numbers and returns the sum of all the positive numbers in the array.',
-    tags: [
-      { name: 'JS', isFav: true },
-      { name: 'React', isFav: false },
-      { name: 'CPP', isFav: true },
+    id: 'room4id',
+    messages: [
+      {
+        text: 'Node.js for backend magic!',
+        authorId: 'nodeguru',
+        userImage: '/images/user.png',
+        fullName: 'Nina Node',
+      },
     ],
+    roomInfo: {
+      ownerId: 'ownerid4',
+      roomData: {
+        roomName: 'Node.js Room',
+        roomDescription: 'Server-side development with Node.js.',
+        repo: 'www.github.com/nodejs/node',
+        tags: 'Node.js JavaScript Backend',
+        roomLevel: 9,
+        maximumParticipants: 2,
+      },
+      id: 'room4info',
+      createdAt: Date.now(),
+    },
     participants: [
       {
-        id: '1',
-        name: 'John Doe',
-        avatarUrl: '/images/user2.png',
-      },
-      {
-        id: '2',
-        name: 'Smith Smith',
-        avatarUrl: '/images/user2.png',
-      },
-      {
-        id: '44',
-        name: 'Smith Smith Smith',
-        avatarUrl: '/images/user2.png',
+        authId: 'nodeguru',
+        isAdmin: true,
+        fullName: 'Nina Node',
+        imageUrl: '/images/user.png',
+        followers: [],
+        following: [],
+        technologies: [],
+        socials: [],
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        id: 'nodeguruid',
       },
     ],
-    maximumParticipants: 4,
   },
   {
-    id: 'asdfasdfasdfrr2',
-    owner: {
-      name: 'John Smith',
-      avatarUrl: '/images/user.png',
-    },
-    targetRank: 15,
-    description:
-      'Write a Python function that takes a list of strings and returns the concatenation of all strings with a length greater than 5.',
-    tags: [
-      { name: 'Python', isFav: true },
-      { name: 'Django', isFav: false },
-      { name: 'Flask', isFav: true },
-    ],
-    participants: [
+    id: 'room6id',
+    messages: [
       {
-        id: '3',
-        name: 'Jane Doe',
-        avatarUrl: '/images/user2.png',
+        text: 'Flutter & Dart for cross-platform apps',
+        authorId: 'flutterfan',
+        userImage: '/images/user.png',
+        fullName: 'Fiona Flutter',
       },
     ],
-    maximumParticipants: 2,
+    roomInfo: {
+      ownerId: 'ownerid6',
+      roomData: {
+        roomName: 'Flutter Room',
+        roomDescription:
+          'Building cross-platform applications with Flutter.Building cross-platform applications with Flutter.Building cross-platform applications with Flutter.Building cross-platform applications with Flutter.Building cross-platform applications with Flutter.Building cross-platform applications with Flutter.Building cross-platform applications with Flutter.Building cross-platform applications with Flutter.Building cross-platform applications with Flutter.Building cross-platform applications with Flutter.Building cross-platform applications with Flutter.',
+        repo: 'www.github.com/flutter/flutter',
+        tags: 'Flutter Dart Mobile',
+        roomLevel: 4,
+        maximumParticipants: 3,
+      },
+      id: 'room6info',
+      createdAt: Date.now(),
+    },
+    participants: [],
   },
   {
-    id: 'asdfasdfasdfrr3',
-    owner: {
-      name: 'Jane Smith',
-      avatarUrl: '/images/user.png',
-    },
-    targetRank: 20,
-    description:
-      'Write a Java method that takes a string and returns the number of vowels in the string.',
-    tags: [
-      { name: 'Java', isFav: true },
-      { name: 'Spring', isFav: false },
-    ],
-    participants: [
+    id: 'room7id',
+    messages: [
       {
-        id: '4',
-        name: 'Alice Smith',
-        avatarUrl: '/images/user2.png',
+        text: 'Exploring the depths of Data Science with Python',
+        authorId: 'datascientist',
+        userImage: '/images/user.png',
+        fullName: 'Diana Data',
       },
     ],
-    maximumParticipants: 3,
+    roomInfo: {
+      ownerId: 'ownerid7',
+      roomData: {
+        roomName: 'Data Science Room',
+        roomDescription: 'Data Science discussions and Python programming.',
+        repo: 'www.github.com',
+        tags: 'Data Science Python Machine Learning',
+        roomLevel: 10,
+        maximumParticipants: 4,
+      },
+      id: 'room7info',
+      createdAt: Date.now(),
+    },
+    participants: [
+      {
+        authId: 'datascientist',
+        isAdmin: true,
+        fullName: 'Diana Data',
+        imageUrl: '/images/user.png',
+        followers: [],
+        following: [],
+        technologies: [],
+        socials: [],
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        id: 'datascientistid',
+      },
+      {
+        authId: 'flutterfan',
+        isAdmin: true,
+        fullName: 'Fiona Flutter',
+        imageUrl: '/images/user.png',
+        followers: [],
+        following: [],
+        technologies: [],
+        socials: [],
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        id: 'flutterfanid',
+      },
+      {
+        authId: 'flutterfannn',
+        isAdmin: true,
+        fullName: 'Fiona Flutter',
+        imageUrl: '/images/user.png',
+        followers: [],
+        following: [],
+        technologies: [],
+        socials: [],
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        id: 'flutterfanid',
+      },
+    ],
   },
   {
-    id: 'asdfasdfasdfrr4',
-    owner: {
-      name: 'Tom Johnson',
-      avatarUrl: '/images/user.png',
-    },
-    targetRank: 18,
-    description:
-      'Write a C# function that takes an array of integers and returns the maximum value.',
-    tags: [
-      { name: 'C#', isFav: true },
-      { name: '.NET', isFav: false },
-    ],
-    participants: [
+    id: 'room8id',
+    messages: [
       {
-        id: '5',
-        name: 'Bob Brown',
-        avatarUrl: '/images/user2.png',
+        text: 'The art of Game Development',
+        authorId: 'gamedev',
+        userImage: '/images/user.png',
+        fullName: 'Gary Game',
       },
     ],
-    maximumParticipants: 3,
+    roomInfo: {
+      ownerId: 'ownerid8',
+      roomData: {
+        roomName: 'Game Dev Room',
+        roomDescription: 'All about game development and design.',
+        repo: 'www.github.com',
+        tags: 'Game Development Design Programming',
+        roomLevel: 3,
+        maximumParticipants: 2,
+      },
+      id: 'room8info',
+      createdAt: Date.now(),
+    },
+    participants: [
+      {
+        authId: 'gamedev',
+        isAdmin: true,
+        fullName: 'Gary Game',
+        imageUrl: '/images/user.png',
+        followers: [],
+        following: [],
+        technologies: [],
+        socials: [],
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        id: 'gamedevid',
+      },
+    ],
   },
   {
-    id: 'asdfasdfasdfrr5',
-    owner: {
-      name: 'Sarah Johnson',
-      avatarUrl: '/images/user.png',
-    },
-    targetRank: 16,
-    description:
-      'Write a Ruby method that takes a string and returns the reversed string.',
-    tags: [
-      { name: 'Ruby', isFav: true },
-      { name: 'Rails', isFav: false },
-    ],
-    participants: [
+    id: 'room9id',
+    messages: [
       {
-        id: '6',
-        name: 'Chris White',
-        avatarUrl: '/images/user2.png',
+        text: 'Mastering Machine Learning',
+        authorId: 'mlmaster',
+        userImage: '/images/user.png',
+        fullName: 'Molly Machine',
       },
     ],
-    maximumParticipants: 2,
+    roomInfo: {
+      ownerId: 'ownerid9',
+      roomData: {
+        roomName: 'Machine Learning Room',
+        roomDescription:
+          'Deep dives into machine learning algorithms and practices.',
+        repo: 'www.github.com',
+        tags: 'Machine Learning AI Data Science',
+        roomLevel: 11,
+        maximumParticipants: 1,
+      },
+      id: 'room9info',
+      createdAt: Date.now(),
+    },
+    participants: [
+      {
+        authId: 'mlmaster',
+        isAdmin: true,
+        fullName: 'Molly Machine',
+        imageUrl: '/images/user.png',
+        followers: [],
+        following: [],
+        technologies: [],
+        socials: [],
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        id: 'mlmasterid',
+      },
+    ],
   },
   {
-    id: 'asdfasdfasdfrr6',
-    owner: {
-      name: 'David Williams',
-      avatarUrl: '/images/user.png',
-    },
-    targetRank: 19,
-    description:
-      'Write a PHP function that takes an array of strings and returns the longest string.',
-    tags: [
-      { name: 'PHP', isFav: true },
-      { name: 'Laravel', isFav: false },
-    ],
-    participants: [
+    id: 'room10id', // Note: This ID was already used in the initial example; ensure unique IDs for each room.
+    messages: [
       {
-        id: '7',
-        name: 'Emily Green',
-        avatarUrl: '/images/user2.png',
+        text: 'Blockchain beyond Bitcoin',
+        authorId: 'blockchainbuff',
+        userImage: '/images/user.png',
+        fullName: 'Bobby Blockchain',
       },
     ],
-    maximumParticipants: 4,
+    roomInfo: {
+      ownerId: 'ownerid10', // Ensure this ID is unique if adjusting from the example
+      roomData: {
+        roomName: 'Blockchain Room',
+        roomDescription:
+          'Exploring blockchain technology and its applications.',
+        repo: 'www.github.com',
+        tags: 'Blockchain Cryptocurrency Ethereum',
+        roomLevel: 2,
+        maximumParticipants: 4,
+      },
+      id: 'room10info', // Ensure this ID is unique if adjusting from the example
+      createdAt: Date.now(),
+    },
+    participants: [
+      {
+        authId: 'blockchainbuff',
+        isAdmin: true,
+        fullName: 'Bobby Blockchain',
+        imageUrl: '/images/user.png',
+        followers: [],
+        following: [],
+        technologies: [],
+        socials: [],
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        id: 'blockchainbuffid',
+      },
+      {
+        authId: 'blockchainbuffff',
+        isAdmin: true,
+        fullName: 'Bobby Blockchain',
+        imageUrl: '/images/user.png',
+        followers: [],
+        following: [],
+        technologies: [],
+        socials: [],
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        id: 'blockchainbuffid',
+      },
+    ],
   },
   {
-    id: 'asdfasdfasdfrr7',
-    owner: {
-      name: 'Michael Davis',
-      avatarUrl: '/images/user.png',
-    },
-    targetRank: 20,
-    description:
-      'Write a TypeScript function that takes an array of numbers and returns the sum of all the even numbers in the array.',
-    tags: [
-      { name: 'TypeScript', isFav: true },
-      { name: 'Angular', isFav: false },
-    ],
-    participants: [
+    id: 'room11id', // Note: This ID was already used in the initial example; ensure unique IDs for each room.
+    messages: [
       {
-        id: '8',
-        name: 'Jennifer Black',
-        avatarUrl: '/images/user2.png',
+        text: 'Blockchain beyond Bitcoin',
+        authorId: 'blockchainbuff',
+        userImage: '/images/user.png',
+        fullName: 'Bobby Blockchain',
       },
     ],
-    maximumParticipants: 2,
+    roomInfo: {
+      ownerId: 'ownerid10', // Ensure this ID is unique if adjusting from the example
+      roomData: {
+        roomName: 'Blockchain Room',
+        roomDescription:
+          'Exploring blockchain technology and its applications.',
+        repo: 'www.github.com',
+        tags: 'Blockchain Cryptocurrency Ethereum',
+        roomLevel: 2,
+        maximumParticipants: 4,
+      },
+      id: 'room10info', // Ensure this ID is unique if adjusting from the example
+      createdAt: Date.now(),
+    },
+    participants: [
+      {
+        authId: 'blockchainbuff',
+        isAdmin: true,
+        fullName: 'Bobby Blockchain',
+        imageUrl: '/images/user.png',
+        followers: [],
+        following: [],
+        technologies: [],
+        socials: [],
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        id: 'blockchainbuffid',
+      },
+      {
+        authId: 'blockchainbuffff',
+        isAdmin: true,
+        fullName: 'Bobby Blockchain',
+        imageUrl: '/images/user.png',
+        followers: [],
+        following: [],
+        technologies: [],
+        socials: [],
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        id: 'blockchainbuffid',
+      },
+    ],
   },
   {
-    id: 'asdfasdfasdfrr8',
-    owner: {
-      name: 'Sophia Martinez',
-      avatarUrl: '/images/user.png',
-    },
-    targetRank: 15,
-    description:
-      'Write a Swift function that takes a string and returns the number of words in the string.',
-    tags: [
-      { name: 'Swift', isFav: true },
-      { name: 'iOS', isFav: false },
-    ],
-    participants: [
+    id: 'room12id', // Note: This ID was already used in the initial example; ensure unique IDs for each room.
+    messages: [
       {
-        id: '9',
-        name: 'William Lee',
-        avatarUrl: '/images/user2.png',
+        text: 'Blockchain beyond Bitcoin',
+        authorId: 'blockchainbuff',
+        userImage: '/images/user.png',
+        fullName: 'Bobby Blockchain',
       },
     ],
-    maximumParticipants: 1,
+    roomInfo: {
+      ownerId: 'ownerid10', // Ensure this ID is unique if adjusting from the example
+      roomData: {
+        roomName: 'Blockchain Room',
+        roomDescription:
+          'Exploring blockchain technology and its applications.',
+        repo: 'www.github.com',
+        tags: 'Blockchain Cryptocurrency Ethereum',
+        roomLevel: 2,
+        maximumParticipants: 4,
+      },
+      id: 'room10info', // Ensure this ID is unique if adjusting from the example
+      createdAt: Date.now(),
+    },
+    participants: [
+      {
+        authId: 'blockchainbuff',
+        isAdmin: true,
+        fullName: 'Bobby Blockchain',
+        imageUrl: '/images/user.png',
+        followers: [],
+        following: [],
+        technologies: [],
+        socials: [],
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        id: 'blockchainbuffid',
+      },
+      {
+        authId: 'blockchainbuffff',
+        isAdmin: true,
+        fullName: 'Bobby Blockchain',
+        imageUrl: '/images/user.png',
+        followers: [],
+        following: [],
+        technologies: [],
+        socials: [],
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        id: 'blockchainbuffid',
+      },
+    ],
   },
   {
-    id: 'asdfasdfasdfrr9',
-    owner: {
-      name: 'Ella Taylor',
-      avatarUrl: '/images/user.png',
-    },
-    targetRank: 18,
-    description:
-      'Write a Kotlin function that takes an array of integers and returns the average value.',
-    tags: [
-      { name: 'Kotlin', isFav: true },
-      { name: 'Android', isFav: false },
-    ],
-    participants: [
+    id: 'room13id', // Note: This ID was already used in the initial example; ensure unique IDs for each room.
+    messages: [
       {
-        id: '10',
-        name: 'Daniel Brown',
-        avatarUrl: '/images/user2.png',
+        text: 'Blockchain beyond Bitcoin',
+        authorId: 'blockchainbuff',
+        userImage: '/images/user.png',
+        fullName: 'Bobby Blockchain',
       },
     ],
-    maximumParticipants: 3,
+    roomInfo: {
+      ownerId: 'ownerid10', // Ensure this ID is unique if adjusting from the example
+      roomData: {
+        roomName: 'Blockchain Room',
+        roomDescription:
+          'Exploring blockchain technology and its applications.',
+        repo: 'www.github.com',
+        tags: 'Blockchain Cryptocurrency Ethereum',
+        roomLevel: 2,
+        maximumParticipants: 4,
+      },
+      id: 'room10info', // Ensure this ID is unique if adjusting from the example
+      createdAt: Date.now(),
+    },
+    participants: [
+      {
+        authId: 'blockchainbuff',
+        isAdmin: true,
+        fullName: 'Bobby Blockchain',
+        imageUrl: '/images/user.png',
+        followers: [],
+        following: [],
+        technologies: [],
+        socials: [],
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        id: 'blockchainbuffid',
+      },
+      {
+        authId: 'blockchainbuffff',
+        isAdmin: true,
+        fullName: 'Bobby Blockchain',
+        imageUrl: '/images/user.png',
+        followers: [],
+        following: [],
+        technologies: [],
+        socials: [],
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        id: 'blockchainbuffid',
+      },
+    ],
   },
   {
-    id: 'asdfasdfasdfrr10',
-    owner: {
-      name: 'Olivia Wilson',
-      avatarUrl: '/images/user.png',
-    },
-    targetRank: 16,
-    description:
-      'Write a Go function that takes a slice of integers and returns the sum of all the elements in the slice.',
-    tags: [
-      { name: 'Go', isFav: true },
-      { name: 'Golang', isFav: false },
-    ],
-    participants: [
+    id: 'room15id', // Note: This ID was already used in the initial example; ensure unique IDs for each room.
+    messages: [
       {
-        id: '11',
-        name: 'Liam Garcia',
-        avatarUrl: '/images/user2.png',
+        text: 'Blockchain beyond Bitcoin',
+        authorId: 'blockchainbuff',
+        userImage: '/images/user.png',
+        fullName: 'Bobby Blockchain',
       },
     ],
-    maximumParticipants: 2,
+    roomInfo: {
+      ownerId: 'ownerid10', // Ensure this ID is unique if adjusting from the example
+      roomData: {
+        roomName: 'Blockchain Room',
+        roomDescription:
+          'Exploring blockchain technology and its applications.',
+        repo: 'www.github.com',
+        tags: 'Blockchain Cryptocurrency Ethereum',
+        roomLevel: 2,
+        maximumParticipants: 4,
+      },
+      id: 'room10info', // Ensure this ID is unique if adjusting from the example
+      createdAt: Date.now(),
+    },
+    participants: [
+      {
+        authId: 'blockchainbuff',
+        isAdmin: true,
+        fullName: 'Bobby Blockchain',
+        imageUrl: '/images/user.png',
+        followers: [],
+        following: [],
+        technologies: [],
+        socials: [],
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        id: 'blockchainbuffid',
+      },
+      {
+        authId: 'blockchainbuffff',
+        isAdmin: true,
+        fullName: 'Bobby Blockchain',
+        imageUrl: '/images/user.png',
+        followers: [],
+        following: [],
+        technologies: [],
+        socials: [],
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        id: 'blockchainbuffid',
+      },
+    ],
   },
 ];

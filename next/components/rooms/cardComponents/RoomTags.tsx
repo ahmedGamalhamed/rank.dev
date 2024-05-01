@@ -1,27 +1,26 @@
 import React from 'react';
 
-type Tag = {
-  name: string;
-  isFav: boolean;
-};
-
 type Props = {
-  tags: Tag[];
+  tags: string;
 };
 
 const RoomTags = ({ tags }: Props) => {
-  const roomTags = tags.map((tag) => {
+  const tagsArray = tags.split(' ');
+
+  // TODO: fetch user data and get his technologies
+
+  const roomTags = tagsArray.map((tag) => {
     return (
       <div
-        className="flex gap-2 items-center justify-center bg-gradient-to-tl from-0% from-[#310363] to-[#4e059d] rounded-lg py-[3px] px-4 font-bold"
-        key={tag.name}
+        className="flex gap-2 items-center justify-center bg-gray-300 dark:bg-black dark:bg-opacity-50 rounded-xl py-[1px] px-3"
+        key={tag}
       >
-        <span className="text-xs text-[white]">{tag.name}</span>
+        <span className="text-[10px] text-black dark:text-white">{tag}</span>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 576 512"
           stroke="currentColor"
-          fill={tag.isFav ? '#ffb100' : '#aaaaaa'}
+          fill="#ffb100"
           aria-hidden="true"
           strokeWidth="0"
           height="12"
@@ -32,7 +31,11 @@ const RoomTags = ({ tags }: Props) => {
       </div>
     );
   });
-  return <>{roomTags}</>;
+  return (
+    <div className="flex flex-wrap gap-x-2 gap-y-1 h-14 content-baseline items-start justify-start">
+      {roomTags}
+    </div>
+  );
 };
 
 export default RoomTags;

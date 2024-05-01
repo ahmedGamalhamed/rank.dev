@@ -5,8 +5,9 @@ import React from 'react';
 
 export default function SearchRoom() {
   return (
-    <div className="w-[450px]">
+    <div className="w-full">
       <Input
+        className="w-full"
         type="text"
         placeholder="Search..."
         endContent={

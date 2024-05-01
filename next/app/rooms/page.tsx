@@ -17,7 +17,7 @@ export default async function Page() {
     );
 
   return (
-    <section>
+    <section className="max-w-7xl mx-auto">
       <RoomLayout />
     </section>
   );

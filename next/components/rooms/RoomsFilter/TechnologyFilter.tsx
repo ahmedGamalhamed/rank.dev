@@ -24,7 +24,7 @@ export default function TechnologyFilter({
         selectedKey={value}
         aria-label="adf"
         disabledKeys={[...selectedTechnologies]}
-        onSelectionChange={(key) => {
+        onSelectionChange={(key: string) => {
           setValue('');
           if (key != null) {
             setSelectedTechnologies((prev: string[]) => [...prev, key]);

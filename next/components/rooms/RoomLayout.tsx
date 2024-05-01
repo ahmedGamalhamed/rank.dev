@@ -25,8 +25,8 @@ export default function RoomLayout() {
 
   return (
     <div>
-      <div className="flex flex-col lg:flex-row justify-center items-center gap-11 my-8">
-        <div className="flex items-center justify-center gap-5">
+      <div className="flex flex-col md:flex-row justify-center md:justify-between items-center gap-11 my-8 px-3">
+        <div className="flex flex-col lg:flex-row items-center justify-center gap-5">
           <TechnologyFilter
             technologies={technologies}
             selectedTechnologies={selectedTechnologies}
@@ -34,7 +34,7 @@ export default function RoomLayout() {
           />
           <LevelsFilter levels={levels} setLevels={setSelectedLevel} />
         </div>
-        <div>
+        <div className=" w-full max-w-[520px]">
           <SearchRoom />
         </div>
       </div>
@@ -45,23 +45,21 @@ export default function RoomLayout() {
           setSelectedTechnologies={setSelectedTechnologies}
         />
       </div>
-      <div className="container flex">
-        <div className=" rooms grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 m-auto gap-5 pb-5">
-          {Rooms.map((room) => {
-            return (
-              <RoomCard
-                roomId={room.id}
-                key={room.id}
-                owner={room.owner}
-                targetRank={room.targetRank}
-                description={room.description}
-                tags={room.tags}
-                participants={room.participants}
-                maximumParticipants={room.maximumParticipants}
-              />
-            );
-          })}
-        </div>
+      <div className="px-3 rooms grid justify-items-center grid-cols-1 md:grid-cols-2 lg:grid-cols-3  m-auto gap-[10px] pb-5">
+        {Rooms.map((room) => {
+          return (
+            <RoomCard
+              roomId={room.id}
+              key={room.id}
+              ownerId={room.roomInfo.ownerId}
+              targetRank={room.roomInfo.roomData.roomLevel}
+              description={room.roomInfo.roomData.roomDescription}
+              tags={room.roomInfo.roomData.tags}
+              participants={room.participants}
+              maximumParticipants={room.roomInfo.roomData.maximumParticipants}
+            />
+          );
+        })}
       </div>
     </div>
   );

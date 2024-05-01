@@ -2,9 +2,9 @@ import Image from 'next/image';
 import React from 'react';
 
 type Participant = {
-  id: string;
-  name: string;
-  avatarUrl: string;
+  authId: string;
+  fullName: string;
+  imageUrl: string;
 };
 
 type Props = {
@@ -15,10 +15,10 @@ type Props = {
 const Participants = ({ participants, maximumParticipants }: Props) => {
   const participantsAvatars = participants.map((participant) => {
     return (
-      <div key={participant.id} className="mb-3">
+      <div key={participant.authId} className="mb-3">
         <Image
-          src={participant.avatarUrl}
-          alt={participant.name}
+          src={participant.imageUrl}
+          alt={participant.fullName}
           className="rounded-full"
           width="40"
           height="40"
