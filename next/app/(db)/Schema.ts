@@ -23,15 +23,13 @@ export type User = {
   following: string[];
   technologies: string[];
   rank: string;
-  socials: {
-    name: string;
-    value: string;
-  }[];
+  socials: { name: string; value: string }[];
   subscriptionId: string;
   paid: boolean;
   createdAt: Date;
   updatedAt: Date;
   id: string;
+  favourties: string[];
 };
 
 export interface UserDocument extends User, Omit<Document, 'id'> {}
@@ -60,6 +58,7 @@ const UserSchema = new Schema<User>(
     ],
     subscriptionId: String,
     paid: Boolean,
+    favourties: [String],
   },
   {
     timestamps: true,
