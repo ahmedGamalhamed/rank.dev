@@ -18,6 +18,8 @@ export interface _IRoom {
   messages: IMessage[];
   roomInfo: {
     ownerId: string;
+    ownerFullName: string;
+    ownerImageUrl: string;
     roomData: {
       roomName: string;
       roomDescription: string;
