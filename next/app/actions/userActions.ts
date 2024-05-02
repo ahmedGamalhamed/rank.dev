@@ -1,53 +1,81 @@
-'use client';
-import React, { createContext, useContext, useEffect, useState } from 'react';
-import { User } from '../(db)/Schema';
-import { useAuth, useUser } from '@clerk/nextjs';
-import { getOrCreateUser, getUserByAuthId } from '../actions/userActions';
-import useRoomsData from '../rooms/[roomId]/components/actions/useRoomsData';
+'use server';
 
-type TStateChange<T> = React.Dispatch<React.SetStateAction<T>>;
+import { UserModel } from '../(db)/Schema';
+import { stripeClient } from '../(utils)/Stripe';
 
-interface TGlobalContext {
-  dbUser: User | null;
-  setDBUser: TStateChange<User | null>;
-}
+export const getOrCreateUser = async (currentUser: {
+  authId: string;
+  fullName: string | null;
+  imageUrl: string | null;
+  email: string;
+}) => {
+  if (!currentUser) return {};
+  const { fullName, imageUrl, authId, email } = currentUser;
 
-const GlobalContext = createContext<TGlobalContext | undefined>(undefined);
+  let dbUser = await UserModel.findOne({
+    authId,
+  });
 
-export const useGlobalContext = () => {
-  if (GlobalContext == undefined) throw new Error('No Context');
-  return useContext(GlobalContext) as TGlobalContext;
+  if (dbUser) {
+    if (!dbUser.email) {
+      dbUser.email = email;
+      dbUser = await dbUser.save();
+    }
+    return JSON.parse(JSON.stringify(dbUser?.toObject() || {}));
+  }
+  const createdUser = await UserModel.create({
+    authId,
+    fullName,
+    imageUrl,
+    email,
+  });
+
+  return JSON.parse(JSON.stringify(createdUser?.toObject() || {}));
 };
 
-export default function ContextProvider({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  const [dbUser, setDBUser] = useState<User | null>(null);
-  const { user } = useUser();
-  useEffect(() => {
-    if (!user) setDBUser(null);
-    else {
-      getOrCreateUser({
-        authId: user.id,
-        email: user.emailAddresses[0].emailAddress,
-        fullName: user.fullName,
-        imageUrl: user.imageUrl,
-      }).then((dbUser: any) => {
-        setDBUser(dbUser);
-      });
-    }
-  }, [user]);
+export const getUserByAuthId = async (authId: string) => {
+  if (!authId) return;
+  const user = await UserModel.findOne({ authId });
+  if (!user) return;
+  const json = user?.toObject();
+  return JSON.parse(JSON.stringify(json));
+};
 
-  return (
-    <GlobalContext.Provider
-      value={{
-        dbUser,
-        setDBUser,
-      }}
-    >
-      {children}
-    </GlobalContext.Provider>
-  );
-}
+export const updateUserRanks = async (rank: number, idsArr: string[]) => {
+  for await (let id of idsArr) {
+    const user = await UserModel.findOne({ id });
+    if (!user) return;
+    const currentRank = user.problems_solved.get(rank) || 0;
+    user?.problems_solved.set(rank, currentRank + 1);
+    await user.save();
+  }
+
+  return true;
+};
+
+export const checkUserPayment = async (email: string) => {
+  const res = await stripeClient.customers.list({
+    email,
+  });
+
+  const user = await UserModel.findOne({ email });
+
+  if (res.data[0]) {
+    const sub = await stripeClient.subscriptions.list({
+      customer: res.data[0].id,
+    });
+
+    if (sub.data[0]) {
+      const paid = sub.data[0].status == 'active';
+      if (user) {
+        user.paid = paid;
+        await user.save();
+      }
+      return {
+        ...JSON.parse(JSON.stringify(user?.toObject())),
+        paid,
+      };
+    }
+  }
+  return JSON.parse(JSON.stringify(user?.toObject()));
+};

@@ -23,8 +23,14 @@ export default function useJoinRoom(roomId: string) {
         }
       }
     );
+
+    socket.on('roomClosed', (d) => {
+      setJoinError('This Room Has Been Closed!');
+    });
+
     return () => {
       socket.emit('leaveRoom');
+      socket.off('roomClosed');
     };
   }, [dbUser, roomId]);
 

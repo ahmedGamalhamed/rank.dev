@@ -8,6 +8,7 @@ import { usePathname } from 'next/navigation';
 import { VideoIO } from './components/VideoIO';
 import { User } from '@/app/(db)/Schema';
 import Participants from './components/Participants';
+import { useGlobalContext } from '@/app/(context)/GlobalContext';
 
 interface IProps {
   params: {
@@ -28,6 +29,7 @@ export interface IJoinRoomResponse {
       roomName: string;
       tags: string;
       roomLevel: string;
+      maximumParticipants: number;
     };
   };
 }
@@ -45,6 +47,7 @@ const Room = ({ params }: IProps) => {
   const { roomId } = params;
   const dialog = useProtect(pathname);
   const { joinError, joinData } = useJoinRoom(roomId);
+  const { dbUser } = useGlobalContext();
   if (dialog) return dialog;
   if (joinError) return <ErrorMsg msg={joinError} />;
 
@@ -56,7 +59,9 @@ const Room = ({ params }: IProps) => {
             <VideoIO roomId={roomId} />
           </div>
           <div className="p-4">
-            <Participants />
+            {joinData && joinData.roomInfo.ownerId == dbUser!.id && (
+              <Participants roomInfo={joinData} />
+            )}
           </div>
         </div>
         <div className="col-span-12 md:col-span-3 flex flex-col gap-1">

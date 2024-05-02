@@ -1,4 +1,4 @@
-import express from "express";
+import express, { Request, Response } from "express";
 import cors from "cors";
 import { Server } from "socket.io";
 import { createServer } from "http";
@@ -16,14 +16,16 @@ export const io = new Server(server, {
 
 app.use(cors());
 
-app.get("");
+app.get("/", (req: Request, res: Response) => {
+  res.send({ data: Room.roomList });
+});
 
 io.on("connection", (socket) => {
   const socketId = socket.id;
   console.log("+ socketId: ", socketId);
 
   socket.on("createRoom", ({ userId, user, ...rest }, sendResponse) => {
-    const room = new Room({ ownerId: userId, ...rest });
+    const room = new Room({ ownerId: userId, ownerFullName: user.fullName, ownerImageUrl: user.imageUrl, ...rest });
     Room.joinUser(room.id, userId, user, socket);
     sendResponse({ roomId: room.id });
   });
@@ -33,6 +35,12 @@ io.on("connection", (socket) => {
     if ("error" in room) return sendResponse({ error: room.error });
     sendResponse({ data: room.data });
     Room.updateStatus(roomId);
+  });
+
+  socket.on("closeRoom", ({ roomId }) => {
+    io.in(roomId).emit("roomClosed");
+    io.in(roomId).socketsLeave(roomId);
+    delete Room.roomList[roomId];
   });
 
   socket.on("leaveRoom", () => {
@@ -51,5 +59,10 @@ io.on("connection", (socket) => {
 });
 
 server.listen(process.env.PORT || 4000, () => {
+  setInterval(() => {
+    const data = Object.values(Room.roomList).filter((room) => Object.values(room.participatns).length > 0);
+    io.emit("roomsData", data);
+  }, 5000);
+
   console.log("listening on *:4000");
 });

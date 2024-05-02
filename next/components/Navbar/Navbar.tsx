@@ -23,36 +23,22 @@ import {
   DropdownMenuTrigger,
 } from '../ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
-import { getOrCreateUser, getUserByAuthId } from '@/app/actions/userActions';
-import { User } from '@/app/(db)/Schema';
 import { useGlobalContext } from '@/app/(context)/GlobalContext';
 import { CreateRoomForm } from '../Createroom/CreateRoomForm';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
-  const { userId, isLoaded } = useAuth();
-  const { user } = useUser();
-  const { dbUser, setDBUser } = useGlobalContext();
+  const { dbUser } = useGlobalContext();
+  const { isLoaded, userId } = useAuth();
   const [showCreateRoomForm, setShowCreateRoomForm] = useState(false);
-  useEffect(() => {
-    if (user && user.id && isLoaded) {
-      getOrCreateUser({
-        fullName: user.fullName,
-        id: user.id,
-        imageUrl: user.imageUrl,
-      }).then((dbUser) => {
-        setDBUser(dbUser as User);
-      });
-    } else {
-      setDBUser(null);
-    }
-  }, [user, isLoaded, setDBUser]);
 
   const buttonCN =
-    '  border-black lg:block cursor-pointer border-2 rounded-full text-sm font-semibold py-1 px-3 uppercase hover:scale-105 active:scale-100 transition duration-200';
+    '  border-black lg:block cursor-pointer border-2 rounded-full text-sm font-semibold py-1 px-3 uppercase hover:scale-105 active:scale-100 transition duration-200 hover:bg-fuchsia-600';
 
   const UnAuthed = () => {
-    if (!isLoaded || userId) return null;
+    if (!isLoaded) return null;
+    if (userId && !dbUser)
+      return <div className="animate-pulse">Logging in...</div>;
     return (
       <div className="flex gap-2">
         <SignUpButton mode="modal">
@@ -61,16 +47,14 @@ export default function Navbar() {
           </button>
         </SignUpButton>
         <SignInButton mode="modal">
-          <button className={`${buttonCN} text-fuchsia-500 border-fuchsia-500`}>
-            Sign-In
-          </button>
+          <button className={`${buttonCN} border-fuchsia-500`}>Sign-In</button>
         </SignInButton>
       </div>
     );
   };
 
   const Authed = () => {
-    if (!userId || !dbUser || !isLoaded) return null;
+    if (!dbUser) return null;
     return (
       <div>
         <div className="flex gap-2 justify-center">
@@ -78,7 +62,7 @@ export default function Navbar() {
             onClick={(e) => {
               setShowCreateRoomForm(!showCreateRoomForm);
             }}
-            className={`${buttonCN} text-fuchsia-500 dark:text-fuchsia-200 dark:border-fuchsia-200 border-fuchsia-500`}
+            className={`${buttonCN}  dark:text-fuchsia-200 dark:border-fuchsia-200 border-fuchsia-500`}
           >
             Create Room
           </button>
@@ -89,7 +73,18 @@ export default function Navbar() {
                   <AvatarImage src={dbUser.imageUrl} />
                 </Avatar>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="p-4">
+              <DropdownMenuContent className="p-4 flex-col flex gap-2 bg-opacity-5 dark:bg-opacity-5 dark:bg-black bg-white backdrop-blur ">
+                <p className="text-center text-fuchsia-500 mb-2 px-2 font-bold">
+                  {dbUser.fullName}
+                </p>
+
+                <Link
+                  href={`/profile/${dbUser.id}`}
+                  className={`${buttonCN} border-black dark:border-white mx-auto`}
+                >
+                  Your Profile
+                </Link>
+
                 <SignOutButton>
                   <span
                     className={`${buttonCN} border-black dark:border-white mx-auto`}
@@ -108,11 +103,11 @@ export default function Navbar() {
   return (
     <header
       suppressHydrationWarning
-      className="  transition-colors duration-300 z-30 sticky top-0 bg-slate-100  dark:bg-black py-2 shadow-md dark:text-white "
+      className="  transition-colors duration-300 z-30 sticky top-0 bg-slate-100  dark:bg-black bg-opacity-70 dark:bg-opacity-70 backdrop-blur py-2 shadow-md dark:text-white "
     >
       <nav className="px-2  sm:container flex justify-between items-center ">
         <div className="w-fit ">
-          <Link href="/" className="h-18 flex items-center ">
+          <Link href="/" className="h-18 flex items-center">
             <Image
               src={'/images/logo/logo.png'}
               alt={'Logo'}
@@ -128,11 +123,10 @@ export default function Navbar() {
         <ul
           className={`
           dark:text-white
-          dark:bg-black
           transition-transform ease-in-out
           ${isOpen ? 'translate-x-0 duration-300' : 'translate-x-80'}
           lg:duration-0 
-          fixed top-0 right-0 h-screen w-80 z-50 shadow-2xl
+          fixed top-0 right-0 h-screen w-80 z-20 shadow-2xl
           lg:static lg:h-auto lg:w-auto lg:shadow-none
           flex flex-col items-start justify-start text-black 
           lg:flex-row lg:items-center 
@@ -173,12 +167,12 @@ export default function Navbar() {
           </li>
         </ul>
         <div className="order-1 ml-auto flex items-center md:order-2 lg:ml-0  ">
-          <Link
+          {/* <Link
             href="/"
             className="h-9 flex items-center mr-2 sm:mr-5 border-r border-border pr-2 sm:pr-5 text-xl text-dark hover:text-primary dark:border-darkmode-border dark:text-white"
           >
             <Search />
-          </Link>
+          </Link> */}
           {/* <Link
             href="/"
             className=" mr-5 inline-block border-r border-border pr-5 text-xl text-dark hover:text-primary dark:border-darkmode-border dark:text-white"
