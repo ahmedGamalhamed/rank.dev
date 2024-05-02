@@ -54,6 +54,10 @@ export const updateUserRanks = async (rank: number, idsArr: string[]) => {
   return true;
 };
 
+export const getUserById = async (id: string) => {
+  return await UserModel.findOne({ _id: id });
+};
+
 export const checkUserPayment = async (email: string) => {
   const res = await stripeClient.customers.list({
     email,
@@ -81,12 +85,15 @@ export const checkUserPayment = async (email: string) => {
   return JSON.parse(JSON.stringify(user?.toObject()));
 };
 export const editProfile = async (updateObject: any) => {
-   try
-  { const userUser = auth();
-    const user = await UserModel.findOneAndUpdate({authId : userUser.userId}, updateObject, { new: true })
+  try {
+    const userUser = auth();
+    const user = await UserModel.findOneAndUpdate(
+      { authId: userUser.userId },
+      updateObject,
+      { new: true }
+    );
     return JSON.parse(JSON.stringify(user?.toObject()));
-  }
-  catch(error){
+  } catch (error) {
     console.log(error);
     return null;
   }
