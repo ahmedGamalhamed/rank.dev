@@ -1,11 +1,4 @@
-import mongoose, {
-  HydratedDocument,
-  Model,
-  Models,
-  Mongoose,
-  Schema,
-  Types,
-} from 'mongoose';
+import mongoose, { Model, Schema } from 'mongoose';
 import { Document } from 'mongoose';
 import { Variables } from '../Variables';
 
@@ -24,7 +17,12 @@ export type User = {
   following: string[];
   technologies: string[];
   rank: string;
-  socials: { name: string; value: string }[];
+  socials: {
+    facebook: string;
+    twitter: string;
+    github: string;
+    linkedin: string;
+  };
   subscriptionId: string;
   paid: boolean;
   createdAt: Date;
@@ -52,12 +50,12 @@ const UserSchema = new Schema<User>(
     following: [String],
     technologies: [String],
     rank: String,
-    socials: [
-      {
-        name: String,
-        value: String,
-      },
-    ],
+    socials: {
+      facebook: String,
+      twitter: String,
+      github: String,
+      linkedin: String,
+    },
     subscriptionId: String,
     paid: Boolean,
     favourties: [String],

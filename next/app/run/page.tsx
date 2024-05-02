@@ -5,8 +5,8 @@ export default async function page() {
   const u = await UserModel.findOneAndUpdate(
     { authId: 'user_2ffvpd7Uha7wZuHwLYXKcnZcOME' },
     {
-      socials: {
-        $set: {
+      $set: {
+        socials: {
           twitter: 'ahmed',
           facebook: 'facebook',
         },
