@@ -5,7 +5,6 @@ import { CardWithProgressbar } from '@/components/profile/progresscard';
 import { CardWithTechnologies } from '@/components/profile/technologiescard';
 import { CardWithSocials } from '@/components/profile/socialscard';
 import { CardWithFollowers } from '@/components/profile/followers';
-import { CardWithFollowing } from '@/components/profile/following';
 import { UserModel } from '@/app/(db)/Schema';
 import ErrorMsg from '@/components/ErrorMsg';
 import { auth } from '@clerk/nextjs/server';
@@ -39,10 +38,16 @@ export default async function Profile({ params }: { params: { id: string } }) {
         <CardWithSocials ownProfile={ownProfile} dbUser={user} />
       </div>
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row gap-5 justify-center">
-        <CardWithFollowers followerIds={userObj?.followers || []} />
+        <CardWithFollowers
+          followerIds={userObj?.followers || []}
+          title="Followers"
+        />
       </div>
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8  flex flex-col sm:flex-row gap-5 justify-center">
-        <CardWithFollowers followerIds={userObj?.following || []} />
+        <CardWithFollowers
+          followerIds={userObj?.following || []}
+          title="Following"
+        />
       </div>
     </>
   );
