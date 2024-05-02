@@ -64,7 +64,7 @@ export default function PayButton({
   return (
     <div>
       <Button
-        className="mx-auto block bg-yellow-300"
+        className="mx-auto block bg-yellow-300 mb-2"
         type="button"
         onClick={() => {
           setOpen(false);

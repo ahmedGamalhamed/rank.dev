@@ -60,12 +60,12 @@ export const checkUserPayment = async (email: string) => {
 
   const user = await UserModel.findOne({ email });
 
-  if (res.data) {
+  if (res.data[0]) {
     const sub = await stripeClient.subscriptions.list({
       customer: res.data[0].id,
     });
 
-    if (sub.data) {
+    if (sub.data[0]) {
       const paid = sub.data[0].status == 'active';
       if (user) {
         user.paid = paid;
