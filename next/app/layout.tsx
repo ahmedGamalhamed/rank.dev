@@ -33,9 +33,7 @@ export default async function RootLayout({
               enableSystem
               disableTransitionOnChange
             >
-              <div className="w-full">
-                <Navbar />
-              </div>
+              <Navbar />
               <div className="flex-grow">{children}</div>
               <Footer />
             </ThemeProvider>

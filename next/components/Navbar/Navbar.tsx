@@ -73,7 +73,11 @@ export default function Navbar() {
                   <AvatarImage src={dbUser.imageUrl} />
                 </Avatar>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="p-4 flex-col flex gap-2">
+              <DropdownMenuContent className="p-4 flex-col flex gap-2 bg-opacity-5 dark:bg-opacity-5 dark:bg-black bg-white backdrop-blur ">
+                <p className="text-center text-fuchsia-500 mb-2 px-2 font-bold">
+                  {dbUser.fullName}
+                </p>
+
                 <Link
                   href={`/profile/${dbUser.id}`}
                   className={`${buttonCN} border-black dark:border-white mx-auto`}
@@ -99,11 +103,11 @@ export default function Navbar() {
   return (
     <header
       suppressHydrationWarning
-      className="  transition-colors duration-300 z-30 sticky top-0 bg-slate-100  dark:bg-black py-2 shadow-md dark:text-white "
+      className="  transition-colors duration-300 z-30 sticky top-0 bg-slate-100  dark:bg-black bg-opacity-70 dark:bg-opacity-70 backdrop-blur py-2 shadow-md dark:text-white "
     >
       <nav className="px-2  sm:container flex justify-between items-center ">
         <div className="w-fit ">
-          <Link href="/" className="h-18 flex items-center ">
+          <Link href="/" className="h-18 flex items-center">
             <Image
               src={'/images/logo/logo.png'}
               alt={'Logo'}
@@ -119,11 +123,10 @@ export default function Navbar() {
         <ul
           className={`
           dark:text-white
-          dark:bg-black
           transition-transform ease-in-out
           ${isOpen ? 'translate-x-0 duration-300' : 'translate-x-80'}
           lg:duration-0 
-          fixed top-0 right-0 h-screen w-80 z-50 shadow-2xl
+          fixed top-0 right-0 h-screen w-80 z-20 shadow-2xl
           lg:static lg:h-auto lg:w-auto lg:shadow-none
           flex flex-col items-start justify-start text-black 
           lg:flex-row lg:items-center 
