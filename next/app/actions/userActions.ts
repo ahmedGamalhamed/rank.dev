@@ -1,5 +1,6 @@
 'use server';
 
+import { auth } from '@clerk/nextjs/server';
 import { UserModel } from '../(db)/Schema';
 import { stripeClient } from '../(utils)/Stripe';
 
@@ -78,4 +79,15 @@ export const checkUserPayment = async (email: string) => {
     }
   }
   return JSON.parse(JSON.stringify(user?.toObject()));
+};
+export const editProfile = async (updateObject: any) => {
+   try
+  { const userUser = auth();
+    const user = await UserModel.findOneAndUpdate({authId : userUser.userId}, updateObject, { new: true })
+    return JSON.parse(JSON.stringify(user?.toObject()));
+  }
+  catch(error){
+    console.log(error);
+    return null;
+  }
 };
