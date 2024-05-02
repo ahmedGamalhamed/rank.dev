@@ -14,7 +14,6 @@ import { User } from "@/app/(db)/Schema";
 import { editProfile } from "@/app/actions/userActions";
 
 export function CardWithTechnologies(props:{dbUser: User , ownProfile: boolean}) {
-  const [isHovered, setIsHovered] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [technologies, setTechnologies] = useState(props.dbUser.technologies.length == 0 ? ["Bird Watching","Counting Water"] : props.dbUser.technologies );
   const [newTechnology, setNewTechnology] = useState("");
@@ -53,12 +52,8 @@ export function CardWithTechnologies(props:{dbUser: User , ownProfile: boolean})
             <div onClick={handleEdit} className="ml-[360%]">
               <FontAwesomeIcon
                 icon={faEdit}
-                className={`text-gray-500 cursor-pointer w-8 h-8`}
-                onMouseEnter={() => setIsHovered(true)}
-                onMouseLeave={() => setIsHovered(false)}
-                style={{
-                  color: isHovered ? 'white' : '', 
-                }}
+                className={`text-gray-500 cursor-pointer w-8 h-8 hover:text-white`}
+                
               />
             </div>
           )}
