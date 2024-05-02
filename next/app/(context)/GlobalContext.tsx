@@ -1,8 +1,8 @@
 'use client';
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { User } from '../(db)/Schema';
-import { useAuth } from '@clerk/nextjs';
-import { getUserByAuthId } from '../actions/userActions';
+import { useAuth, useUser } from '@clerk/nextjs';
+import { getOrCreateUser, getUserByAuthId } from '../actions/userActions';
 import useRoomsData from '../rooms/[roomId]/components/actions/useRoomsData';
 
 type TStateChange<T> = React.Dispatch<React.SetStateAction<T>>;
@@ -25,16 +25,20 @@ export default function ContextProvider({
   children: React.ReactNode;
 }) {
   const [dbUser, setDBUser] = useState<User | null>(null);
-  const { userId } = useAuth();
-
+  const { user } = useUser();
   useEffect(() => {
-    if (!userId) setDBUser(null);
+    if (!user) setDBUser(null);
     else {
-      getUserByAuthId(userId).then((dbUser) => {
+      getOrCreateUser({
+        authId: user.id,
+        email: user.emailAddresses[0].emailAddress,
+        fullName: user.fullName,
+        imageUrl: user.imageUrl,
+      }).then((dbUser: any) => {
         setDBUser(dbUser);
       });
     }
-  }, [userId]);
+  }, [user]);
 
   return (
     <GlobalContext.Provider

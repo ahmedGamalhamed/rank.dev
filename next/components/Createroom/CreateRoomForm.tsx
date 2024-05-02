@@ -15,7 +15,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { MouseEventHandler } from 'react';
+import { MouseEventHandler, useEffect, useRef, useState } from 'react';
 import { socket } from '@/app/(socket)/socket';
 import { useGlobalContext } from '@/app/(context)/GlobalContext';
 import { useRouter } from 'next/navigation';
@@ -30,6 +30,8 @@ import {
   SelectGroup,
   SelectTrigger,
 } from '../ui/select';
+import { useUser } from '@clerk/nextjs';
+import PayButton from './PayButton';
 
 const formSchema = z.object({
   roomName: z.string().min(2, {
@@ -43,12 +45,15 @@ const formSchema = z.object({
     message: 'Please add at least 1 tag',
   }),
   roomLevel: z.coerce
-    .number()
-    .min(1, {
-      message: 'Min Rank is 1',
+    .number({
+      required_error: 'This field is required',
+      message: 'A Level',
     })
-    .max(20, {
-      message: 'Max Rank is 20',
+    .min(1, {
+      message: 'Min Level is 1',
+    })
+    .max(5, {
+      message: 'Max Level is 20',
     }),
   maximumParticipants: z.coerce
     .number({
@@ -72,6 +77,9 @@ export function CreateRoomForm({
 }) {
   const { dbUser } = useGlobalContext();
   const router = useRouter();
+  const [allowFree, setAllowFree] = useState(true);
+  const [paymentChecked, setPaymentChecked] = useState(false);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -93,6 +101,18 @@ export function CreateRoomForm({
         router.push(`/rooms/create/${response.roomId}`);
       }
     );
+  }
+
+  async function checkPayment(level: string) {
+    if (!paymentChecked) {
+      if (+level >= 15) {
+        setAllowFree(false);
+      } else {
+        setAllowFree(true);
+      }
+    } else {
+      setAllowFree(true);
+    }
   }
 
   if (!isOpen) return null;
@@ -138,7 +158,7 @@ export function CreateRoomForm({
                     <Select onValueChange={field.onChange}>
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Select" />
+                          <SelectValue placeholder="Select max count" />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
@@ -195,16 +215,28 @@ export function CreateRoomForm({
                 name="roomLevel"
                 render={({ field }) => (
                   <FormItem className="flex-grow">
-                    <FormLabel>Talent level</FormLabel>
-                    <FormControl>
-                      <Input
-                        min={1}
-                        max={20}
-                        placeholder="Select a level between 1 and 20"
-                        {...field}
-                        type="number"
-                      />
-                    </FormControl>
+                    <FormLabel>Talent Level</FormLabel>
+                    <Select
+                      onValueChange={(e) => {
+                        checkPayment(e);
+                        field.onChange(e);
+                      }}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select a rank Level" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {Array(20)
+                          .fill(2)
+                          .map((n, i) => (
+                            <SelectItem key={i} value={(i + 1).toString()}>
+                              {i + 1}
+                            </SelectItem>
+                          ))}
+                      </SelectContent>
+                    </Select>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -227,10 +259,19 @@ export function CreateRoomForm({
                 </FormItem>
               )}
             />
-            <div className="pt-5">
-              <Button className="mx-auto block " type="submit">
-                Create
-              </Button>
+            <div className="pt-5 h-20 my-4">
+              {allowFree ? (
+                <Button className="mx-auto block " type="submit">
+                  Create
+                </Button>
+              ) : (
+                <PayButton
+                  setOpen={setOpen}
+                  setAllow={setAllowFree}
+                  paymentChecked={paymentChecked}
+                  setPaymentChecked={setPaymentChecked}
+                />
+              )}
             </div>
           </form>
         </Form>

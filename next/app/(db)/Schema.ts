@@ -13,6 +13,7 @@ mongoose.connect(Variables.MONGODB_URL);
 
 export type User = {
   authId: string;
+  email: string;
   isAdmin: boolean;
   fullName: string;
   jobTitle: string;
@@ -37,6 +38,7 @@ export interface UserDocument extends User, Omit<Document, 'id'> {}
 const UserSchema = new Schema<User>(
   {
     authId: { type: String, required: true },
+    email: { type: String, unique: true },
     isAdmin: { type: Boolean, default: false },
     fullName: String,
     jobTitle: String,

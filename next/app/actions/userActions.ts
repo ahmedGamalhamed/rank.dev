@@ -1,24 +1,33 @@
 'use server';
 
 import { UserModel } from '../(db)/Schema';
+import { stripeClient } from '../(utils)/Stripe';
 
 export const getOrCreateUser = async (currentUser: {
-  id: string;
+  authId: string;
   fullName: string | null;
   imageUrl: string | null;
+  email: string;
 }) => {
   if (!currentUser) return {};
-  const { fullName, imageUrl, id } = currentUser;
+  const { fullName, imageUrl, authId, email } = currentUser;
 
-  const dbUser = await UserModel.findOne({
-    authId: id,
+  let dbUser = await UserModel.findOne({
+    authId,
   });
 
-  if (dbUser) return JSON.parse(JSON.stringify(dbUser?.toObject() || {}));
+  if (dbUser) {
+    if (!dbUser.email) {
+      dbUser.email = email;
+      dbUser = await dbUser.save();
+    }
+    return JSON.parse(JSON.stringify(dbUser?.toObject() || {}));
+  }
   const createdUser = await UserModel.create({
-    authId: id,
+    authId,
     fullName,
     imageUrl,
+    email,
   });
 
   return JSON.parse(JSON.stringify(createdUser?.toObject() || {}));
@@ -42,4 +51,31 @@ export const updateUserRanks = async (rank: number, idsArr: string[]) => {
   }
 
   return true;
+};
+
+export const checkUserPayment = async (email: string) => {
+  const res = await stripeClient.customers.list({
+    email,
+  });
+
+  const user = await UserModel.findOne({ email });
+
+  if (res.data) {
+    const sub = await stripeClient.subscriptions.list({
+      customer: res.data[0].id,
+    });
+
+    if (sub.data) {
+      const paid = sub.data[0].status == 'active';
+      if (user) {
+        user.paid = paid;
+        await user.save();
+      }
+      return {
+        ...JSON.parse(JSON.stringify(user?.toObject())),
+        paid,
+      };
+    }
+  }
+  return JSON.parse(JSON.stringify(user?.toObject()));
 };

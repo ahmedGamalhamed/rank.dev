@@ -23,20 +23,22 @@ import {
   DropdownMenuTrigger,
 } from '../ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
-import { getOrCreateUser, getUserByAuthId } from '@/app/actions/userActions';
-import { User } from '@/app/(db)/Schema';
 import { useGlobalContext } from '@/app/(context)/GlobalContext';
 import { CreateRoomForm } from '../Createroom/CreateRoomForm';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const { dbUser } = useGlobalContext();
+  const { isLoaded, userId } = useAuth();
   const [showCreateRoomForm, setShowCreateRoomForm] = useState(false);
 
   const buttonCN =
-    '  border-black lg:block cursor-pointer border-2 rounded-full text-sm font-semibold py-1 px-3 uppercase hover:scale-105 active:scale-100 transition duration-200';
+    '  border-black lg:block cursor-pointer border-2 rounded-full text-sm font-semibold py-1 px-3 uppercase hover:scale-105 active:scale-100 transition duration-200 hover:bg-fuchsia-600';
 
   const UnAuthed = () => {
+    if (!isLoaded) return null;
+    if (userId && !dbUser)
+      return <div className="animate-pulse">Logging in...</div>;
     return (
       <div className="flex gap-2">
         <SignUpButton mode="modal">
@@ -45,9 +47,7 @@ export default function Navbar() {
           </button>
         </SignUpButton>
         <SignInButton mode="modal">
-          <button className={`${buttonCN} text-fuchsia-500 border-fuchsia-500`}>
-            Sign-In
-          </button>
+          <button className={`${buttonCN} border-fuchsia-500`}>Sign-In</button>
         </SignInButton>
       </div>
     );
@@ -62,7 +62,7 @@ export default function Navbar() {
             onClick={(e) => {
               setShowCreateRoomForm(!showCreateRoomForm);
             }}
-            className={`${buttonCN} text-fuchsia-500 dark:text-fuchsia-200 dark:border-fuchsia-200 border-fuchsia-500`}
+            className={`${buttonCN}  dark:text-fuchsia-200 dark:border-fuchsia-200 border-fuchsia-500`}
           >
             Create Room
           </button>
@@ -73,7 +73,14 @@ export default function Navbar() {
                   <AvatarImage src={dbUser.imageUrl} />
                 </Avatar>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="p-4">
+              <DropdownMenuContent className="p-4 flex-col flex gap-2">
+                <Link
+                  href={`/profile/${dbUser.id}`}
+                  className={`${buttonCN} border-black dark:border-white mx-auto`}
+                >
+                  Your Profile
+                </Link>
+
                 <SignOutButton>
                   <span
                     className={`${buttonCN} border-black dark:border-white mx-auto`}
