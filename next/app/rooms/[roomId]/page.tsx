@@ -47,7 +47,7 @@ const Room = ({ params }: IProps) => {
   const { roomId } = params;
   const dialog = useProtect(pathname);
   const { joinError, joinData } = useJoinRoom(roomId);
-  const { dbUser } = useGlobalContext();
+  const { signedUser } = useGlobalContext();
   if (dialog) return dialog;
   if (joinError) return <ErrorMsg msg={joinError} />;
 
@@ -59,7 +59,7 @@ const Room = ({ params }: IProps) => {
             <VideoIO roomId={roomId} />
           </div>
           <div className="p-4">
-            {joinData && joinData.roomInfo.ownerId == dbUser!.id && (
+            {joinData && joinData.roomInfo.ownerId == signedUser!.id && (
               <Participants roomInfo={joinData} />
             )}
           </div>

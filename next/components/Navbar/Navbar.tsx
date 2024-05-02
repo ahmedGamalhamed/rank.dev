@@ -28,7 +28,7 @@ import { CreateRoomForm } from '../Createroom/CreateRoomForm';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
-  const { dbUser } = useGlobalContext();
+  const { signedUser } = useGlobalContext();
   const { isLoaded, userId } = useAuth();
   const [showCreateRoomForm, setShowCreateRoomForm] = useState(false);
 
@@ -37,7 +37,7 @@ export default function Navbar() {
 
   const UnAuthed = () => {
     if (!isLoaded) return null;
-    if (userId && !dbUser)
+    if (userId && !signedUser)
       return <div className="animate-pulse">Logging in...</div>;
     return (
       <div className="flex gap-2">
@@ -54,7 +54,7 @@ export default function Navbar() {
   };
 
   const Authed = () => {
-    if (!dbUser) return null;
+    if (!signedUser) return null;
     return (
       <div>
         <div className="flex gap-2 justify-center">
@@ -70,16 +70,16 @@ export default function Navbar() {
             <DropdownMenu>
               <DropdownMenuTrigger>
                 <Avatar>
-                  <AvatarImage src={dbUser.imageUrl} />
+                  <AvatarImage src={signedUser.imageUrl} />
                 </Avatar>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="p-4 flex-col flex gap-2 bg-opacity-5 dark:bg-opacity-5 dark:bg-black bg-white backdrop-blur ">
                 <p className="text-center text-fuchsia-500 mb-2 px-2 font-bold">
-                  {dbUser.fullName}
+                  {signedUser.fullName}
                 </p>
 
                 <Link
-                  href={`/profile/${dbUser.id}`}
+                  href={`/profile/${signedUser.id}`}
                   className={`${buttonCN} border-black dark:border-white mx-auto`}
                 >
                   Your Profile
@@ -151,13 +151,8 @@ export default function Navbar() {
             </Link>
           </li>
 
-          {dbUser?.id && <li className="w-full pl-5 hover:bg-gray-200 lg:pl-0 lg:w-auto lg:hover:bg-transparent py-3  px-2  opacity-80 hover:opacity-100 hover:scale-105 active:scale-100 transition duration-200">
-            <Link className="w-full block  " href={`/profile/${dbUser.id}`}>
-              My Profile
-            </Link>
-          </li>}
           <li className="w-full pl-5 hover:bg-gray-200 lg:pl-0 lg:w-auto lg:hover:bg-transparent lg:hidden py-3  px-2  opacity-80 hover:opacity-100 hover:scale-105 active:scale-100 transition duration-200">
-            {dbUser && dbUser.id ? <Authed /> : <UnAuthed />}
+            {signedUser && signedUser.id ? <Authed /> : <UnAuthed />}
           </li>
           <li
             onClick={() => setIsOpen(false)}
@@ -183,7 +178,7 @@ export default function Navbar() {
             <ModeToggle />
           </div>
           <div className="hidden lg:block">
-            {dbUser && dbUser.id ? <Authed /> : <UnAuthed />}
+            {signedUser && signedUser.id ? <Authed /> : <UnAuthed />}
           </div>
           <button
             onClick={() => setIsOpen(true)}

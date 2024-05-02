@@ -75,7 +75,7 @@ export function CreateRoomForm({
   isOpen: boolean;
   setOpen: Function;
 }) {
-  const { dbUser } = useGlobalContext();
+  const { signedUser } = useGlobalContext();
   const router = useRouter();
   const [allowFree, setAllowFree] = useState(true);
   const [paymentChecked, setPaymentChecked] = useState(false);
@@ -92,10 +92,10 @@ export function CreateRoomForm({
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    if (!dbUser) return;
+    if (!signedUser) return;
     socket.emit(
       'createRoom',
-      { userId: dbUser.id, user: dbUser, roomData: values },
+      { userId: signedUser.id, user: signedUser, roomData: values },
       (response: { roomId: string }) => {
         setOpen(false);
         router.push(`/rooms/create/${response.roomId}`);
