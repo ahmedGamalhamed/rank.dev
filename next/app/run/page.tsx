@@ -13,6 +13,5 @@ export default async function page() {
       },
     }
   );
-  console.log(u);
   return <div>page</div>;
 }
