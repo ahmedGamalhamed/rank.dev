@@ -1,3 +1,4 @@
+"use client"
 import * as React from "react"
 
 import {
@@ -12,36 +13,34 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faSave } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-export function CardWithAvatar() {
-  const [isHovered, setIsHovered] = useState(false);
+import { User } from "@/app/(db)/Schema";
+import { editProfile } from "@/app/actions/userActions";
+
+export function CardWithAvatar(props:{dbUser: User , ownProfile: boolean}) {
+
   const [isEditMode, setIsEditMode] = useState(false);
   const [nameText, setNameText] = useState(
-    "John Doe"
+    props.dbUser!.fullName
   );
   const [titleText, setTitleText] = useState(
-    "Front-End Developer"
+    props.dbUser!.jobTitle == null ? "No Title" : props.dbUser!.jobTitle
   );
   const handleEdit = () => {
-   
     setIsEditMode(true);
   };
 
   const handleSave = () => {
     setIsEditMode(false);
+    const updatedData ={fullName : nameText , jobTitle : titleText}
+    editProfile(updatedData);
   };
   return (
     <Card className="w-[100%] sm:w-[40%]">
-      {!isEditMode && (
+      {!isEditMode && props.ownProfile && (
                 <div onClick={handleEdit} className="flex justify-end pt-5 pr-5">
                   <FontAwesomeIcon
                     icon={faEdit}
-                    className={`text-gray-500 cursor-pointer mt-4 mx-3 mr-2 w-8 h-8`}
-                    onMouseEnter={() => setIsHovered(true)}
-                    onMouseLeave={() => setIsHovered(false)}
-                    style={{
-                      color: isHovered ? 'white' : '', 
-                     
-                    }}
+                    className={`text-gray-500 cursor-pointer hover:bg-white mt-4 mx-3 mr-2 w-8 h-8`}
                   />
                 </div>
               )}
@@ -65,7 +64,7 @@ export function CardWithAvatar() {
                   value={nameText}
                   onChange={(e) => setNameText(e.target.value)}
                   className="text-m py-4 mb-3 w-[100%] sm:w-[100%] "
-                  rows="2"
+                  rows={2}
                   style={{
                     borderRadius: "8px",
                     padding:"8px 9px"
@@ -81,9 +80,10 @@ export function CardWithAvatar() {
                 <div className="flex justify-between items-center w-full sm:w-[90%] flex-col">
                   <textarea
                     value={titleText}
+                    placeholder="Title"
                     onChange={(e) => setTitleText(e.target.value)}
                     className="text-m py-4 mb-3 w-[100%] sm:w-[100%] "
-                    rows="1"
+                    rows={1}
                     style={{
                       borderRadius: "8px",
                       padding:"8px 9px"

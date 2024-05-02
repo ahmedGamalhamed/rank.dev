@@ -1,5 +1,8 @@
-import { io } from "socket.io-client";
+import { io } from 'socket.io-client';
+import { Variables } from '../Variables';
 
-export const socket = io(process.env.SOCKET_SERVER_URL || "http://localhost:4000", {
+const socketURL = Variables.SOCKET_URL;
+
+export const socket = io(socketURL, {
   autoConnect: false,
 });

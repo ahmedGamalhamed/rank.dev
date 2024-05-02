@@ -1,3 +1,4 @@
+"use client"
 import * as React from "react";
 import TechTag from "./technology";
 import {
@@ -9,29 +10,38 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faSave } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
+import { User } from "@/app/(db)/Schema";
+import { editProfile } from "@/app/actions/userActions";
 
-export function CardWithTechnologies() {
+export function CardWithTechnologies(props:{dbUser: User , ownProfile: boolean}) {
   const [isHovered, setIsHovered] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
-  const [technologies, setTechnologies] = useState(["ReactJs", "TypeScript", "JavaScript", "NodeJs", "Angular", "NextJs"]);
+  const [technologies, setTechnologies] = useState(props.dbUser.technologies.length == 0 ? ["Bird Watching","Counting Water"] : props.dbUser.technologies );
   const [newTechnology, setNewTechnology] = useState("");
+  
+  React.useEffect(() => {
+    editProfile({technologies})
+  }, [technologies])
+  
   
   const handleEdit = () => {
     setIsEditMode(true);
   };
-
+  
   const handleSave = () => {
     setIsEditMode(false);
     if (newTechnology) {
-      setTechnologies([...technologies, newTechnology]);
+      setTechnologies((prevState) => [...prevState, newTechnology] );
       setNewTechnology("");
     }
+    editProfile({technologies})
   };
 
-  const handleDeleteTech = (index) => {
+  const handleDeleteTech = (index: number) => {
     const updatedTech = [...technologies];
     updatedTech.splice(index, 1);
     setTechnologies(updatedTech);
+    
   };
 
   return (
@@ -39,7 +49,7 @@ export function CardWithTechnologies() {
       <CardHeader>
         <div className="flex flex-row justify-between">
           <CardTitle className="text-xl flex-grow">Technologies</CardTitle>
-          {!isEditMode && (
+          {!isEditMode  && props.ownProfile && (
             <div onClick={handleEdit} className="ml-[360%]">
               <FontAwesomeIcon
                 icon={faEdit}

@@ -1,3 +1,4 @@
+"use client"
 import * as React from "react";
 import {
   Card,
@@ -9,17 +10,36 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faHeart, faSave } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
+import { User } from "@/app/(db)/Schema";
 
-export function CardWithAbout() {
-  const [isRed, setIsRed] = useState(true);
-  const [isHovered, setIsHovered] = useState(false);
+import { usePathname } from "next/navigation";
+
+import useSetProfile from "./useSetProfile";
+
+export function CardWithAbout(props:{dbUser: User , ownProfile: boolean}) {
+  const pathName = usePathname();
+  const {updateFunction} = useSetProfile();
+  const followed = props.dbUser.followers.includes(pathName?.split("/").at(-1)||"");
+  const [isRed, setIsRed] = useState(followed);
   const [isEditMode, setIsEditMode] = useState(false);
   const [aboutText, setAboutText] = useState(
-    "I’m a web developer. I spend my whole day, practically every day, experimenting with HTML, CSS, and JavaScript; dabbling with Python and Ruby; and inhaling a wide variety of potentially useless information through a few hundred RSS feeds. I build websites that delight and inform. I do it well. I’m curious, and I enjoy work that challenges me to learn something new and stretch in a different direction. I do my best to stay on top of changes in the state of the art so that I can meet challenges with tools well suited to the job at hand. The list of projects I follow on GitHub will give you a good idea of the types of tools I’d prefer to be using, and my Instapaper “Starred” list will give you a glimpse into the reading material I find interesting enough to share."
+    props.dbUser.about ? props.dbUser.about :
+   `${props.dbUser.fullName} doesn't has an about yet.`
   );
-
+  const idFollowed =  pathName?.split("/").at(-1) || "";
+  React.useEffect(() => {
+    setIsRed(props.dbUser.followers.includes(idFollowed));
+  },[props.dbUser , idFollowed])
+  console.log("ay kelma",props.dbUser);
   const toggleColor = () => {
-    setIsRed(!isRed);
+   
+    if(!idFollowed) return;
+    if(followed){ 
+      updateFunction({$pull:{followers:idFollowed}})
+    }
+    else {
+      updateFunction({$push:{followers:idFollowed}})
+    }
   };
 
   const handleEdit = () => {
@@ -28,6 +48,7 @@ export function CardWithAbout() {
 
   const handleSave = () => {
     setIsEditMode(false);
+    updateFunction({about:aboutText});
    
   };
 
@@ -36,22 +57,17 @@ export function CardWithAbout() {
       <CardHeader className="py-10">
         <div className="flex flex-row">
           <CardTitle className="text-xl flex-grow">About</CardTitle>
-          <div onClick={toggleColor}>
+          {!props.ownProfile && <div onClick={toggleColor}>
             <FontAwesomeIcon
               icon={faHeart}
               className={`${isRed ? "text-red-500" : "text-white"} cursor-pointer mr-2 w-8 h-8`}
             />
-          </div>
-          {!isEditMode && (
+          </div>}
+          {!isEditMode && props.ownProfile && (
             <div onClick={handleEdit}>
               <FontAwesomeIcon
                 icon={faEdit}
-                className={`text-gray-500 cursor-pointer mr-2 w-8 h-8`}
-                onMouseEnter={() => setIsHovered(true)}
-                onMouseLeave={() => setIsHovered(false)}
-                style={{
-                  color: isHovered ? 'white' : '', 
-                }}
+                className={`text-gray-500 cursor-pointer hover:bg-white mr-2 w-8 h-8`}
               />
             </div>
           )}
@@ -67,7 +83,7 @@ export function CardWithAbout() {
                 value={aboutText}
                 onChange={(e) => setAboutText(e.target.value)}
                 className="text-m py-4 mb-3 w-[110%] sm:w-[110%] "
-                rows="8"
+                rows={8}
                 style={{
                   borderRadius: "8px",
                   padding:"8px 9px"

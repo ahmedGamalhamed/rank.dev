@@ -1,34 +1,48 @@
+"use client"
 import * as React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFacebook, faTwitter, faGithub, faLinkedin } from '@fortawesome/free-brands-svg-icons';
 import { faEdit, faSave } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
+import { User } from "@/app/(db)/Schema";
+import { editProfile } from "@/app/actions/userActions";
 
-export function CardWithSocials() {
+export function CardWithSocials(props:{dbUser: User , ownProfile: boolean}) {
   const [isEditMode, setIsEditMode] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
-  const [socialData, setSocialData] = useState({
+  
+  const initialSocialData = Object.keys(props.dbUser.socials).length == 0 ? 
+  {
     twitter: "https://www.twitter.com",
     facebook: "https://www.facebook.com",
     github: "https://www.github.com",
     linkedin: "https://www.linkedin.com"
-  });
+  } 
+  : 
+  props.dbUser.socials;
+
+const [socialData, setSocialData] = useState(initialSocialData);
+
 
   const handleEdit = () => {
     setIsEditMode(true);
+  
   };
 
   const handleSave = () => {
     setIsEditMode(false);
+    editProfile({$set:{socials:socialData}})
+    
   };
 
+  
   return (
     <Card className="w-full sm:w-full">
       <CardHeader>
         <div className="flex flex-row items-center">
           <CardTitle className="text-xl flex-grow pt-2">Social Media</CardTitle>
-          {!isEditMode && (
+          {!isEditMode  && props.ownProfile && (
             <FontAwesomeIcon
               icon={faEdit}
               className={`text-gray-500 cursor-pointer mx-3 mr-2 w-8 h-8`}
@@ -62,22 +76,24 @@ export function CardWithSocials() {
         ))}
         {isEditMode && (
           <div className="flex justify-center items-center">
-            <div
+            <button
               onClick={handleSave}
               className="text-white cursor-pointer bg-blue-600 rounded-md py-2 px-4"
             >
               <FontAwesomeIcon icon={faSave} className="mr-2" />
               Save
-            </div>
+            </button>
           </div>
         )}
       </CardContent>
     </Card>
   );
+  
 }
 
 
 function getSocialIcon(key) {
+  console.log("KEY",key);
   switch (key) {
     case "twitter":
       return <FontAwesomeIcon icon={faTwitter} className="mr-2 w-8 h-8 text-blue-400" />;

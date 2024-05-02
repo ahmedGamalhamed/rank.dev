@@ -3,49 +3,107 @@ import Image from 'next/image';
 import Link from 'next/link';
 import React, { use, useEffect, useState } from 'react';
 import { Search, X, AlignJustify } from 'lucide-react';
-import { Switch } from '../ui/switch';
 import { ModeToggle } from '../themeSwitcher';
 import {
   SignInButton,
   SignOutButton,
   SignUpButton,
+  SignedOut,
+  UserButton,
   useAuth,
+  useClerk,
+  useUser,
 } from '@clerk/nextjs';
 import { usePathname } from 'next/navigation';
+import { socket } from '@/app/(socket)/socket';
+import { useRouter } from 'next/navigation';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from '../ui/dropdown-menu';
+import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
+import { getOrCreateUser, getUserByAuthId } from '@/app/actions/userActions';
+import { User } from '@/app/(db)/Schema';
+import { useGlobalContext } from '@/app/(context)/GlobalContext';
+import { CreateRoomForm } from '../Createroom/CreateRoomForm';
 
 export default function Navbar() {
-  const [isOpen, setIsOpen] = useState(true);
-  const { isLoaded, userId, sessionId, getToken } = useAuth();
+  const [isOpen, setIsOpen] = useState(false);
+  const { userId, isLoaded } = useAuth();
+  const { user } = useUser();
+  const { dbUser, setDBUser } = useGlobalContext();
+  const [showCreateRoomForm, setShowCreateRoomForm] = useState(false);
+  useEffect(() => {
+    if (user && user.id && isLoaded) {
+      getOrCreateUser({
+        fullName: user.fullName,
+        id: user.id,
+        imageUrl: user.imageUrl,
+      }).then((dbUser) => {
+        setDBUser(dbUser as User);
+      });
+    } else {
+      setDBUser(null);
+    }
+  }, [user, isLoaded, setDBUser]);
 
   const buttonCN =
-    '  border-black dark:border-black lg:block cursor-pointer border-2 lg:border-black lg:dark:border-white rounded-full border-inherit text-sm font-semibold py-1 px-3 uppercase hover:scale-105 active:scale-100 transition duration-200';
+    '  border-black lg:block cursor-pointer border-2 rounded-full text-sm font-semibold py-1 px-3 uppercase hover:scale-105 active:scale-100 transition duration-200';
 
-  const UnAuthed = () => (
-    <div className="flex gap-2">
-      <SignUpButton mode="modal">
-        <button className={buttonCN}>Sign-up</button>
-      </SignUpButton>
-      <SignInButton mode="modal">
-        <button className={buttonCN}>Sign-In</button>
-      </SignInButton>
-    </div>
-  );
-
-  const Authed = () => (
-    <div>
+  const UnAuthed = () => {
+    if (!isLoaded || userId) return null;
+    return (
       <div className="flex gap-2">
-        <button
-          // className="btn btn-outline-primary btn-sm hidden lg:inline-block rounded-xl"
-          className={`   ${buttonCN}`}
-        >
-          Create Room
-        </button>
-        <SignOutButton>
-          <button className={buttonCN}>Sign-out</button>
-        </SignOutButton>
+        <SignUpButton mode="modal">
+          <button className={`${buttonCN} border-black dark:border-white `}>
+            Sign-up
+          </button>
+        </SignUpButton>
+        <SignInButton mode="modal">
+          <button className={`${buttonCN} text-fuchsia-500 border-fuchsia-500`}>
+            Sign-In
+          </button>
+        </SignInButton>
       </div>
-    </div>
-  );
+    );
+  };
+
+  const Authed = () => {
+    if (!userId || !dbUser || !isLoaded) return null;
+    return (
+      <div>
+        <div className="flex gap-2 justify-center">
+          <button
+            onClick={(e) => {
+              setShowCreateRoomForm(!showCreateRoomForm);
+            }}
+            className={`${buttonCN} text-fuchsia-500 dark:text-fuchsia-200 dark:border-fuchsia-200 border-fuchsia-500`}
+          >
+            Create Room
+          </button>
+          <span className="grid place-content-center">
+            <DropdownMenu>
+              <DropdownMenuTrigger>
+                <Avatar>
+                  <AvatarImage src={dbUser.imageUrl} />
+                </Avatar>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="p-4">
+                <SignOutButton>
+                  <span
+                    className={`${buttonCN} border-black dark:border-white mx-auto`}
+                  >
+                    Sign-out
+                  </span>
+                </SignOutButton>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </span>
+        </div>
+      </div>
+    );
+  };
 
   return (
     <header
@@ -69,6 +127,8 @@ export default function Navbar() {
         {/* routes */}
         <ul
           className={`
+          dark:text-white
+          dark:bg-black
           transition-transform ease-in-out
           ${isOpen ? 'translate-x-0 duration-300' : 'translate-x-80'}
           lg:duration-0 
@@ -88,21 +148,22 @@ export default function Navbar() {
           </li>
           <li className="w-full pl-5 hover:bg-gray-200 lg:pl-0 lg:w-auto lg:hover:bg-transparent py-3  px-2  opacity-80 hover:opacity-100 hover:scale-105 active:scale-100 transition duration-200">
             <Link className="w-full block  " href="/">
-              Blog
+              Rooms
             </Link>
           </li>
           <li className="w-full pl-5 hover:bg-gray-200 lg:pl-0 lg:w-auto lg:hover:bg-transparent py-3  px-2  opacity-80 hover:opacity-100 hover:scale-105 active:scale-100 transition duration-200">
-            <Link className="w-full block  " href="/">
+            <Link className="w-full block  " href="/about">
               About
             </Link>
           </li>
-          <li className="w-full pl-5 hover:bg-gray-200 lg:pl-0 lg:w-auto lg:hover:bg-transparent py-3  px-2  opacity-80 hover:opacity-100 hover:scale-105 active:scale-100 transition duration-200">
-            <Link className="w-full block  " href="/">
-              Contact
+
+          {dbUser?.id && <li className="w-full pl-5 hover:bg-gray-200 lg:pl-0 lg:w-auto lg:hover:bg-transparent py-3  px-2  opacity-80 hover:opacity-100 hover:scale-105 active:scale-100 transition duration-200">
+            <Link className="w-full block  " href={`/profile/${dbUser.id}`}>
+              My Profile
             </Link>
-          </li>
+          </li>}
           <li className="w-full pl-5 hover:bg-gray-200 lg:pl-0 lg:w-auto lg:hover:bg-transparent lg:hidden py-3  px-2  opacity-80 hover:opacity-100 hover:scale-105 active:scale-100 transition duration-200">
-            {userId ? <Authed /> : <UnAuthed />}
+            {dbUser && dbUser.id ? <Authed /> : <UnAuthed />}
           </li>
           <li
             onClick={() => setIsOpen(false)}
@@ -128,7 +189,7 @@ export default function Navbar() {
             <ModeToggle />
           </div>
           <div className="hidden lg:block">
-            {userId ? <Authed /> : <UnAuthed />}
+            {dbUser && dbUser.id ? <Authed /> : <UnAuthed />}
           </div>
           <button
             onClick={() => setIsOpen(true)}
@@ -139,6 +200,11 @@ export default function Navbar() {
           </button>
         </div>
       </nav>
+
+      <CreateRoomForm
+        isOpen={showCreateRoomForm}
+        setOpen={setShowCreateRoomForm}
+      />
     </header>
   );
 }
