@@ -1,9 +1,9 @@
-import SideNavbar from "@/components/admin/SideNavbar";
-import { Inter } from "next/font/google";
-import { cn } from "../../lib/utils";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import Link from "next/link";
-const inter = Inter({ subsets: ["latin"] });
+import SideNavbar from '@/components/admin/SideNavbar';
+import { Inter } from 'next/font/google';
+import { cn } from '../../lib/utils';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import Link from 'next/link';
+const inter = Inter({ subsets: ['latin'] });
 export default function Layout({
   children,
 }: Readonly<{
@@ -12,10 +12,10 @@ export default function Layout({
   return (
     <div
       className={cn(
-        "min-h-screen w-full text-black md:flex  ",
+        'min-h-screen w-full text-black md:flex  ',
         inter.className,
         {
-          "debug-screens": process.env.NODE_ENV === "development",
+          'debug-screens': process.env.NODE_ENV === 'development',
         }
       )}
     >
@@ -31,14 +31,9 @@ export default function Layout({
               Users
             </Link>
           </TabsTrigger>
-          <TabsTrigger value="orders">
-            <Link className="text-xs" href="/admin/orders">
-              Orders
-            </Link>
-          </TabsTrigger>
-          <TabsTrigger value="setting">
-            <Link className="text-xs" href="/admin/settings">
-              Settings
+          <TabsTrigger value="Rooms">
+            <Link className="text-xs" href="/admin/rooms">
+              Rooms
             </Link>
           </TabsTrigger>
         </TabsList>

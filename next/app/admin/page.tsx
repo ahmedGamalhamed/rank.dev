@@ -1,80 +1,86 @@
 /** @format */
-
-import PageTitle from "@/components/admin/PageTitle";
-import { Users, Eye, ShoppingCart, DoorOpen } from "lucide-react";
-import Card, { CardContent, CardProps } from "@/components/admin/Card";
-import BarChart from "@/components/admin/BarChart";
-import SalesCard, { SalesProps } from "@/components/admin/SalesCard";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import Link from "next/link";
-import PieChart from "@/components/admin/PieChart";
-// import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-const cardData: CardProps[] = [
-  {
-    label: "Total Views",
-    amount: "$3.456K",
-    discription: "+20.1% from last month",
-    icon: Eye,
-    presentage: "0.43%",
-  },
-  {
-    label: "Total Profit",
-    amount: "$45.2K",
-    discription: "+180.1% from last month",
-    icon: ShoppingCart,
-    presentage: "4.35%",
-  },
-  {
-    label: "Total Rooms",
-    amount: "2.450",
-    discription: "+19% from last month",
-    icon: DoorOpen,
-    presentage: "2.59%",
-  },
-  {
-    label: "Total Users",
-    amount: "3.456",
-    discription: "+201 since last hour",
-    icon: Users,
-    presentage: "0.95%",
-  },
-];
+'use client';
+import PageTitle from '@/components/admin/PageTitle';
+import { DoorOpen, Banknote, Contact, Video } from 'lucide-react';
+import Card, { CardContent } from '@/components/admin/Card';
+import BarChart from '@/components/admin/BarChart';
+import { SalesProps } from '@/components/admin/SalesCard';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import PieChart from '@/components/admin/PieChart';
+import useRoomsData from '../rooms/[roomId]/components/actions/useRoomsData';
+import { getUsersInfo } from './components/actions';
+import { useEffect, useState } from 'react';
 
 const uesrSalesData: SalesProps[] = [
   {
-    name: "Olivia Martin",
-    email: "olivia.martin@email.com",
-    saleAmount: "+$1,999.00",
+    name: 'Olivia Martin',
+    email: 'olivia.martin@email.com',
+    saleAmount: '+$1,999.00',
   },
   {
-    name: "Jackson Lee",
-    email: "isabella.nguyen@email.com",
-    saleAmount: "+$1,999.00",
+    name: 'Jackson Lee',
+    email: 'isabella.nguyen@email.com',
+    saleAmount: '+$1,999.00',
   },
   {
-    name: "Isabella Nguyen",
-    email: "isabella.nguyen@email.com",
-    saleAmount: "+$39.00",
+    name: 'Isabella Nguyen',
+    email: 'isabella.nguyen@email.com',
+    saleAmount: '+$39.00',
   },
   {
-    name: "William Kim",
-    email: "will@email.com",
-    saleAmount: "+$299.00",
+    name: 'William Kim',
+    email: 'will@email.com',
+    saleAmount: '+$299.00',
   },
   {
-    name: "Sofia Davis",
-    email: "sofia.davis@email.com",
-    saleAmount: "+$39.00",
+    name: 'Sofia Davis',
+    email: 'sofia.davis@email.com',
+    saleAmount: '+$39.00',
   },
 ];
 
 export default function AdminPage() {
+  const { roomsData } = useRoomsData();
+  const [usersInfo, setUsersInfo] = useState({});
+
+  const total_users_in_rooms = roomsData
+    ? roomsData
+        .map((room) => Object.keys(room.participatns).length)
+        .reduce((prev, curr) => prev + curr, 0)
+    : 0;
+
+  useEffect(() => {
+    getUsersInfo().then(({ usersCount, paidUsers }) => {
+      setUsersInfo((oldInfo) => ({ ...oldInfo, usersCount, paidUsers }));
+    });
+  }, []);
+
   return (
     <div className="flex flex-col gap-5  w-full">
-      <PageTitle title="Dashboard" />
+      <PageTitle title="Dashboard" className="dark:text-white" />
 
       <section className="grid w-full grid-cols-1 gap-4 gap-x-8 transition-all sm:grid-cols-2 xl:grid-cols-4">
-        {cardData.map((d, i) => (
+        <Card
+          amount={roomsData?.length || 0}
+          icon={DoorOpen}
+          label={'Total Rooms'}
+        />
+        <Card
+          amount={usersInfo.usersCount ?? 0}
+          icon={Contact}
+          label={'Numbers of subscriping users'}
+        />
+        <Card
+          amount={total_users_in_rooms}
+          icon={Video}
+          label={'Total Users In Rooms'}
+        />
+        <Card
+          amount={usersInfo.paidUsers ?? 0}
+          icon={Banknote}
+          label={'Numbers of Paid users'}
+        />
+        {/* {cardData.slice(1).map((d, i) => (
           <Card
             key={i}
             amount={d.amount}
@@ -83,7 +89,7 @@ export default function AdminPage() {
             label={d.label}
             presentage={d.presentage}
           />
-        ))}
+        ))} */}
       </section>
 
       <section className="grid grid-cols-3 gap-4 transition-all lg:grid-cols-5">

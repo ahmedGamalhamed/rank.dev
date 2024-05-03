@@ -37,8 +37,8 @@ export function Nav({ links, isCollapsed }: NavProps) {
       >
         <nav className="grid gap-1 px-2 group-[[data-collapsed=true]]:justify-center group-[[data-collapsed=true]]:px-2">
           {links.map((link, index) => {
-            console.log(link.href);
-            console.log(link.href === pathName);
+            // console.log(link.href);
+            // console.log(link.href === pathName);
             return isCollapsed ? (
               <Tooltip key={index} delayDuration={0}>
                 <TooltipTrigger asChild>
@@ -49,25 +49,29 @@ export function Nav({ links, isCollapsed }: NavProps) {
                         variant: link.href === pathName ? 'default' : 'ghost',
                         size: 'icon',
                       }),
-                      'h-9 w-9',
-                      link.variant === 'default' &&
-                        'dark:bg-muted dark:text-muted-foreground dark:hover:bg-muted dark:hover:text-white'
+                      'h-9 w-9 text-slate-900 dark:text-slate-300 active:text-white',
+                      link.href === pathName &&
+                        ' hover:bg-slate-700 hover:text-slate-300 hover:dark:bg-slate-300 hover:dark:text-slate-800 bg-slate-300 dark:text-slate-700 ' // Change text color to white if the link is active
+
+                      // link.variant === 'default' &&
+                      //   'dark:bg-muted dark:text-muted-foreground dark:hover:bg-muted dark:hover:text-white'
                     )}
                   >
                     <link.icon className="h-4 w-4" />
                     <span className="sr-only">{link.title}</span>
                   </Link>
                 </TooltipTrigger>
+
                 <TooltipContent
                   side="right"
                   className="flex items-center gap-4"
                 >
                   {link.title}
-                  {link.label && (
+                  {/* {link.label && (
                     <span className="ml-auto text-muted-foreground">
                       {link.label}
                     </span>
-                  )}
+                  )} */}
                 </TooltipContent>
               </Tooltip>
             ) : (
@@ -80,14 +84,18 @@ export function Nav({ links, isCollapsed }: NavProps) {
                     variant: link.href === pathName ? 'default' : 'ghost',
                     size: 'sm',
                   }),
-                  link.variant === 'default' &&
-                    'dark:bg-muted dark:text-white dark:hover:bg-muted dark:hover:text-white',
+                  '  text-slate-900 dark:text-slate-300  ', //here how to make if the link active make text white
+                  link.href === pathName &&
+                    ' hover:bg-slate-700 hover:text-slate-300 hover:dark:bg-slate-300 hover:dark:text-slate-800 bg-slate-300 dark:text-slate-700 ', // Change text color to white if the link is active
                   'justify-start'
+                  // link.variant === 'default' &&
+                  //   '  dark:bg-muted  dark:text-white dark:hover:bg-muted dark:hover:text-white',
+                  // 'justify-start'
                 )}
               >
                 <link.icon className="mr-2 h-4 w-4" />
                 {link.title}
-                {link.label && (
+                {/* {link.label && (
                   <span
                     className={cn(
                       'ml-auto',
@@ -97,7 +105,7 @@ export function Nav({ links, isCollapsed }: NavProps) {
                   >
                     {link.label}
                   </span>
-                )}
+                )} */}
               </Link>
             );
           })}
