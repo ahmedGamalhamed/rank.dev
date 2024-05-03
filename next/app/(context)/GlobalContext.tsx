@@ -1,7 +1,7 @@
 'use client';
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { User } from '../(db)/Schema';
-import { useUser } from '@clerk/nextjs';
+import { useAuth, useUser } from '@clerk/nextjs';
 import { getOrCreateUser } from '../actions/userActions';
 
 type TStateChange<T> = React.Dispatch<React.SetStateAction<T>>;
@@ -25,8 +25,9 @@ export default function ContextProvider({
 }) {
   const [signedUser, setSignedUser] = useState<User | null>(null);
   const { user } = useUser();
+  const { isLoaded } = useAuth();
   useEffect(() => {
-    if (!user) setSignedUser(null);
+    if (!user || !isLoaded) setSignedUser(null);
     else {
       getOrCreateUser({
         authId: user.id,
@@ -37,7 +38,7 @@ export default function ContextProvider({
         setSignedUser(dbUser);
       });
     }
-  }, [user]);
+  }, [user, isLoaded]);
 
   return (
     <GlobalContext.Provider
