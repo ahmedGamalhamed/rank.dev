@@ -27,9 +27,10 @@ export default function ContextProvider({
 }) {
   const [signedUser, setSignedUser] = useState<User | null>(null);
   const [userLoaded, setUserLoaded] = useState(false);
-  const { userId } = useAuth();
+  const { userId, isLoaded } = useAuth();
 
   useEffect(() => {
+    console.log({ signedUser, userLoaded, userId, isLoaded });
     setUserLoaded(false);
     if (userId) {
       getOrCreateUser().then((dbUser: any) => {
@@ -40,7 +41,7 @@ export default function ContextProvider({
       setSignedUser(null);
       setUserLoaded(true);
     }
-  }, [userId]);
+  }, [userId, isLoaded]);
 
   return (
     <GlobalContext.Provider
