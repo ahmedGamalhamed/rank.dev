@@ -78,6 +78,14 @@ export default function Navbar() {
                   {signedUser.fullName}
                 </p>
 
+                {signedUser.isAdmin && (
+                  <Link
+                    href={`/admin`}
+                    className={`${buttonCN} border-black dark:border-white mx-auto`}
+                  >
+                    Admin Panel
+                  </Link>
+                )}
                 <Link
                   href={`/profile/${signedUser.id}`}
                   className={`${buttonCN} border-black dark:border-white mx-auto`}

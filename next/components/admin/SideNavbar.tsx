@@ -6,10 +6,8 @@ import { useState } from 'react';
 type Props = {};
 
 import {
-  ShoppingCart,
   LayoutDashboard,
   UsersRound,
-  Settings,
   ChevronRight,
   DoorOpen,
 } from 'lucide-react';
@@ -22,7 +20,7 @@ export default function SideNavbar({}: Props) {
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   const onlyWidth = useWindowWidth();
-  const mobileWidth = onlyWidth < 768;
+  const mobileWidth = typeof window == 'undefined' ? false : onlyWidth < 768;
 
   function toggleSidebar() {
     setIsCollapsed(!isCollapsed);
@@ -30,17 +28,16 @@ export default function SideNavbar({}: Props) {
 
   return (
     <div className="relative min-w-[80px] border-r px-3  pb-10 pt-24 ">
-      {!mobileWidth && (
-        <div className="absolute right-[-20px] top-7">
-          <Button
-            onClick={toggleSidebar}
-            variant="secondary"
-            className=" rounded-full p-2"
-          >
-            <ChevronRight />
-          </Button>
-        </div>
-      )}
+      <div className="absolute right-[-20px] top-7 sm:hidden md:block">
+        <Button
+          onClick={toggleSidebar}
+          variant="secondary"
+          className=" rounded-full p-2"
+        >
+          <ChevronRight />
+        </Button>
+      </div>
+
       <Nav
         isCollapsed={mobileWidth ? true : isCollapsed}
         links={[

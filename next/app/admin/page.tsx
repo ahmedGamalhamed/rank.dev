@@ -1,3 +1,4 @@
+//@ts-nocheck
 /** @format */
 'use client';
 import PageTitle from '@/components/admin/PageTitle';
@@ -10,6 +11,12 @@ import PieChart from '@/components/admin/PieChart';
 import useRoomsData from '../rooms/[roomId]/components/actions/useRoomsData';
 import { getUsersInfo } from './components/actions';
 import { useEffect, useState } from 'react';
+import { useGlobalContext } from '../(context)/GlobalContext';
+import { useRouter } from 'next/navigation';
+import ErrorMsg from '@/components/ErrorMsg';
+import Link from 'next/link';
+import { cn } from '@/lib/utils';
+import SideNavbar from '@/components/admin/SideNavbar';
 
 const uesrSalesData: SalesProps[] = [
   {
@@ -43,33 +50,42 @@ export default function AdminPage() {
   const { roomsData } = useRoomsData();
   const [usersInfo, setUsersInfo] = useState({});
 
-  const total_users_in_rooms = roomsData
-    ? roomsData
-        .map((room) => Object.keys(room.participatns).length)
-        .reduce((prev, curr) => prev + curr, 0)
-    : 0;
+  const { signedUser } = useGlobalContext();
+
+  const total_users_in_rooms =
+    roomsData?.map((room) => Object.keys(room.participatns).length) || 0;
 
   useEffect(() => {
-    getUsersInfo().then(({ usersCount, paidUsers }) => {
-      setUsersInfo((oldInfo) => ({ ...oldInfo, usersCount, paidUsers }));
+    getUsersInfo().then((info) => {
+      setUsersInfo(info);
     });
   }, []);
+
+  if (!signedUser) return null;
+
+  if (!signedUser.isAdmin) {
+    return (
+      <div className="h-[80vh] grid place-content-center">
+        <ErrorMsg msg="This Page is only allowed for admins" />
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-5  w-full">
       <PageTitle title="Dashboard" className="dark:text-white" />
 
-      <section className="grid w-full grid-cols-1 gap-4 gap-x-8 transition-all sm:grid-cols-2 xl:grid-cols-4">
+      <section className="grid w-full grid-cols-1 gap-4 gap-x-8 transition-all sm:grid-cols-2 xl:grid-cols-3">
         <Card
           amount={roomsData?.length || 0}
           icon={DoorOpen}
           label={'Total Rooms'}
         />
-        <Card
-          amount={usersInfo.usersCount ?? 0}
+        {/* <Card
+          amount={usersInfo.paidCount ?? 0}
           icon={Contact}
-          label={'Numbers of subscriping users'}
-        />
+          label={'Number of subscriping users'}
+        /> */}
         <Card
           amount={total_users_in_rooms}
           icon={Video}
@@ -92,8 +108,8 @@ export default function AdminPage() {
         ))} */}
       </section>
 
-      <section className="grid grid-cols-3 gap-4 transition-all lg:grid-cols-5">
-        <div className="col-span-5 lg:col-span-3	">
+      <section className="grid grid-cols-3 gap-4 transition-all lg:grid-cols-8">
+        <div className="col-span-8 ">
           <CardContent>
             <div className="flex justify-between items-center flex-col sm:flex-row ">
               <div className="flex items-start">
@@ -120,30 +136,15 @@ export default function AdminPage() {
                 </TabsList>
               </Tabs>
             </div>
-            <BarChart />
+            <div>
+              <BarChart />
+            </div>
           </CardContent>
         </div>
-        <div className="col-span-5 lg:col-span-2 lg:col-start-4	rounded-xl border p-5 shadow flex justify-center items-center">
-          <PieChart />
+        {/* <div className="rounded-xl col-span-4 border p-2 shadow flex justify-center items-center">
+          <PieChart /> *
 
-          {/* <CardContent className="flex justify-between gap-4">
-            <section>
-              <p>Recent Sales</p>
-              <p className="text-sm text-gray-400">
-                You made 265 sales this month.
-              </p>
-            </section>
-            {uesrSalesData.map((d, i) => (
-              <SalesCard
-                key={i}
-                email={d.email}
-                name={d.name}
-                saleAmount={d.saleAmount}
-              />
-            ))}
-          </CardContent> */}
-        </div>
-        {/*  */}
+        </div> */}
       </section>
     </div>
   );

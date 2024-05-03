@@ -2,7 +2,15 @@ import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMinus } from '@fortawesome/free-solid-svg-icons';
 
-const TechTag = ({ text, onDelete, isEditMode }) => (
+const TechTag = ({
+  text,
+  onDelete,
+  isEditMode,
+}: {
+  text: string;
+  onDelete: any;
+  isEditMode: boolean;
+}) => (
   <div
     style={{
       background: '#4F46E5',
@@ -10,7 +18,7 @@ const TechTag = ({ text, onDelete, isEditMode }) => (
       display: 'inline-flex',
       alignItems: 'center',
       padding: '3px 9px',
-      margin: '2px'
+      margin: '2px',
     }}
   >
     <span style={{ color: 'white', marginRight: '5px' }}>{text}</span>

@@ -1,3 +1,4 @@
+//@ts-nocheck
 /**
  * eslint-disable @next/next/no-img-element
  *
@@ -13,6 +14,9 @@ import React, { useEffect, useState } from 'react';
 import PageTitle from '@/components/admin/PageTitle';
 import Image from 'next/image';
 import { getUsers } from '../components/actions';
+import { Switch } from '@/components/ui/switch';
+import IsAdminSwitch from '@/components/admin/IsAdminSwitch';
+import ErrorMsg from '@/components/ErrorMsg';
 
 const columns = [
   {
@@ -73,15 +77,31 @@ const columns = [
       return <p>{isSubscribed ? 'Subscribed' : 'Not Subscribed'}</p>;
     },
   },
+
+  {
+    accessorKey: 'Admin',
+    header: 'Admin',
+    cell: ({ row }) => {
+      return <IsAdminSwitch user={row.original} />;
+    },
+  },
 ];
 
 export default function UsersPage() {
-  const [users, setUsers] = useState([]);
+  const [users, setUsers] = useState(null);
   useEffect(() => {
     getUsers()
       .then((users) => setUsers(users))
       .catch((err) => console.log(err));
   }, []);
+
+  if (!users)
+    return (
+      <div className="h-[80vh] grid place-content-center ">
+        <ErrorMsg msg="Loading..." />
+      </div>
+    );
+
   return (
     <div className="flex flex-col gap-5  w-full">
       <PageTitle title="Users" className="dark:text-white" />

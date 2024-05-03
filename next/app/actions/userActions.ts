@@ -98,3 +98,8 @@ export const editProfile = async (updateObject: any) => {
     return null;
   }
 };
+
+export const updateUser = async (userId: string, updateObj: any) => {
+  const update = await UserModel.findOneAndUpdate({ _id: userId }, updateObj);
+  return !!update;
+};

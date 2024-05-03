@@ -12,11 +12,7 @@ export default function Layout({
   return (
     <div
       className={cn(
-        'min-h-screen w-full text-black md:flex  ',
-        inter.className,
-        {
-          'debug-screens': process.env.NODE_ENV === 'development',
-        }
+        'min-h-screen w-full text-black md:flex mx-auto max-w-7xl '
       )}
     >
       <Tabs defaultValue="dash" className="mt-4  md:hidden ">

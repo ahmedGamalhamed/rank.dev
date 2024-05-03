@@ -38,7 +38,7 @@ interface _IRoom {
 }
 
 export default function useRoomsData() {
-  const [roomsData, setRoomsData] = useState<_IRoom | null>(null);
+  const [roomsData, setRoomsData] = useState<_IRoom[] | null>(null);
 
   useEffect(() => {
     socket.on('roomsData', (d) => {
