@@ -2,6 +2,7 @@
 
 import { auth } from '@clerk/nextjs/server';
 import { StreamChat } from 'stream-chat';
+export const dynamic = 'force-dynamic';
 
 export async function generateTokenAction() {
   const user = auth();
