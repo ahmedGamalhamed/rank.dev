@@ -29,7 +29,9 @@ export const getOrCreateUser = async () => {
     email: userEmail,
   });
 
-  return JSON.parse(JSON.stringify(createdUser?.toObject() || {}));
+  const userObj = createdUser?.toObject();
+
+  return userObj ? JSON.parse(JSON.stringify(userObj)) : null;
 };
 
 export const getUserByAuthId = async (authId: string) => {

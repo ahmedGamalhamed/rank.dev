@@ -21,12 +21,10 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const user = await getOrCreateUser();
-
   return (
     <ClerkProvider>
       <html className="h-full" lang="en" suppressHydrationWarning>
-        <ContextProvider user={user}>
+        <ContextProvider>
           <body
             className={`${inter.className} flex flex-col justify-between min-h-screen has-[.modal-overlay]:overflow-hidden`}
           >

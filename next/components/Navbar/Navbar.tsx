@@ -4,25 +4,19 @@ import Link from 'next/link';
 import React, { useState } from 'react';
 import { X, AlignJustify } from 'lucide-react';
 import { ModeToggle } from '../themeSwitcher';
-import {
-  SignInButton,
-  SignOutButton,
-  SignUpButton,
-  useAuth,
-  useClerk,
-} from '@clerk/nextjs';
+import { SignInButton, SignUpButton } from '@clerk/nextjs';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from '../ui/dropdown-menu';
-import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
+import { Avatar, AvatarImage } from '../ui/avatar';
 import { useGlobalContext } from '@/app/(context)/GlobalContext';
 import { CreateRoomForm } from '../Createroom/CreateRoomForm';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
-  const { signedUser } = useGlobalContext();
+  const { signedUser, userLoaded } = useGlobalContext();
   const [showCreateRoomForm, setShowCreateRoomForm] = useState(false);
 
   const buttonCN =
@@ -96,6 +90,12 @@ export default function Navbar() {
     );
   };
 
+  const AuthButtons = () => {
+    if (!userLoaded) return <h4>Loading...</h4>;
+    if (signedUser) return <Authed />;
+    return <UnAuthed />;
+  };
+
   return (
     <header
       suppressHydrationWarning
@@ -148,7 +148,7 @@ export default function Navbar() {
           </li>
 
           <li className="w-full pl-5 hover:bg-gray-200 lg:pl-0 lg:w-auto lg:hover:bg-transparent lg:hidden py-3  px-2  opacity-80 hover:opacity-100 hover:scale-105 active:scale-100 transition duration-200">
-            {signedUser ? <Authed /> : <UnAuthed />}
+            <AuthButtons />
           </li>
           <li
             onClick={() => setIsOpen(false)}
@@ -174,7 +174,7 @@ export default function Navbar() {
             <ModeToggle />
           </div>
           <div className="hidden lg:block">
-            {signedUser ? <Authed /> : <UnAuthed />}
+            <AuthButtons />
           </div>
           <button
             onClick={() => setIsOpen(true)}
