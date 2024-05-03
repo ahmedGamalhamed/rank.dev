@@ -7,6 +7,7 @@ import { stripeClient } from '../(utils)/Stripe';
 export const getOrCreateUser = async () => {
   const user = await currentUser();
 
+  console.log('1', user);
   if (!user) return null;
 
   let dbUser = await UserModel.findOne({
@@ -30,6 +31,8 @@ export const getOrCreateUser = async () => {
   });
 
   const userObj = createdUser?.toObject();
+
+  console.log('2', userObj);
 
   return userObj ? JSON.parse(JSON.stringify(userObj)) : null;
 };
