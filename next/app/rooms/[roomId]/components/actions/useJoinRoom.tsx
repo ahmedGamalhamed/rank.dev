@@ -8,13 +8,13 @@ import { useEffect, useState } from 'react';
 export default function useJoinRoom(roomId: string) {
   const [joinError, setJoinError] = useState('');
   const [joinData, setJoinData] = useState<IJoinRoomResponse | null>(null);
-  const { dbUser } = useGlobalContext();
+  const { signedUser } = useGlobalContext();
 
   useEffect(() => {
-    if (!dbUser) return;
+    if (!signedUser) return;
     socket.emit(
       'joinRoom',
-      { roomId, userId: dbUser!.id, user: dbUser },
+      { roomId, userId: signedUser!.id, user: signedUser },
       (response: { data: IJoinRoomResponse } | { error: string }) => {
         if ('data' in response) {
           setJoinData(response.data);
@@ -32,7 +32,7 @@ export default function useJoinRoom(roomId: string) {
       socket.emit('leaveRoom');
       socket.off('roomClosed');
     };
-  }, [dbUser, roomId]);
+  }, [signedUser, roomId]);
 
   return { joinError, joinData };
 }

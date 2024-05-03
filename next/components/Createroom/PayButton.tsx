@@ -17,13 +17,13 @@ export default function PayButton({
   setPaymentChecked: Function;
   paymentChecked: boolean;
 }) {
-  const { dbUser, setDBUser } = useGlobalContext();
+  const { signedUser, setSignedUser } = useGlobalContext();
 
   useEffect(() => {
-    if (dbUser && !paymentChecked) {
-      checkUserPayment(dbUser.email).then((res: User | null) => {
+    if (signedUser && !paymentChecked) {
+      checkUserPayment(signedUser.email).then((res: User | null) => {
         if (res) {
-          setDBUser(res);
+          setSignedUser(res);
           setPaymentChecked(true);
           if (res.paid) {
             setAllow(true);
@@ -69,7 +69,7 @@ export default function PayButton({
         onClick={() => {
           setOpen(false);
           window.open(
-            `https://buy.stripe.com/test_fZe6rxbkMc26fMk00h?prefilled_email=${dbUser?.email}`,
+            `https://buy.stripe.com/test_fZe6rxbkMc26fMk00h?prefilled_email=${signedUser?.email}`,
             'Subscribe to Rank.dev',
             `
                   menubar=no,toolbar=no,location=no

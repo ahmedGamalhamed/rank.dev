@@ -20,7 +20,7 @@ export default function ChatForm({
   const [messages, setMessages] = useState<IMessage[]>([]);
   const [currentMessage, setCurrentMessage] = useState('');
   const messageContainer = useRef<HTMLDivElement | null>(null);
-  const { dbUser } = useGlobalContext();
+  const { signedUser } = useGlobalContext();
 
   useEffect(() => {
     socket.on('message', ({ info }: { info: IMessage }) => {
@@ -30,7 +30,7 @@ export default function ChatForm({
     return () => {
       socket.off('message');
     };
-  }, [roomId, dbUser]);
+  }, [roomId, signedUser]);
 
   useEffect(() => {
     if (messageContainer.current) {
@@ -47,10 +47,10 @@ export default function ChatForm({
       setCurrentMessage('');
       socket.emit('message', {
         text: currentMessage.trim(),
-        userId: dbUser!.id,
-        userImage: dbUser?.imageUrl,
+        userId: signedUser!.id,
+        userImage: signedUser?.imageUrl,
         roomId,
-        ...dbUser,
+        ...signedUser,
       });
     }
   };

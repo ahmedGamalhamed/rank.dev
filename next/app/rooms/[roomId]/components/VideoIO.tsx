@@ -22,17 +22,17 @@ export function VideoIO({ roomId }: { roomId: string }) {
   const [client, setClient] = useState<any>(null);
   const [call, setCall] = useState<any>(null);
   const router = useRouter();
-  const { dbUser } = useGlobalContext();
+  const { signedUser } = useGlobalContext();
 
   useEffect(() => {
-    if (!roomId || !dbUser || !dbUser.id) return;
+    if (!roomId || !signedUser || !signedUser.id) return;
     if (typeof window == 'undefined') return;
 
     const { call, client } = getCallClient(
       {
-        fullName: dbUser?.fullName!,
-        userId: dbUser.id,
-        imageUrl: dbUser.imageUrl,
+        fullName: signedUser?.fullName!,
+        userId: signedUser.id,
+        imageUrl: signedUser.imageUrl,
       },
       roomId
     );
@@ -49,7 +49,7 @@ export function VideoIO({ roomId }: { roomId: string }) {
           .catch(console.log);
       } catch (e) {}
     };
-  }, [dbUser, roomId]);
+  }, [signedUser, roomId]);
 
   if (!call || !client) return <ErrorMsg msg="Connecting..." />;
 

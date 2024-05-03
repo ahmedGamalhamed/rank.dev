@@ -1,15 +1,14 @@
 'use client';
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { User } from '../(db)/Schema';
-import { useAuth, useUser } from '@clerk/nextjs';
-import { getOrCreateUser, getUserByAuthId } from '../actions/userActions';
-import useRoomsData from '../rooms/[roomId]/components/actions/useRoomsData';
+import { useUser } from '@clerk/nextjs';
+import { getOrCreateUser } from '../actions/userActions';
 
 type TStateChange<T> = React.Dispatch<React.SetStateAction<T>>;
 
 interface TGlobalContext {
-  dbUser: User | null;
-  setDBUser: TStateChange<User | null>;
+  signedUser: User | null;
+  setSignedUser: TStateChange<User | null>;
 }
 
 const GlobalContext = createContext<TGlobalContext | undefined>(undefined);
@@ -24,10 +23,10 @@ export default function ContextProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const [dbUser, setDBUser] = useState<User | null>(null);
+  const [signedUser, setSignedUser] = useState<User | null>(null);
   const { user } = useUser();
   useEffect(() => {
-    if (!user) setDBUser(null);
+    if (!user) setSignedUser(null);
     else {
       getOrCreateUser({
         authId: user.id,
@@ -35,7 +34,7 @@ export default function ContextProvider({
         fullName: user.fullName,
         imageUrl: user.imageUrl,
       }).then((dbUser: any) => {
-        setDBUser(dbUser);
+        setSignedUser(dbUser);
       });
     }
   }, [user]);
@@ -43,8 +42,8 @@ export default function ContextProvider({
   return (
     <GlobalContext.Provider
       value={{
-        dbUser,
-        setDBUser,
+        signedUser,
+        setSignedUser,
       }}
     >
       {children}

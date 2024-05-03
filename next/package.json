@@ -60,6 +60,7 @@
     "react": "^18",
     "react-day-picker": "^8.10.1",
     "react-dom": "^18",
+    "react-fontawesome": "^1.7.1",
     "react-hook-form": "^7.51.3",
     "react-resizable-panels": "^2.0.18",
     "react-responsive": "^10.0.0",
