@@ -4,8 +4,6 @@ import { auth, currentUser } from '@clerk/nextjs/server';
 import { UserModel } from '../(db)/Schema';
 import { stripeClient } from '../(utils)/Stripe';
 
-export const dynamic = 'force-dynamic';
-
 export const getOrCreateUser = async () => {
   const user = await currentUser();
 
