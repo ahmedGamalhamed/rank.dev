@@ -9,6 +9,7 @@ import {
   SignOutButton,
   SignUpButton,
   useAuth,
+  useClerk,
 } from '@clerk/nextjs';
 import {
   DropdownMenu,
@@ -21,8 +22,7 @@ import { CreateRoomForm } from '../Createroom/CreateRoomForm';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
-  const { signedUser, userLoaded } = useGlobalContext();
-
+  const { signedUser } = useGlobalContext();
   const [showCreateRoomForm, setShowCreateRoomForm] = useState(false);
 
   const buttonCN =
@@ -82,13 +82,12 @@ export default function Navbar() {
                   Your Profile
                 </Link>
 
-                <SignOutButton>
-                  <span
-                    className={`${buttonCN} border-black dark:border-white mx-auto`}
-                  >
-                    Sign-out
-                  </span>
-                </SignOutButton>
+                <Link
+                  href={'/sign-out'}
+                  className={`${buttonCN} border-black dark:border-white mx-auto`}
+                >
+                  Sign-out
+                </Link>
               </DropdownMenuContent>
             </DropdownMenu>
           </span>
@@ -175,15 +174,7 @@ export default function Navbar() {
             <ModeToggle />
           </div>
           <div className="hidden lg:block">
-            {userLoaded ? (
-              signedUser ? (
-                <Authed />
-              ) : (
-                <UnAuthed />
-              )
-            ) : (
-              <h4>Loading...</h4>
-            )}
+            {signedUser ? <Authed /> : <UnAuthed />}
           </div>
           <button
             onClick={() => setIsOpen(true)}

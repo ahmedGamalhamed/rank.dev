@@ -7,6 +7,8 @@ import Footer from '@/components/Footer/Footer';
 import { ClerkProvider } from '@clerk/nextjs';
 import SocketProvider from './(socket)/SocketProvider';
 import ContextProvider from './(context)/GlobalContext';
+import { currentUser } from '@clerk/nextjs/server';
+import { getOrCreateUser } from './actions/userActions';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
@@ -19,10 +21,12 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const user = await getOrCreateUser();
+
   return (
     <ClerkProvider>
       <html className="h-full" lang="en" suppressHydrationWarning>
-        <ContextProvider>
+        <ContextProvider user={user}>
           <body
             className={`${inter.className} flex flex-col justify-between min-h-screen has-[.modal-overlay]:overflow-hidden`}
           >
