@@ -2,15 +2,23 @@ import React from 'react';
 import { Autocomplete, AutocompleteItem } from '@nextui-org/react';
 
 interface TechnologyFilterProps {
-  technologies: Array<{ value: string; label: string }>;
-  selectedTechnologies: string[];
-  setSelectedTechnologies: Function;
+  handleFilterChange: Function;
+  filters: { query: string; level: string; technology: string[] };
 }
 
+const technologyArray = [
+  { label: 'js', value: 'js' },
+  { label: 'react', value: 'react' },
+  { label: 'node', value: 'node' },
+  { label: 'express', value: 'express' },
+  { label: 'mongo', value: 'mongo' },
+  { label: 'sql', value: 'sql' },
+  { label: 'python', value: 'python' },
+];
+
 export default function TechnologyFilter({
-  technologies,
-  setSelectedTechnologies,
-  selectedTechnologies,
+  handleFilterChange,
+  filters,
 }: TechnologyFilterProps) {
   const [value, setValue] = React.useState<string>('');
 
@@ -18,16 +26,16 @@ export default function TechnologyFilter({
     <div className="flex w-full max-w-xs flex-col gap-2">
       <Autocomplete
         variant="bordered"
-        defaultItems={technologies}
+        defaultItems={technologyArray}
         placeholder="Search Technology"
         className="max-w-xs"
         selectedKey={value}
         aria-label="adf"
-        disabledKeys={[...selectedTechnologies]}
-        onSelectionChange={(key: string) => {
+        disabledKeys={[...filters.technology]}
+        onSelectionChange={(key: any) => {
           setValue('');
           if (key != null) {
-            setSelectedTechnologies((prev: string[]) => [...prev, key]);
+            handleFilterChange('technology', [...filters.technology, key]);
           }
         }}
       >

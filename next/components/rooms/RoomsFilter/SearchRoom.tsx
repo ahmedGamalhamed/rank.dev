@@ -1,15 +1,28 @@
 'use client';
-
+import { _IRoom } from '@/app/rooms/[roomId]/components/actions/useRoomsData';
 import { Input } from '@nextui-org/react';
-import React from 'react';
+import React, { useState } from 'react';
 
-export default function SearchRoom() {
+export default function SearchRoom({
+  handleFilterChange,
+}: {
+  handleFilterChange: Function;
+}) {
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const handleChange = (e: any) => {
+    setSearchTerm(e.target.value);
+    handleFilterChange('query', e.target.value);
+  };
+
   return (
     <div className="w-full">
       <Input
+        value={searchTerm}
+        onChange={(e) => handleChange(e)}
         className="w-full"
         type="text"
-        placeholder="Search..."
+        placeholder="Search for user..."
         endContent={
           <svg
             stroke="#8e8e8e"

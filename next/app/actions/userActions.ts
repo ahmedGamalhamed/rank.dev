@@ -49,6 +49,7 @@ export const updateUserFavorites = async (
   favorite: boolean | null,
   dbUser: User
 ) => {
+  if (!dbUser) return;
   const user = await UserModel.findOne({ authId: dbUser.authId });
   if (!user) return;
   if (favorite) {

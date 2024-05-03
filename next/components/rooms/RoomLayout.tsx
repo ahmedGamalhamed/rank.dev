@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { use, useEffect, useMemo, useState } from 'react';
 import LevelsFilter from './RoomsFilter/LevelFilter';
 import SearchRoom from './RoomsFilter/SearchRoom';
 import TechnologyChip from './RoomsFilter/TechnologyChip';
@@ -11,47 +11,87 @@ import useRoomsData, {
 } from '@/app/rooms/[roomId]/components/actions/useRoomsData';
 
 export default function RoomLayout({ rooms }: { rooms: _IRoom[] }) {
-  const [technologies, setTechnologies] = useState([
-    { label: 'js', value: 'js' },
-    { label: 'react', value: 'react' },
-  ]);
+  const [filteredRooms, setFilteredRooms] = useState([]);
 
-  const [levels, setLevels] = useState([
-    { label: 'Level 1', value: 'level 1' },
-    { label: 'Level 2', value: 'level 2' },
-  ]);
+  const [filters, setFilters] = useState({
+    query: '',
+    level: '',
+    technology: [],
+  });
 
-  const [selectedLevel, setSelectedLevel] = useState();
+  const handleFilterChange = (filterType: string, value: string) => {
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      [filterType]: value,
+    }));
+  };
 
-  const [selectedTechnologies, setSelectedTechnologies] = useState([]);
+  useEffect(() => {
+    setFilteredRooms(rooms as any);
+  }, [rooms]);
 
-  const roomsData: { roomsData: _IRoom[] | any } = useRoomsData();
-  console.log(roomsData?.roomsData);
+  const applyFilters = () => {
+    let filtered = rooms as any[];
+
+    // Apply query filter
+    if (filters.query) {
+      filtered = filtered.filter((room) =>
+        room.roomInfo.roomData.roomName
+          .toLowerCase()
+          .startsWith(filters.query.toLowerCase())
+      );
+    }
+
+    // Apply level filter
+    if (filters.level) {
+      filtered = filtered.filter(
+        (room) => room.roomInfo.roomData.roomLevel === parseInt(filters.level)
+      );
+    }
+
+    // Apply tech filter
+    if (filters.technology) {
+      filtered = filtered.filter((room) => {
+        const techs = room.roomInfo.roomData.tags
+          .split(' ')
+          .map((tag: string) => tag.toLowerCase());
+        return filters.technology.every((tech) => techs.includes(tech));
+      });
+    }
+
+    setFilteredRooms(filtered);
+  };
+
+  useEffect(() => {
+    applyFilters();
+  }, [filters]);
 
   return (
     <div>
       <div className="flex flex-col md:flex-row justify-center md:justify-between items-center gap-11 my-8 px-3">
         <div className="flex flex-col lg:flex-row items-center justify-center gap-5">
+          {/* technology filter */}
           <TechnologyFilter
-            technologies={technologies}
-            selectedTechnologies={selectedTechnologies}
-            setSelectedTechnologies={setSelectedTechnologies}
+            filters={filters}
+            handleFilterChange={handleFilterChange}
           />
-          <LevelsFilter levels={levels} setLevels={setSelectedLevel} />
+          {/* level filter */}
+          <LevelsFilter handleFilterChange={handleFilterChange} />
         </div>
         <div className=" w-full max-w-[520px]">
-          <SearchRoom />
+          {/* search rooms bar */}
+          <SearchRoom handleFilterChange={handleFilterChange} rooms={rooms} />
         </div>
       </div>
 
       <div className="flex justify-center mb-8 min-h-[30px]">
         <TechnologyChip
-          selectedTechnologies={selectedTechnologies}
-          setSelectedTechnologies={setSelectedTechnologies}
+          filters={filters}
+          handleFilterChange={handleFilterChange}
         />
       </div>
       <div className="px-3 rooms grid justify-items-center grid-cols-1 md:grid-cols-2 lg:grid-cols-3  m-auto gap-[10px] pb-5">
-        {roomsData?.roomsData?.map((room: _IRoom) => {
+        {filteredRooms?.map((room: _IRoom) => {
           return (
             <RoomCard
               roomId={room.id}

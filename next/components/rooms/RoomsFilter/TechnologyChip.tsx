@@ -3,25 +3,25 @@
 import { Chip, select } from '@nextui-org/react';
 
 export default function TechnologyChip({
-  selectedTechnologies,
-  setSelectedTechnologies,
+  filters,
+  handleFilterChange,
+}: {
+  handleFilterChange: Function;
+  filters: { query: string; level: string; technology: string[] };
 }) {
-  const handleClose = (technologyToRemove) => {
-    setSelectedTechnologies(
-      selectedTechnologies.filter(
-        (technology) => technology !== technologyToRemove
+  const handleClose = (technologyToRemove: string) => {
+    handleFilterChange(
+      'technology',
+      filters?.technology.filter(
+        (technology: string) => technology !== technologyToRemove
       )
     );
   };
   return (
     <div className="flex gap-2">
-      {selectedTechnologies.map((technology, index) => (
-        <Chip
-          key={index}
-          onClose={() => handleClose(technology)}
-          variant="flat"
-        >
-          {technology}
+      {filters.technology.map((tech: string, index: number) => (
+        <Chip key={index} onClose={() => handleClose(tech)} variant="flat">
+          {tech}
         </Chip>
       ))}
     </div>
