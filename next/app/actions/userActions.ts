@@ -1,34 +1,32 @@
 'use server';
 
-import { auth } from '@clerk/nextjs/server';
+import { auth, currentUser } from '@clerk/nextjs/server';
 import { UserModel } from '../(db)/Schema';
 import { stripeClient } from '../(utils)/Stripe';
 
-export const getOrCreateUser = async (currentUser: {
-  authId: string;
-  fullName: string | null;
-  imageUrl: string | null;
-  email: string;
-}) => {
-  if (!currentUser) return {};
-  const { fullName, imageUrl, authId, email } = currentUser;
+export const getOrCreateUser = async () => {
+  const user = await currentUser();
+
+  if (!user) return null;
 
   let dbUser = await UserModel.findOne({
-    authId,
+    authId: user.id,
   });
+
+  const userEmail = user.emailAddresses[0].emailAddress;
 
   if (dbUser) {
     if (!dbUser.email) {
-      dbUser.email = email;
+      dbUser.email = userEmail;
       dbUser = await dbUser.save();
     }
     return JSON.parse(JSON.stringify(dbUser?.toObject() || {}));
   }
   const createdUser = await UserModel.create({
-    authId,
-    fullName,
-    imageUrl,
-    email,
+    authId: user.id,
+    fullName: user.fullName,
+    imageUrl: user.imageUrl,
+    email: userEmail,
   });
 
   return JSON.parse(JSON.stringify(createdUser?.toObject() || {}));

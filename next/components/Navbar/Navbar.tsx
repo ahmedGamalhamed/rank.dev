@@ -1,22 +1,15 @@
 'use client';
 import Image from 'next/image';
 import Link from 'next/link';
-import React, { use, useEffect, useState } from 'react';
-import { Search, X, AlignJustify } from 'lucide-react';
+import React, { useState } from 'react';
+import { X, AlignJustify } from 'lucide-react';
 import { ModeToggle } from '../themeSwitcher';
 import {
   SignInButton,
   SignOutButton,
   SignUpButton,
-  SignedOut,
-  UserButton,
   useAuth,
-  useClerk,
-  useUser,
 } from '@clerk/nextjs';
-import { usePathname } from 'next/navigation';
-import { socket } from '@/app/(socket)/socket';
-import { useRouter } from 'next/navigation';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -28,17 +21,14 @@ import { CreateRoomForm } from '../Createroom/CreateRoomForm';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
-  const { signedUser } = useGlobalContext();
-  const { isLoaded, userId } = useAuth();
+  const { signedUser, userLoaded } = useGlobalContext();
+
   const [showCreateRoomForm, setShowCreateRoomForm] = useState(false);
 
   const buttonCN =
     '  border-black lg:block cursor-pointer border-2 rounded-full text-sm font-semibold py-1 px-3 uppercase hover:scale-105 active:scale-100 transition duration-200 hover:bg-fuchsia-600';
 
   const UnAuthed = () => {
-    if (!isLoaded) return null;
-    if (userId && !signedUser)
-      return <div className="animate-pulse">Logging in...</div>;
     return (
       <div className="flex gap-2">
         <SignUpButton mode="modal">
@@ -54,7 +44,6 @@ export default function Navbar() {
   };
 
   const Authed = () => {
-    if (!signedUser) return null;
     return (
       <div>
         <div className="flex gap-2 justify-center">
@@ -70,15 +59,15 @@ export default function Navbar() {
             <DropdownMenu>
               <DropdownMenuTrigger>
                 <Avatar>
-                  <AvatarImage src={signedUser.imageUrl} />
+                  <AvatarImage src={signedUser!.imageUrl} />
                 </Avatar>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="p-4 flex-col flex gap-2 bg-opacity-5 dark:bg-opacity-5 dark:bg-black bg-white backdrop-blur ">
                 <p className="text-center text-fuchsia-500 mb-2 px-2 font-bold">
-                  {signedUser.fullName}
+                  {signedUser!.fullName}
                 </p>
 
-                {signedUser.isAdmin && (
+                {signedUser!.isAdmin && (
                   <Link
                     href={`/admin`}
                     className={`${buttonCN} border-black dark:border-white mx-auto`}
@@ -87,7 +76,7 @@ export default function Navbar() {
                   </Link>
                 )}
                 <Link
-                  href={`/profile/${signedUser.id}`}
+                  href={`/profile/${signedUser!.id}`}
                   className={`${buttonCN} border-black dark:border-white mx-auto`}
                 >
                   Your Profile
@@ -160,7 +149,7 @@ export default function Navbar() {
           </li>
 
           <li className="w-full pl-5 hover:bg-gray-200 lg:pl-0 lg:w-auto lg:hover:bg-transparent lg:hidden py-3  px-2  opacity-80 hover:opacity-100 hover:scale-105 active:scale-100 transition duration-200">
-            {signedUser && signedUser.id ? <Authed /> : <UnAuthed />}
+            {signedUser ? <Authed /> : <UnAuthed />}
           </li>
           <li
             onClick={() => setIsOpen(false)}
@@ -186,7 +175,15 @@ export default function Navbar() {
             <ModeToggle />
           </div>
           <div className="hidden lg:block">
-            {signedUser && signedUser.id ? <Authed /> : <UnAuthed />}
+            {userLoaded ? (
+              signedUser ? (
+                <Authed />
+              ) : (
+                <UnAuthed />
+              )
+            ) : (
+              <h4>Loading...</h4>
+            )}
           </div>
           <button
             onClick={() => setIsOpen(true)}

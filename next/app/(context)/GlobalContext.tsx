@@ -9,6 +9,8 @@ type TStateChange<T> = React.Dispatch<React.SetStateAction<T>>;
 interface TGlobalContext {
   signedUser: User | null;
   setSignedUser: TStateChange<User | null>;
+  userLoaded: boolean;
+  setUserLoaded: TStateChange<boolean>;
 }
 
 const GlobalContext = createContext<TGlobalContext | undefined>(undefined);
@@ -24,27 +26,31 @@ export default function ContextProvider({
   children: React.ReactNode;
 }) {
   const [signedUser, setSignedUser] = useState<User | null>(null);
-  const { user } = useUser();
-  const { isLoaded } = useAuth();
+  const [userLoaded, setUserLoaded] = useState(false);
+  const { isLoaded, userId } = useAuth();
   useEffect(() => {
-    if (!user || !isLoaded) setSignedUser(null);
-    else {
-      getOrCreateUser({
-        authId: user.id,
-        email: user.emailAddresses[0].emailAddress,
-        fullName: user.fullName,
-        imageUrl: user.imageUrl,
-      }).then((dbUser: any) => {
-        setSignedUser(dbUser);
-      });
+    if (!isLoaded) {
+      setSignedUser(null);
+    } else {
+      if (!userId) {
+        setSignedUser(null);
+        setUserLoaded(true);
+      } else {
+        getOrCreateUser().then((dbUser: any) => {
+          setSignedUser(dbUser);
+          setUserLoaded(true);
+        });
+      }
     }
-  }, [user, isLoaded]);
+  }, [isLoaded, userId]);
 
   return (
     <GlobalContext.Provider
       value={{
         signedUser,
         setSignedUser,
+        userLoaded,
+        setUserLoaded,
       }}
     >
       {children}
