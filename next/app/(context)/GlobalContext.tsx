@@ -34,6 +34,7 @@ export default function ContextProvider({
     setUserLoaded(false);
     if (userId) {
       getOrCreateUser().then((dbUser: any) => {
+        console.log({ dbUser });
         setSignedUser(dbUser);
         setUserLoaded(true);
       });

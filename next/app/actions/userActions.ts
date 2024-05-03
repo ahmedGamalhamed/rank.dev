@@ -21,7 +21,9 @@ export const getOrCreateUser = async () => {
       dbUser.email = userEmail;
       dbUser = await dbUser.save();
     }
-    return JSON.parse(JSON.stringify(dbUser?.toObject() || {}));
+
+    const userObj = dbUser?.toObject();
+    return userObj ? JSON.parse(JSON.stringify(userObj)) : null;
   }
   const createdUser = await UserModel.create({
     authId: user.id,
