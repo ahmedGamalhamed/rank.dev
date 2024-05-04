@@ -90,7 +90,7 @@ export default function RoomLayout({ rooms }: { rooms: _IRoom[] }) {
           handleFilterChange={handleFilterChange}
         />
       </div>
-      <div className="px-3 rooms grid justify-items-center grid-cols-1 md:grid-cols-2 lg:grid-cols-3  m-auto gap-[10px] pb-5">
+      <div className="px-3 rooms grid justify-items-center grid-cols-1 md:grid-cols-2 lg:grid-cols-3  m-auto gap-[10px] pb-5 min-h-[80vh]">
         {filteredRooms?.map((room: _IRoom) => {
           return (
             <RoomCard
