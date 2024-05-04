@@ -1,13 +1,12 @@
 'use server';
 
 import { auth, currentUser } from '@clerk/nextjs/server';
-import { UserModel } from '../(db)/Schema';
+import { User, UserModel } from '../(db)/Schema';
 import { stripeClient } from '../(utils)/Stripe';
 
 export const getOrCreateUser = async () => {
   const user = await currentUser();
 
-  console.log('1', user);
   if (!user) return null;
 
   let dbUser = await UserModel.findOne({
@@ -33,8 +32,6 @@ export const getOrCreateUser = async () => {
   });
 
   const userObj = createdUser?.toObject();
-
-  console.log('2', userObj);
 
   return userObj ? JSON.parse(JSON.stringify(userObj)) : null;
 };
@@ -107,4 +104,20 @@ export const editProfile = async (updateObject: any) => {
 export const updateUser = async (userId: string, updateObj: any) => {
   const update = await UserModel.findOneAndUpdate({ _id: userId }, updateObj);
   return !!update;
+};
+
+export const updateUserFavorites = async (
+  tag: string,
+  favorite: boolean | null,
+  dbUser: User
+) => {
+  if (!dbUser) return;
+  const user = await UserModel.findOne({ authId: dbUser.authId });
+  if (!user) return;
+  if (favorite) {
+    user.favorites?.push(tag);
+  } else {
+    user.favorites = user.favorites.filter((fav: string) => fav !== tag);
+  }
+  user.save();
 };

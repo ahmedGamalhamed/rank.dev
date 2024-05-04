@@ -1,6 +1,4 @@
 import React from 'react';
-import { CardWithAvatar } from '../../../../components/profile/avatarcard';
-import { CardWithAbout } from '../../../../components/profile/aboutcard';
 import { CardWithProgressbar } from '@/components/profile/progresscard';
 import { CardWithTechnologies } from '@/components/profile/technologiescard';
 import { CardWithSocials } from '@/components/profile/socialscard';
@@ -8,7 +6,8 @@ import { CardWithFollowers } from '@/components/profile/followers';
 import { UserModel } from '@/app/(db)/Schema';
 import ErrorMsg from '@/components/ErrorMsg';
 import { auth } from '@clerk/nextjs/server';
-import { serialize } from 'v8';
+import { CardWithAvatar } from '@/components/profile/avatarcard';
+import { CardWithAbout } from '@/components/profile/aboutcard';
 
 export default async function Profile({ params }: { params: { id: string } }) {
   const userObj = await UserModel.findOne({ _id: params.id });

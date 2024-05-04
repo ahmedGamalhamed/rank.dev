@@ -7,7 +7,6 @@ export const getCallClient = (
   user: { userId: string; fullName: string; imageUrl: string },
   roomId: string
 ) => {
-  console.log(user);
   const client = new StreamVideoClient({
     apiKey,
     user: {

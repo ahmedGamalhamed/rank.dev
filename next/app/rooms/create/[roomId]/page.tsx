@@ -39,7 +39,7 @@ export default function Page({ params }: { params: { roomId: string } }) {
   if (joinError) return <ErrorMsg msg={joinError} />;
 
   return (
-    <main className="h-screen grid place-content-center">
+    <main className="h-[80vh] grid place-content-center">
       <ErrorMsg msg="Please wait while we are creating your room..." />
     </main>
   );

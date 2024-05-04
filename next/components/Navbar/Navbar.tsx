@@ -137,7 +137,7 @@ export default function Navbar() {
             </Link>
           </li>
           <li className="w-full pl-5 hover:bg-gray-200 lg:pl-0 lg:w-auto lg:hover:bg-transparent py-3  px-2  opacity-80 hover:opacity-100 hover:scale-105 active:scale-100 transition duration-200">
-            <Link className="w-full block  " href="/">
+            <Link className="w-full block  " href="/rooms">
               Rooms
             </Link>
           </li>

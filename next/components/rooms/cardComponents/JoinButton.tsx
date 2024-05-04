@@ -1,7 +1,7 @@
 import React from 'react';
 
 type Props = {
-  roomId: number;
+  roomId: string;
   isFull: boolean;
 };
 
@@ -10,11 +10,11 @@ const JoinButton = ({ roomId, isFull }: Props) => {
     <button
       className={`${
         isFull
-          ? 'bg-[hsl(var(--muted))]'
-          : 'bg-gradient-to-tl from-30% from-[#4e059d] to-[#5046e5] bg-[#5046e5]'
-      } gap-3 rounded-3xl font-medium text-l py-1 px-12 text-center text-white inline-flex`}
+          ? 'dark:bg-[#ffffff] dark:text-[#222222] bg-[#222222] opacity-50 disabled-cursor pointer-events-none'
+          : 'bg-gradient-to-tl from-30% bg-[#4F46E5] transform hover:scale-110 transition ease-in duration-300 '
+      } gap-3 rounded-3xl font-medium text-l py-2 px-12 text-center text-white inline-flex`}
     >
-      {isFull ? 'Full' : 'Join'}
+      <a href={`/rooms/${roomId}`}>{isFull ? 'Full' : 'Join'}</a>
     </button>
   );
 };

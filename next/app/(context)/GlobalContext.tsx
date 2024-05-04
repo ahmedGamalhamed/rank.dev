@@ -30,11 +30,10 @@ export default function ContextProvider({
   const { userId, isLoaded } = useAuth();
 
   useEffect(() => {
-    console.log({ signedUser, userLoaded, userId, isLoaded });
     setUserLoaded(false);
     if (userId) {
       getOrCreateUser().then((dbUser: any) => {
-        console.log({ dbUser });
+        console.log(dbUser);
         setSignedUser(dbUser);
         setUserLoaded(true);
       });

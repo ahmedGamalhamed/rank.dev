@@ -52,7 +52,7 @@ const formSchema = z.object({
     .min(1, {
       message: 'Min Level is 1',
     })
-    .max(5, {
+    .max(20, {
       message: 'Max Level is 20',
     }),
   maximumParticipants: z.coerce
