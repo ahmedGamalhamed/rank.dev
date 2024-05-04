@@ -91,7 +91,7 @@ export default function Navbar() {
   };
 
   const AuthButtons = () => {
-    if (!userLoaded) return <h4>Loading...</h4>;
+    if (!userLoaded) return <h4>Authenticating...</h4>;
     if (signedUser) return <Authed />;
     return <UnAuthed />;
   };
