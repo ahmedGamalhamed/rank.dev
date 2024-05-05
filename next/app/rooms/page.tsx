@@ -2,7 +2,7 @@ import React, { use } from 'react';
 import RoomLayout from '@/components/rooms/RoomLayout';
 import { Variables } from '../Variables';
 
-export const dyanmic = 'force-dynamic';
+export const dynamic = 'force-dynamic';
 
 export default async function Page() {
   let roomsData = { data: [] };
