@@ -8,6 +8,7 @@ export type User = {
   authId: string;
   email: string;
   isAdmin: boolean;
+  isMaster: boolean;
   fullName: string;
   jobTitle: string;
   imageUrl: string;
@@ -39,6 +40,8 @@ const UserSchema = new Schema<User>(
     authId: { type: String, required: true },
     email: { type: String, unique: true },
     isAdmin: { type: Boolean, default: false },
+    isMaster: { type: Boolean, default: false },
+
     fullName: String,
     jobTitle: String,
     favorites: { type: [String], default: [] },

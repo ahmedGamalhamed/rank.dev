@@ -30,16 +30,37 @@ export default function ContextProvider({
   const { userId, isLoaded } = useAuth();
 
   useEffect(() => {
-    setUserLoaded(false);
-    if (userId) {
-      getOrCreateUser().then((dbUser: any) => {
-        console.log(dbUser);
-        setSignedUser(dbUser);
-        setUserLoaded(true);
-      });
-    } else {
-      setSignedUser(null);
+    const setUser = (dbUser: User | null) => {
       setUserLoaded(true);
+      setSignedUser(dbUser);
+    };
+
+    const getUserFromDB = () => {
+      setUserLoaded(false);
+      getOrCreateUser().then((dbUser: any) => {
+        setUser(dbUser);
+        localStorage.setItem('signedUser', JSON.stringify(dbUser));
+      });
+    };
+
+    const localStorageUser = localStorage.getItem('signedUser') || 'null';
+    if (userId) {
+      const localStorageUserObj = JSON.parse(localStorageUser) as User | null;
+      if (localStorageUserObj) {
+        if (localStorageUserObj.authId == userId) {
+          setUser(localStorageUserObj);
+        } else {
+          getUserFromDB();
+        }
+      } else {
+        getUserFromDB();
+      }
+    } else {
+      if (isLoaded) {
+        setSignedUser(null);
+        localStorage.removeItem('signedUser');
+        setUserLoaded(true);
+      }
     }
   }, [userId, isLoaded]);
 

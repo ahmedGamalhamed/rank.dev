@@ -44,12 +44,20 @@ export const getUserByAuthId = async (authId: string) => {
   return JSON.parse(JSON.stringify(json));
 };
 
-export const updateUserRanks = async (rank: number, idsArr: string[]) => {
+export const updateUserRanks = async (
+  rank: number | string,
+  idsArr: string[]
+) => {
+  rank = rank + '';
   for await (let id of idsArr) {
-    const user = await UserModel.findOne({ id });
+    const user = await UserModel.findOne({ _id: id });
     if (!user) return;
-    const currentRank = user.problems_solved.get(rank) || 0;
-    user?.problems_solved.set(rank, currentRank + 1);
+    const ps = user.problems_solved || new Map();
+    const currentRank = ps.get(rank) || 0;
+    ps.set(rank, currentRank + 1);
+    user.set('problems_solved', ps);
+    // user.problems_solved[rank] = currentRank +1
+    // user?.problems_solved.set(rank, currentRank + 1);
     await user.save();
   }
 
@@ -76,6 +84,7 @@ export const checkUserPayment = async (email: string) => {
       const paid = sub.data[0].status == 'active';
       if (user) {
         user.paid = paid;
+        user.subscriptionId = sub.data[0].id;
         await user.save();
       }
       return {

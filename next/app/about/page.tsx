@@ -1,8 +1,7 @@
 import Logo from '@/components/Logo';
-import Image from 'next/image';
 import React from 'react';
 
-export default function About() {
+export default async function About() {
   return (
     <div className="container flex justify-center  flex-col dark:text-white text-black">
       <div className="h-96 w-full flex justify-center ">

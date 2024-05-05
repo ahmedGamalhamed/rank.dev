@@ -1,21 +1,22 @@
 'use client';
 import { useGlobalContext } from '@/app/(context)/GlobalContext';
 import { socket } from '@/app/(socket)/socket';
-import { IJoinRoomResponse } from '@/app/rooms/[roomId]/page';
-import { useAuth } from '@clerk/nextjs';
 import { useEffect, useState } from 'react';
+import { _IRoom } from './useRoomsData';
+import { useRouter } from 'next/navigation';
 
 export default function useJoinRoom(roomId: string) {
   const [joinError, setJoinError] = useState('');
-  const [joinData, setJoinData] = useState<IJoinRoomResponse | null>(null);
+  const [joinData, setJoinData] = useState<_IRoom | null>(null);
   const { signedUser } = useGlobalContext();
+  const router = useRouter();
 
   useEffect(() => {
     if (!signedUser) return;
     socket.emit(
       'joinRoom',
       { roomId, userId: signedUser!.id, user: signedUser },
-      (response: { data: IJoinRoomResponse } | { error: string }) => {
+      (response: { data: _IRoom } | { error: string }) => {
         if ('data' in response) {
           setJoinData(response.data);
         } else if ('error' in response) {
@@ -25,7 +26,10 @@ export default function useJoinRoom(roomId: string) {
     );
 
     socket.on('roomClosed', (d) => {
-      setJoinError('This Room Has Been Closed!');
+      setJoinError('This Room Has Been Closed!, Redirecting in 3s');
+      setTimeout(() => {
+        router.push('/rooms');
+      }, 3000);
     });
 
     return () => {

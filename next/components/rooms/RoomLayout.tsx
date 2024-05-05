@@ -11,11 +11,13 @@ import useRoomsData, {
 } from '@/app/rooms/[roomId]/components/actions/useRoomsData';
 
 export default function RoomLayout({ rooms }: { rooms: _IRoom[] }) {
-  const [filteredRooms, setFilteredRooms] = useState([]);
+  const { roomsData } = useRoomsData(rooms);
+  const [filteredRooms, setFilteredRooms] = useState<_IRoom[]>([]);
 
   const [filters, setFilters] = useState({
     query: '',
     level: '',
+    followed: '',
     technology: [],
   });
 
@@ -27,44 +29,46 @@ export default function RoomLayout({ rooms }: { rooms: _IRoom[] }) {
   };
 
   useEffect(() => {
-    setFilteredRooms(rooms as any);
-  }, [rooms]);
+    const applyFilters = () => {
+      if (!roomsData) return;
+      let filtered = roomsData;
 
-  const applyFilters = () => {
-    let filtered = rooms as any[];
+      // Apply query filter
+      if (filters.query) {
+        filtered = filtered.filter((room) =>
+          room.roomInfo.roomData.roomName
+            .toLowerCase()
+            .startsWith(filters.query.toLowerCase())
+        );
+      }
 
-    // Apply query filter
-    if (filters.query) {
-      filtered = filtered.filter((room) =>
-        room.roomInfo.roomData.roomName
-          .toLowerCase()
-          .startsWith(filters.query.toLowerCase())
-      );
-    }
+      // Apply level filter
+      if (filters.level) {
+        filtered = filtered.filter(
+          (room) => room.roomInfo.roomData.roomLevel === parseInt(filters.level)
+        );
+      }
 
-    // Apply level filter
-    if (filters.level) {
-      filtered = filtered.filter(
-        (room) => room.roomInfo.roomData.roomLevel === parseInt(filters.level)
-      );
-    }
+      if (filters.followed) {
+        filtered = filtered.filter(
+          (room) => room.roomInfo.ownerId == filters.followed
+        );
+      }
 
-    // Apply tech filter
-    if (filters.technology) {
-      filtered = filtered.filter((room) => {
-        const techs = room.roomInfo.roomData.tags
-          .split(' ')
-          .map((tag: string) => tag.toLowerCase());
-        return filters.technology.every((tech) => techs.includes(tech));
-      });
-    }
-    //@ts-ignore
-    setFilteredRooms(filtered);
-  };
-
-  useEffect(() => {
+      // Apply tech filter
+      if (filters.technology) {
+        filtered = filtered.filter((room) => {
+          const techs = room.roomInfo.roomData.tags
+            .split(' ')
+            .map((tag: string) => tag.toLowerCase());
+          return filters.technology.every((tech) => techs.includes(tech));
+        });
+      }
+      //@ts-ignore
+      setFilteredRooms(filtered);
+    };
     applyFilters();
-  }, [filters]);
+  }, [filters, roomsData]);
 
   return (
     <div>
@@ -90,25 +94,29 @@ export default function RoomLayout({ rooms }: { rooms: _IRoom[] }) {
           handleFilterChange={handleFilterChange}
         />
       </div>
-      <div className="px-3 rooms grid justify-items-center grid-cols-1 md:grid-cols-2 lg:grid-cols-3  m-auto gap-[10px] pb-5 min-h-[80vh]">
-        {filteredRooms?.map((room: _IRoom) => {
-          return (
-            <RoomCard
-              roomId={room.id}
-              ownerFullName={room.roomInfo.ownerFullName ?? 'No Name'}
-              ownerImageUrl={room.roomInfo.ownerImageUrl ?? '/images/user.png'}
-              key={room.id}
-              ownerId={room.roomInfo.ownerId}
-              targetRank={room.roomInfo.roomData.roomLevel}
-              description={room.roomInfo.roomData.roomDescription}
-              tags={room.roomInfo.roomData.tags}
-              participants={
-                room.participants ? Object.values(room.participants) : []
-              }
-              maximumParticipants={room.roomInfo.roomData.maximumParticipants}
-            />
-          );
-        })}
+      <div className="min-h-[80vh]">
+        <div className="px-3 rooms grid justify-items-center grid-cols-1 md:grid-cols-2 lg:grid-cols-3  m-auto gap-[10px] pb-5">
+          {filteredRooms?.map((room: _IRoom) => {
+            return (
+              <RoomCard
+                roomId={room.id}
+                ownerFullName={room.roomInfo.ownerFullName ?? 'No Name'}
+                ownerImageUrl={
+                  room.roomInfo.ownerImageUrl ?? '/images/user.png'
+                }
+                key={room.id}
+                ownerId={room.roomInfo.ownerId}
+                targetRank={room.roomInfo.roomData.roomLevel}
+                description={room.roomInfo.roomData.roomDescription}
+                tags={room.roomInfo.roomData.tags}
+                participants={
+                  room.participants ? Object.values(room.participants) : []
+                }
+                maximumParticipants={room.roomInfo.roomData.maximumParticipants}
+              />
+            );
+          })}
+        </div>
       </div>
     </div>
   );

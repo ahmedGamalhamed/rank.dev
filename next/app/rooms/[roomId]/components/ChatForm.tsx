@@ -9,6 +9,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { SendHorizontal } from 'lucide-react';
 import { IconButton } from '@stream-io/video-react-sdk';
 import { useGlobalContext } from '@/app/(context)/GlobalContext';
+import { useRouter } from 'next/navigation';
 
 export default function ChatForm({
   roomId,
@@ -21,14 +22,20 @@ export default function ChatForm({
   const [currentMessage, setCurrentMessage] = useState('');
   const messageContainer = useRef<HTMLDivElement | null>(null);
   const { signedUser } = useGlobalContext();
+  const router = useRouter();
 
   useEffect(() => {
     socket.on('message', ({ info }: { info: IMessage }) => {
       setMessages((prev) => [...prev, info]);
     });
 
+    socket.on('kickFromRoom', () => {
+      router.push('/rooms');
+    });
+
     return () => {
       socket.off('message');
+      socket.off('kickFromRoom');
     };
   }, [roomId, signedUser]);
 
@@ -56,7 +63,7 @@ export default function ChatForm({
   };
 
   return (
-    <div className="h-full overflow-auto bg-white bg-opacity-5 flex flex-col">
+    <div className="flex-grow overflow-auto bg-white bg-opacity-5 flex flex-col">
       <div ref={messageContainer} className="flex-grow overflow-auto ">
         {[...initialMessages, ...messages].map((message) => (
           <div key={message.id} className="p-1 w-full">

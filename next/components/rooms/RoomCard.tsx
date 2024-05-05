@@ -38,7 +38,7 @@ const RoomCard = ({
   const userAvatar = ownerImageUrl;
 
   return (
-    <div className="lg:mx-0 bg-[hsl(var(--card))] drop-shadow-md rounded-xl w-full  p-5 dark:border-none border-solid border border-gray-200 flex flex-col grow ">
+    <div className="lg:mx-0 bg-[hsl(var(--card))] drop-shadow-md rounded-xl w-full  p-5 dark:border-none border-solid border border-gray-200 flex flex-col ">
       <div className="header">
         <header className="flex items-center gap-4">
           <div className="image">
@@ -75,7 +75,7 @@ const RoomCard = ({
       >
         {description}
       </div>
-      <div className="participants flex items-center gap-3 mb-3 mt-auto pl-[20px]">
+      <div className="participants flex items-center gap-3 mb-3 pl-[20px]">
         <Participants
           participants={participants}
           maximumParticipants={maximumParticipants}

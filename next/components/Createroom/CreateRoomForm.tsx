@@ -104,14 +104,19 @@ export function CreateRoomForm({
   }
 
   async function checkPayment(level: string) {
-    if (!paymentChecked) {
-      if (+level >= 15) {
-        setAllowFree(false);
-      } else {
-        setAllowFree(true);
-      }
-    } else {
+    if (+level < 15) {
       setAllowFree(true);
+      return;
+    }
+
+    if (!paymentChecked) {
+      setAllowFree(false);
+    } else {
+      if (signedUser?.paid) {
+        setAllowFree(true);
+      } else {
+        setAllowFree(false);
+      }
     }
   }
 

@@ -1,7 +1,7 @@
 import { v4 as uuidv4, validate } from "uuid";
 import { io } from "./server";
 import { Socket } from "socket.io";
-import { socket_room_table, socket_user_table } from "./tables";
+import { socket_room_table, socket_user_table, user_socket_table } from "./tables";
 
 export interface IMessage {
   roomId: string;
@@ -74,7 +74,7 @@ export class Room {
     return io.sockets.adapter.rooms.get(roomId);
   }
 
-  static kickUser(roomId: string, userId: string, socket: Socket) {
+  static leaveUser(roomId: string, userId: string, socket: Socket) {
     const room = this.getById(roomId);
     if (!room) return { error: "This room doesnt exist" };
     delete room.participatns[userId];
@@ -85,9 +85,10 @@ export class Room {
   static joinUser(roomId: string, userId: string, user: _IRoom["participatns"][""], socket: Socket) {
     socket_user_table[socket.id] = userId;
     socket_room_table[socket.id] = roomId;
+    user_socket_table[userId] = socket.id;
     const room = this.getById(roomId);
 
-    if (!room) return { error: "This room doesnt exist" };
+    if (!room) return { error: "This room doesn't exist" };
     const roomSize = this.getSocketRoom(socket.id)!.size;
     if (roomSize >= +room.roomInfo.roomData.maximumParticipants) return { error: "Room is at Maximum Capacity" };
 
@@ -102,7 +103,6 @@ export class Room {
   static updateStatus(roomId: string) {
     const socketRoom = this.getSocketRoom(roomId);
     const clientsCount = socketRoom?.size || 0;
-    const clients = Array.from(socketRoom?.values() || []).map((id) => socket_user_table[id]);
     const room = Room.getById(roomId);
     if (!room) return;
     io.to(roomId).emit("status", {
@@ -118,7 +118,7 @@ export class Room {
   static kickBySocket(socket: Socket) {
     const userId = socket_user_table[socket.id];
     const roomId = socket_room_table[socket.id];
-    Room.kickUser(roomId, userId, socket);
+    Room.leaveUser(roomId, userId, socket);
     delete socket_user_table[socket.id];
     delete socket_room_table[socket.id];
   }

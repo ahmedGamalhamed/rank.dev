@@ -2,7 +2,7 @@ import express, { Request, Response } from "express";
 import cors from "cors";
 import { Server } from "socket.io";
 import { createServer } from "http";
-import { socket_room_table, socket_user_table } from "./tables";
+import { socket_room_table, socket_user_table, user_socket_table } from "./tables";
 import { Message } from "./Message";
 import { Room } from "./Room";
 
@@ -17,9 +17,7 @@ export const io = new Server(server, {
 app.use(cors());
 
 app.get("/", (req: Request, res: Response) => {
-  const data = Object.values(Room.roomList).filter(
-    (room) => Object.values(room.participatns).length > 0
-  );
+  const data = Object.values(Room.roomList).filter((room) => Object.values(room.participatns).length > 0);
 
   res.send({ data });
 });
@@ -41,6 +39,14 @@ io.on("connection", (socket) => {
     Room.updateStatus(roomId);
   });
 
+  socket.on("kickUser", ({ userId, roomId }, sendResponse) => {
+    const room = Room.getById(roomId);
+    if (!room) return;
+    const socketId = user_socket_table[userId];
+    io.to(socketId).emit("kickFromRoom");
+    Room.updateStatus(roomId);
+  });
+
   socket.on("closeRoom", ({ roomId }) => {
     io.in(roomId).emit("roomClosed");
     io.in(roomId).socketsLeave(roomId);
@@ -48,6 +54,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("leaveRoom", () => {
+    console.log("Leave Room");
     Room.kickBySocket(socket);
   });
 
@@ -64,9 +71,7 @@ io.on("connection", (socket) => {
 
 server.listen(process.env.PORT || 4000, () => {
   setInterval(() => {
-    const data = Object.values(Room.roomList).filter(
-      (room) => Object.values(room.participatns).length > 0
-    );
+    const data = Object.values(Room.roomList).filter((room) => Object.values(room.participatns).length > 0);
     io.emit("roomsData", data);
   }, 5000);
 

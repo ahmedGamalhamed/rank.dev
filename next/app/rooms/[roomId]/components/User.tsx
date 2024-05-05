@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import Link from 'next/link';
 
 const User = ({
   user,
@@ -7,7 +8,7 @@ const User = ({
 }) => {
   if (!user) return null;
   return (
-    <div className="py-2 ">
+    <Link href={`/profile/${user.id}`} className="py-2 ">
       <div>
         <Image
           width={40}
@@ -18,7 +19,7 @@ const User = ({
         />
         <span className="text-sm">{user.fullName}</span>
       </div>
-    </div>
+    </Link>
   );
 };
 

@@ -2,30 +2,33 @@
 
 import '@stream-io/video-react-sdk/dist/css/styles.css';
 import {
-  Call,
   CallControls,
-  CallParticipantsList,
   SpeakerLayout,
   StreamCall,
-  StreamCallProvider,
   StreamTheme,
   StreamVideo,
-  StreamVideoClient,
 } from '@stream-io/video-react-sdk';
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import ErrorMsg from '@/components/ErrorMsg';
 import { getCallClient } from '../../getCallClient';
 import { useGlobalContext } from '@/app/(context)/GlobalContext';
+import Participants from './Participants';
+import { useRoomStatus } from './actions/useRoomStatus';
+import User from './User';
+import { Trash } from 'lucide-react';
+import useRoomsData, { _IRoom } from './actions/useRoomsData';
+import useJoinRoom from './actions/useJoinRoom';
+import { socket } from '@/app/(socket)/socket';
 
-export function VideoIO({ roomId }: { roomId: string }) {
+export function VideoIO({ roomData }: { roomData: _IRoom | null }) {
   const [client, setClient] = useState<any>(null);
   const [call, setCall] = useState<any>(null);
   const router = useRouter();
   const { signedUser } = useGlobalContext();
 
   useEffect(() => {
-    if (!roomId || !signedUser || !signedUser.id) return;
+    if (!roomData || !signedUser || !signedUser.id) return;
     if (typeof window == 'undefined') return;
 
     const { call, client } = getCallClient(
@@ -34,22 +37,21 @@ export function VideoIO({ roomId }: { roomId: string }) {
         userId: signedUser.id,
         imageUrl: signedUser.imageUrl,
       },
-      roomId
+      roomData.roomInfo.id
     );
 
     call.join();
     call.camera.disable();
+    call.microphone.disable();
     setCall(call);
     setClient(client);
     return () => {
-      try {
-        call
-          .leave()
-          .then(() => client.disconnectUser())
-          .catch(console.log);
-      } catch (e) {}
+      call
+        .leave()
+        .then(() => client.disconnectUser())
+        .catch(console.log);
     };
-  }, [signedUser, roomId]);
+  }, [signedUser, roomData]);
 
   if (!call || !client) return <ErrorMsg msg="Connecting..." />;
 
@@ -63,9 +65,6 @@ export function VideoIO({ roomId }: { roomId: string }) {
               router.push('/rooms');
             }}
           />
-          <div className="p-4">
-            <CallParticipantsList onClose={() => {}} />
-          </div>
         </StreamCall>
       </StreamTheme>
     </StreamVideo>

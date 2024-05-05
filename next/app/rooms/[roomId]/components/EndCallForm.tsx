@@ -17,17 +17,21 @@ import User from './User';
 import { updateUserRanks } from '@/app/actions/userActions';
 import { useGlobalContext } from '@/app/(context)/GlobalContext';
 import { useRouter } from 'next/navigation';
+import { socket } from '@/app/(socket)/socket';
 
 export default function EndCallForm({
   usersToReward,
   roomLevel,
+  roomId,
 }: {
   usersToReward: Record<string, IRoomStatus['clients'][0] | null>;
   roomLevel: number;
+  roomId: string;
 }) {
   const router = useRouter();
   const onClick = async () => {
     await updateUserRanks(roomLevel, Object.keys(usersToReward));
+    socket.emit('closeRoom', { roomId });
     router.push('/rooms');
   };
 
