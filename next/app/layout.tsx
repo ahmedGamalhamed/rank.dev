@@ -25,7 +25,7 @@ export default async function RootLayout({
       <html className="h-full" lang="en" suppressHydrationWarning>
         <ContextProvider>
           <body
-            className={`${inter.className} flex flex-col justify-between min-h-screen has-[.modal-overlay]:overflow-hidden`}
+            className={`${inter.className} flex flex-col justify-between min-h-screen overflow-x-hidden has-[.modal-overlay]:overflow-hidden`}
           >
             <SocketProvider />
             <ThemeProvider
@@ -38,7 +38,7 @@ export default async function RootLayout({
                 <div className="w-full">
                   <Navbar />
                 </div>
-                <div className="flex-grow">{children}</div>
+                <div className="flex-grow pt-14">{children}</div>
                 <Footer />
               </NextUIProvider>
             </ThemeProvider>

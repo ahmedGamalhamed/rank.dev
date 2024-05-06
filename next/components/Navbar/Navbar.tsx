@@ -1,7 +1,7 @@
 'use client';
 import Image from 'next/image';
 import Link from 'next/link';
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { X, AlignJustify } from 'lucide-react';
 import { ModeToggle } from '../themeSwitcher';
 import { SignInButton, SignUpButton } from '@clerk/nextjs';
@@ -13,20 +13,47 @@ import {
 import { Avatar, AvatarImage } from '../ui/avatar';
 import { useGlobalContext } from '@/app/(context)/GlobalContext';
 import { CreateRoomForm } from '../Createroom/CreateRoomForm';
+import { usePathname } from 'next/navigation';
+//
+const ulStyle = ` dark:text-slate-900
+dark:lg:text-white
+transition-transform ease-in-out
 
+lg:duration-0 
+fixed top-0 right-0 h-screen w-80 z-20 shadow-2xl
+lg:static lg:h-auto lg:w-auto lg:shadow-none
+flex flex-col items-start justify-start text-black 
+lg:flex-row lg:items-center 
+lg:translate-x-0
+lg:flex
+bg-slate-100 lg:bg-transparent order-3 pt-14 lg:pt-0 pb-6 lg:order-1 lg:space-x-2 lg:pb-0 xl:space-x-4 font-semibold overflow-hidden`;
+const linkStyle =
+  ' font-semibold w-full pl-5 lg:pl-0 hover:bg-gray-200  lg:w-auto lg:hover:bg-transparent py-3 px-2 hover:opacity-100 hover:scale-105 active:scale-100 transition duration-75 opacity-80 ';
+const activeLink =
+  'bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 text-transparent bg-clip-text';
+const hoverTextGradiant = ` hover:bg-gradient-to-r hover:from-purple-500 hover:via-pink-500 hover:to-red-400 hover:text-transparent hover:bg-clip-text`;
+const NavLinks = [
+  { href: '/', name: 'Home' },
+  { href: '/rooms', name: 'Rooms' },
+  { href: '/about', name: 'About' },
+];
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const { signedUser, userLoaded } = useGlobalContext();
   const [showCreateRoomForm, setShowCreateRoomForm] = useState(false);
 
+  const pathname = usePathname();
+
   const buttonCN =
-    '  border-black lg:block cursor-pointer border-2 rounded-full text-sm font-semibold py-1 px-3 uppercase hover:scale-105 active:scale-100 transition duration-200 hover:bg-fuchsia-600';
+    ' text-slate-800 lg:dark:text-slate-200  border-black lg:block cursor-pointer border-2 rounded-full text-sm font-semibold py-1 px-3 uppercase hover:scale-105 active:scale-100 transition duration-200 hover:bg-fuchsia-600 hover:border-transparent dark:hover:border-transparent hover:text-white';
 
   const UnAuthed = () => {
     return (
       <div className="flex gap-2">
         <SignUpButton mode="modal">
-          <button className={`${buttonCN} border-black dark:border-white `}>
+          <button
+            className={`${buttonCN}  border-slate-600 lg:dark:border-white dark:hover:border-transparent`}
+          >
             Sign-up
           </button>
         </SignUpButton>
@@ -45,7 +72,7 @@ export default function Navbar() {
             onClick={(e) => {
               setShowCreateRoomForm(!showCreateRoomForm);
             }}
-            className={`${buttonCN}  dark:text-fuchsia-200 dark:border-fuchsia-200 border-fuchsia-500`}
+            className={`${buttonCN}  dark:text-fuchsia-200 dark:border-fuchsia-200 dark:hover:border-transparent border-fuchsia-500`}
           >
             Create Room
           </button>
@@ -64,7 +91,7 @@ export default function Navbar() {
                 {signedUser!.isAdmin && (
                   <Link
                     href={`/admin`}
-                    className={`${buttonCN} border-black dark:border-white mx-auto`}
+                    className={`${buttonCN} border-black dark:border-white mx-auto `}
                   >
                     Admin Panel
                   </Link>
@@ -99,7 +126,7 @@ export default function Navbar() {
   return (
     <header
       suppressHydrationWarning
-      className="  transition-colors duration-300 z-30 sticky top-0 bg-slate-100  dark:bg-black bg-opacity-70 dark:bg-opacity-70 backdrop-blur py-2 shadow-md dark:text-white "
+      className="  transition-colors duration-300 z-30 fixed top-0 left-0 right-0 bg-slate-100  dark:bg-black bg-opacity-70 dark:bg-opacity-70 backdrop-blur py-2 shadow-md dark:text-white "
     >
       <nav className="px-2  sm:container flex justify-between items-center ">
         <div className="w-fit ">
@@ -118,36 +145,45 @@ export default function Navbar() {
         {/* routes */}
         <ul
           className={`
-          dark:text-white
-          transition-transform ease-in-out
+          ${ulStyle} 
           ${isOpen ? 'translate-x-0 duration-300' : 'translate-x-80'}
-          lg:duration-0 
-          fixed top-0 right-0 h-screen w-80 z-20 shadow-2xl
-          lg:static lg:h-auto lg:w-auto lg:shadow-none
-          flex flex-col items-start justify-start text-black 
-          lg:flex-row lg:items-center 
-          lg:translate-x-0
-          lg:flex
-          bg-slate-100 lg:bg-transparent order-3 pt-14 lg:pt-0 pb-6 lg:order-1 lg:space-x-2 lg:pb-0 xl:space-x-4 font-semibold overflow-hidden
+         
         `}
         >
-          <li className="w-full pl-5 hover:bg-gray-200 lg:pl-0 lg:w-auto lg:hover:bg-transparent py-3 px-2  opacity-100 hover:opacity-100 hover:scale-105 active:scale-100 transition duration-200">
+          {NavLinks.map((link) => {
+            const isActive = pathname === link.href;
+            return (
+              <li
+                className={`${linkStyle} ${
+                  isActive
+                    ? activeLink + ' pl-6  text-lg scale-105 font-bold'
+                    : ''
+                }`}
+                key={link.name}
+              >
+                <Link className="w-full block  " href={link.href}>
+                  {link.name}
+                </Link>
+              </li>
+            );
+          })}
+          {/* <li className={`${linkStyle} opacity-100 `}>
             <Link className="w-full block  " href="/">
               Home
             </Link>
           </li>
-          <li className="w-full pl-5 hover:bg-gray-200 lg:pl-0 lg:w-auto lg:hover:bg-transparent py-3  px-2  opacity-80 hover:opacity-100 hover:scale-105 active:scale-100 transition duration-200">
+          <li className={`${linkStyle} `}>
             <Link className="w-full block  " href="/rooms">
               Rooms
             </Link>
           </li>
-          <li className="w-full pl-5 hover:bg-gray-200 lg:pl-0 lg:w-auto lg:hover:bg-transparent py-3  px-2  opacity-80 hover:opacity-100 hover:scale-105 active:scale-100 transition duration-200">
+          <li className={`${linkStyle} `}>
             <Link className="w-full block  " href="/about">
               About
             </Link>
-          </li>
+          </li> */}
 
-          <li className="w-full pl-5 hover:bg-gray-200 lg:pl-0 lg:w-auto lg:hover:bg-transparent lg:hidden py-3  px-2  opacity-80 hover:opacity-100 hover:scale-105 active:scale-100 transition duration-200">
+          <li className={`${linkStyle} lg:hidden `}>
             <AuthButtons />
           </li>
           <li
