@@ -35,23 +35,28 @@ export function CardWithAvatar(props: { dbUser: User; ownProfile: boolean }) {
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log("e.target.files",e.target.files);
     const file = e.target.files?.[0]; // Get the selected file
-    if (file) {
-      // Check if file size is less than or equal to 5MB (adjust as needed)
-      if (file.size <= 5 * 1024 * 1024) {
-        setImageFile(file); // Set the selected file to state
-        const reader = new FileReader();
-        reader.onload = () => {
-          if (reader.readyState === 2) {
-            setImageUrl(reader.result as string); // Set the image URL to display the preview
-          }
-        };
-        reader.readAsDataURL(file); // Read the file as data URL
-      } else {
-        // Display an error message or handle the oversized file case
-        console.log('File size exceeds the limit (5MB). Please choose a smaller file.');
+
+      if (file) {
+        // Check if file size is less than or equal to 5MB (adjust as needed)
+        if (file.size <= 5 * 1024 * 1024) {
+          setImageFile(file); // Set the selected file to state
+          const reader = new FileReader();
+          reader.onload = () => {``
+            if (reader.readyState === 2) {
+              setImageUrl(reader.result as string); // Set the image URL to display the preview
+            }
+          };
+          reader.readAsDataURL(file); // Read the file as data URL
+        } else {
+          alert('File size exceeds the limit (5MB). Please choose a smaller file.');
+          // Display an error message or handle the oversized file case
+          console.log('File size exceeds the limit (5MB). Please choose a smaller file.');
+        }
       }
-    }
+    
+    
   };
 
   return (
@@ -71,24 +76,25 @@ export function CardWithAvatar(props: { dbUser: User; ownProfile: boolean }) {
               style={{
                 width: '200px', // Set the width of the avatar container
                 height: '200px', // Set the height of the avatar container
-                cursor: 'pointer',
+                cursor: isEditMode ? 'pointer' : 'default',
               }}
             >
               <AvatarImage src={imageUrl} />
               <AvatarFallback>User Image</AvatarFallback>
             </Avatar>
           </label>
-          {/* Hidden input for file selection */}
-          <input
+        
+         {isEditMode && <input
             id="image-upload"
             type="file"
             accept="image/*"
             style={{ display: 'none' }}
             onChange={handleImageChange}
-          />
+          /> }
         </div>
       </CardContent>
       <CardFooter className="flex justify-between flex-col ">
+        
         <CardHeader className="text-center pt-0">
           <div className="flex justify-center items-center flex flex-col">
             <div className="">

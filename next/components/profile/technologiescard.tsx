@@ -49,7 +49,7 @@ export function CardWithTechnologies(props:{dbUser: User , ownProfile: boolean})
         <div className="flex flex-row justify-between">
           <CardTitle className="text-xl flex-grow">Technologies</CardTitle>
           {!isEditMode  && props.ownProfile && (
-            <div onClick={handleEdit} className="ml-[360%]">
+            <div onClick={handleEdit} className="ml-[390%]">
               <FontAwesomeIcon
                 icon={faEdit}
                 className={`text-gray-500 cursor-pointer w-8 h-8 hover:text-white`}

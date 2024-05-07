@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import * as React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -35,7 +35,6 @@ const [socialData, setSocialData] = useState(initialSocialData);
     
   };
 
-  
   return (
     <Card className="w-full sm:w-full">
       <CardHeader>
@@ -85,9 +84,7 @@ const [socialData, setSocialData] = useState(initialSocialData);
   
 }
 
-
-function getSocialIcon(key) {
-  console.log("KEY",key);
+function getSocialIcon(key : String) {
   switch (key) {
     case "twitter":
       return <FontAwesomeIcon icon={faTwitter} className="mr-2 w-8 h-8 text-blue-400" />;
