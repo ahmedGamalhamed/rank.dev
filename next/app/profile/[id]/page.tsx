@@ -8,10 +8,11 @@ import ErrorMsg from '@/components/ErrorMsg';
 import { auth } from '@clerk/nextjs/server';
 import { CardWithAvatar } from '@/components/profile/avatarcard';
 import { CardWithAbout } from '@/components/profile/aboutcard';
+import { getOrCreateUser } from '@/app/actions/userActions';
 
 export default async function Profile({ params }: { params: { id: string } }) {
   const userObj = await UserModel.findOne({ _id: params.id });
-  const user = userObj ? JSON.parse(JSON.stringify(userObj.toObject())) : null;
+  const user = userObj ? userObj.toObject({ virtuals: false }) : null;
   if (!user) {
     return (
       <div className="grid place-content-center h-[80vh]">
@@ -33,7 +34,7 @@ export default async function Profile({ params }: { params: { id: string } }) {
         <CardWithTechnologies ownProfile={ownProfile} dbUser={user} />
       </div>
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col sm:flex-row gap-5 justify-center">
-        <CardWithProgressbar />
+        <CardWithProgressbar dbUser={user} />
         <CardWithSocials ownProfile={ownProfile} dbUser={user} />
       </div>
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row gap-5 justify-center">

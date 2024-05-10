@@ -33,7 +33,7 @@ export function CardWithAvatar(props: { dbUser: User; ownProfile: boolean }) {
     setIsEditMode(true);
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     setIsEditMode(false);
     const updatedData = { fullName: nameText, jobTitle: titleText, imageUrl };
     updateFunction(updatedData);
