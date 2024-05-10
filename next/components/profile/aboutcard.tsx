@@ -76,13 +76,13 @@ export function CardWithAbout(props: {
             <div onClick={handleEdit}>
               <FontAwesomeIcon
                 icon={faEdit}
-                className={`text-gray-500 cursor-pointer hover:bg-white mr-2 w-8 h-8`}
+                className={`text-gray-500 cursor-pointer hover:text-white mr-2 w-8 h-8`}
               />
             </div>
           )}
         </div>
         <CardDescription>
-          Followers: 20 &nbsp;&nbsp; Following: 15
+          Followers: {props.currentProfile.followers.length} &nbsp;&nbsp; Following: {props.currentProfile.following.length}
         </CardDescription>
       </CardHeader>
       <CardContent>

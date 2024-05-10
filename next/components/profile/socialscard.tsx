@@ -15,7 +15,6 @@ import { editProfile } from '@/app/actions/userActions';
 
 export function CardWithSocials(props: { dbUser: User; ownProfile: boolean }) {
   const [isEditMode, setIsEditMode] = useState(false);
-  const [isHovered, setIsHovered] = useState(false);
 
   const initialSocialData =
     Object.keys(props.dbUser.socials).length == 0
@@ -46,13 +45,8 @@ export function CardWithSocials(props: { dbUser: User; ownProfile: boolean }) {
           {!isEditMode && props.ownProfile && (
             <FontAwesomeIcon
               icon={faEdit}
-              className={`text-gray-500 cursor-pointer mx-3 mr-2 w-8 h-8`}
+              className={`text-gray-500 cursor-pointer hover:text-white mx-3 mr-2 w-8 h-8`}
               onClick={handleEdit}
-              onMouseEnter={() => setIsHovered(true)}
-              onMouseLeave={() => setIsHovered(false)}
-              style={{
-                color: isHovered ? 'white' : '',
-              }}
             />
           )}
         </div>
@@ -82,7 +76,7 @@ export function CardWithSocials(props: { dbUser: User; ownProfile: boolean }) {
                 href={value}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-xl ml-2"
+                className="text-m ml-2"
               >
                 <span className="text-white-500">{value}</span>
               </a>
@@ -105,7 +99,7 @@ export function CardWithSocials(props: { dbUser: User; ownProfile: boolean }) {
   );
 }
 
-function getSocialIcon(key: string) {
+function getSocialIcon(key: String) {
   switch (key) {
     case 'twitter':
       return (

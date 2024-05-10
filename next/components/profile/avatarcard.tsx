@@ -1,6 +1,5 @@
-'use client';
+"use client";
 import * as React from 'react';
-
 import {
   Card,
   CardContent,
@@ -22,34 +21,80 @@ export function CardWithAvatar(props: { dbUser: User; ownProfile: boolean }) {
   const [titleText, setTitleText] = useState(
     props.dbUser!.jobTitle == null ? 'No Title' : props.dbUser!.jobTitle
   );
+  const [imageFile, setImageFile] = useState<File | null>(null); // State to store the selected image file
+  const [imageUrl, setImageUrl] = useState(props.dbUser.imageUrl); // State to store the image URL
+
   const handleEdit = () => {
     setIsEditMode(true);
   };
 
   const handleSave = () => {
     setIsEditMode(false);
-    const updatedData = { fullName: nameText, jobTitle: titleText };
+    const updatedData = { fullName: nameText, jobTitle: titleText, imageUrl };
     editProfile(updatedData);
   };
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log("e.target.files",e.target.files);
+    const file = e.target.files?.[0]; // Get the selected file
+
+      if (file) {
+        // Check if file size is less than or equal to 5MB (adjust as needed)
+        if (file.size <= 5 * 1024 * 1024) {
+          setImageFile(file); // Set the selected file to state
+          const reader = new FileReader();
+          reader.onload = () => {``
+            if (reader.readyState === 2) {
+              setImageUrl(reader.result as string); // Set the image URL to display the preview
+            }
+          };
+          reader.readAsDataURL(file); // Read the file as data URL
+        } else {
+          alert('File size exceeds the limit (5MB). Please choose a smaller file.');
+          // Display an error message or handle the oversized file case
+          console.log('File size exceeds the limit (5MB). Please choose a smaller file.');
+        }
+      }
+    
+    
+  };
+
   return (
     <Card className="w-[100%] sm:w-[40%]">
       {!isEditMode && props.ownProfile && (
         <div onClick={handleEdit} className="flex justify-end pt-5 pr-5">
           <FontAwesomeIcon
             icon={faEdit}
-            className={`text-gray-500 cursor-pointer hover:bg-white mt-4 mx-3 mr-2 w-8 h-8`}
+            className={`text-gray-500 cursor-pointer hover:text-white mt-4 mx-3 mr-2 w-8 h-8`}
           />
         </div>
       )}
       <CardContent>
         <div className="flex justify-center items-center pt-5">
-          <Avatar style={{ width: '200px', height: '200px' }}>
-            <AvatarImage src="https://github.com/shadcn.png" />
-            <AvatarFallback>JD</AvatarFallback>
-          </Avatar>
+          <label htmlFor="image-upload">
+            <Avatar
+              style={{
+                width: '200px', // Set the width of the avatar container
+                height: '200px', // Set the height of the avatar container
+                cursor: isEditMode ? 'pointer' : 'default',
+              }}
+            >
+              <AvatarImage src={imageUrl} />
+              <AvatarFallback>User Image</AvatarFallback>
+            </Avatar>
+          </label>
+        
+         {isEditMode && <input
+            id="image-upload"
+            type="file"
+            accept="image/*"
+            style={{ display: 'none' }}
+            onChange={handleImageChange}
+          /> }
         </div>
       </CardContent>
       <CardFooter className="flex justify-between flex-col ">
+        
         <CardHeader className="text-center pt-0">
           <div className="flex justify-center items-center flex flex-col">
             <div className="">
