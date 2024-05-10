@@ -11,10 +11,11 @@ import {
 import { faEdit, faSave } from '@fortawesome/free-solid-svg-icons';
 import { useState } from 'react';
 import { User } from '@/app/(db)/Schema';
-import { editProfile } from '@/app/actions/userActions';
+import useSetProfile from './useSetProfile';
 
 export function CardWithSocials(props: { dbUser: User; ownProfile: boolean }) {
   const [isEditMode, setIsEditMode] = useState(false);
+  const { updateFunction } = useSetProfile();
 
   const initialSocialData =
     Object.keys(props.dbUser.socials).length == 0
@@ -34,7 +35,7 @@ export function CardWithSocials(props: { dbUser: User; ownProfile: boolean }) {
 
   const handleSave = () => {
     setIsEditMode(false);
-    editProfile({ $set: { socials: socialData } });
+    updateFunction({ $set: { socials: socialData } });
   };
 
   return (

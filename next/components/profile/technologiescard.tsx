@@ -1,59 +1,59 @@
-"use client"
-import * as React from "react";
-import TechTag from "./technology";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEdit, faSave } from "@fortawesome/free-solid-svg-icons";
-import { useState } from "react";
-import { User } from "@/app/(db)/Schema";
-import { editProfile } from "@/app/actions/userActions";
+'use client';
+import * as React from 'react';
+import TechTag from './technology';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEdit, faSave } from '@fortawesome/free-solid-svg-icons';
+import { useState } from 'react';
+import { User } from '@/app/(db)/Schema';
+import useSetProfile from './useSetProfile';
 
-export function CardWithTechnologies(props:{dbUser: User , ownProfile: boolean}) {
+export function CardWithTechnologies(props: {
+  dbUser: User;
+  ownProfile: boolean;
+}) {
   const [isEditMode, setIsEditMode] = useState(false);
-  const [technologies, setTechnologies] = useState(props.dbUser.technologies.length == 0 ? ["Bird Watching","Counting Water"] : props.dbUser.technologies );
-  const [newTechnology, setNewTechnology] = useState("");
-  
+  const [technologies, setTechnologies] = useState(
+    props.dbUser.technologies.length == 0
+      ? ['Bird Watching', 'Counting Water']
+      : props.dbUser.technologies
+  );
+  const [newTechnology, setNewTechnology] = useState('');
+  const { updateFunction } = useSetProfile();
+
   React.useEffect(() => {
-    editProfile({technologies})
-  }, [technologies])
-  
-  
+    updateFunction({ technologies });
+  }, [technologies]);
+
   const handleEdit = () => {
     setIsEditMode(true);
   };
-  
+
   const handleSave = () => {
     setIsEditMode(false);
     if (newTechnology) {
-      setTechnologies((prevState) => [...prevState, newTechnology] );
-      setNewTechnology("");
+      setTechnologies((prevState) => [...prevState, newTechnology]);
+      setNewTechnology('');
     }
-    editProfile({technologies})
+    updateFunction({ technologies });
   };
 
   const handleDeleteTech = (index: number) => {
     const updatedTech = [...technologies];
     updatedTech.splice(index, 1);
     setTechnologies(updatedTech);
-    
   };
 
   return (
-    <Card className="w-[100%] flex justify-center items-center flex-col">
+    <Card className="w-[100%] flex justify-center items-center flex-col relative">
       <CardHeader>
         <div className="flex flex-row justify-between">
           <CardTitle className="text-xl flex-grow">Technologies</CardTitle>
-          {!isEditMode  && props.ownProfile && (
-            <div onClick={handleEdit} className="ml-[390%]">
+          {!isEditMode && props.ownProfile && (
+            <div onClick={handleEdit} className="absolute right-10">
               <FontAwesomeIcon
                 icon={faEdit}
                 className={`text-gray-500 cursor-pointer w-8 h-8 hover:text-white`}
-                
               />
             </div>
           )}
@@ -68,8 +68,8 @@ export function CardWithTechnologies(props:{dbUser: User , ownProfile: boolean})
             className="text-m py-2 mb-2 w-[100%] sm:w-[100%] "
             placeholder="Add a new technology"
             style={{
-              borderRadius: "8px",
-              padding: "8px 9px",
+              borderRadius: '8px',
+              padding: '8px 9px',
             }}
           />
         )}
@@ -81,7 +81,6 @@ export function CardWithTechnologies(props:{dbUser: User , ownProfile: boolean})
             isEditMode={isEditMode}
           />
         ))}
-        
       </CardContent>
       {isEditMode && (
         <div
@@ -91,9 +90,9 @@ export function CardWithTechnologies(props:{dbUser: User , ownProfile: boolean})
             borderRadius: '8px',
             display: 'inline-block',
             padding: '3px 9px',
-            cursor: "pointer",
-            marginTop: "10px",
-            marginBottom: "10px",
+            cursor: 'pointer',
+            marginTop: '10px',
+            marginBottom: '10px',
           }}
         >
           <FontAwesomeIcon icon={faSave} className="mr-2 " />

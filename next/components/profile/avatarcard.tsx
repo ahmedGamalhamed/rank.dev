@@ -1,4 +1,4 @@
-"use client";
+'use client';
 import * as React from 'react';
 import {
   Card,
@@ -13,7 +13,10 @@ import { faEdit, faSave } from '@fortawesome/free-solid-svg-icons';
 import { useState } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { User } from '@/app/(db)/Schema';
-import { editProfile } from '@/app/actions/userActions';
+import useSetProfile from './useSetProfile';
+import { Button } from '../ui/button';
+import { Camera } from 'lucide-react';
+import { saveImage } from './actions';
 
 export function CardWithAvatar(props: { dbUser: User; ownProfile: boolean }) {
   const [isEditMode, setIsEditMode] = useState(false);
@@ -21,8 +24,10 @@ export function CardWithAvatar(props: { dbUser: User; ownProfile: boolean }) {
   const [titleText, setTitleText] = useState(
     props.dbUser!.jobTitle == null ? 'No Title' : props.dbUser!.jobTitle
   );
+  const { updateFunction } = useSetProfile();
   const [imageFile, setImageFile] = useState<File | null>(null); // State to store the selected image file
   const [imageUrl, setImageUrl] = useState(props.dbUser.imageUrl); // State to store the image URL
+  const imageUploadRef = React.useRef<HTMLInputElement | null>(null);
 
   const handleEdit = () => {
     setIsEditMode(true);
@@ -31,32 +36,32 @@ export function CardWithAvatar(props: { dbUser: User; ownProfile: boolean }) {
   const handleSave = () => {
     setIsEditMode(false);
     const updatedData = { fullName: nameText, jobTitle: titleText, imageUrl };
-    editProfile(updatedData);
+    updateFunction(updatedData);
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log("e.target.files",e.target.files);
-    const file = e.target.files?.[0]; // Get the selected file
+    const file = e.target.files?.[0];
 
-      if (file) {
-        // Check if file size is less than or equal to 5MB (adjust as needed)
-        if (file.size <= 5 * 1024 * 1024) {
-          setImageFile(file); // Set the selected file to state
-          const reader = new FileReader();
-          reader.onload = () => {``
-            if (reader.readyState === 2) {
-              setImageUrl(reader.result as string); // Set the image URL to display the preview
-            }
-          };
-          reader.readAsDataURL(file); // Read the file as data URL
-        } else {
-          alert('File size exceeds the limit (5MB). Please choose a smaller file.');
-          // Display an error message or handle the oversized file case
-          console.log('File size exceeds the limit (5MB). Please choose a smaller file.');
-        }
+    if (file) {
+      if (file.size <= 5 * 1024 * 1024) {
+        setImageFile(file);
+        const reader = new FileReader();
+        reader.onload = () => {
+          ``;
+          if (reader.readyState === 2) {
+            setImageUrl(reader.result as string);
+          }
+        };
+        reader.readAsDataURL(file);
+      } else {
+        alert(
+          'File size exceeds the limit (5MB). Please choose a smaller file.'
+        );
+        console.log(
+          'File size exceeds the limit (5MB). Please choose a smaller file.'
+        );
       }
-    
-    
+    }
   };
 
   return (
@@ -70,7 +75,7 @@ export function CardWithAvatar(props: { dbUser: User; ownProfile: boolean }) {
         </div>
       )}
       <CardContent>
-        <div className="flex justify-center items-center pt-5">
+        <div className="flex justify-center items-center pt-5 relative">
           <label htmlFor="image-upload">
             <Avatar
               style={{
@@ -80,23 +85,33 @@ export function CardWithAvatar(props: { dbUser: User; ownProfile: boolean }) {
               }}
             >
               <AvatarImage src={imageUrl} />
-              <AvatarFallback>User Image</AvatarFallback>
+              {/* <AvatarFallback>User Image</AvatarFallback> */}
             </Avatar>
           </label>
-        
-         {isEditMode && <input
-            id="image-upload"
-            type="file"
-            accept="image/*"
-            style={{ display: 'none' }}
-            onChange={handleImageChange}
-          /> }
+
+          {isEditMode && (
+            <>
+              <Button
+                className="rounded-full p-2 absolute bottom-0 right-1/4 w-10 h-10"
+                onClick={() => imageUploadRef.current?.click()}
+              >
+                <Camera />
+              </Button>
+              <input
+                ref={imageUploadRef}
+                id="image-upload"
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+                className="hidden"
+              />
+            </>
+          )}
         </div>
       </CardContent>
       <CardFooter className="flex justify-between flex-col ">
-        
         <CardHeader className="text-center pt-0">
-          <div className="flex justify-center items-center flex flex-col">
+          <div className="justify-center items-center flex flex-col">
             <div className="">
               {isEditMode ? (
                 <div className="flex justify-between items-center w-full sm:w-[90%] flex-col">

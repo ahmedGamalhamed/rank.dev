@@ -82,11 +82,12 @@ export function CardWithAbout(props: {
           )}
         </div>
         <CardDescription>
-          Followers: {props.currentProfile.followers.length} &nbsp;&nbsp; Following: {props.currentProfile.following.length}
+          Followers: {props.currentProfile.followers.length} &nbsp;&nbsp;
+          Following: {props.currentProfile.following.length}
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="flex justify-center items-center flex flex-col">
+        <div className="justify-center items-center flex flex-col">
           {isEditMode ? (
             <div className="flex justify-between items-center w-full sm:w-[90%] flex-col">
               <textarea

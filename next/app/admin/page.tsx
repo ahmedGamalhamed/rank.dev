@@ -2,21 +2,16 @@
 /** @format */
 'use client';
 import PageTitle from '@/components/admin/PageTitle';
-import { DoorOpen, Banknote, Contact, Video } from 'lucide-react';
+import { DoorOpen, Banknote, Video } from 'lucide-react';
 import Card, { CardContent } from '@/components/admin/Card';
 import BarChart from '@/components/admin/BarChart';
 import { SalesProps } from '@/components/admin/SalesCard';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import PieChart from '@/components/admin/PieChart';
 import useRoomsData from '../rooms/[roomId]/components/actions/useRoomsData';
 import { getUsersInfo } from './components/actions';
 import { useEffect, useState } from 'react';
 import { useGlobalContext } from '../(context)/GlobalContext';
-import { useRouter } from 'next/navigation';
 import ErrorMsg from '@/components/ErrorMsg';
-import Link from 'next/link';
-import { cn } from '@/lib/utils';
-import SideNavbar from '@/components/admin/SideNavbar';
 
 const uesrSalesData: SalesProps[] = [
   {

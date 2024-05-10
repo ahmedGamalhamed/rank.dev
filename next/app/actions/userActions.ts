@@ -95,6 +95,7 @@ export const checkUserPayment = async (email: string) => {
   }
   return JSON.parse(JSON.stringify(user?.toObject()));
 };
+
 export const editProfile = async (updateObject: any) => {
   try {
     const userUser = auth();
