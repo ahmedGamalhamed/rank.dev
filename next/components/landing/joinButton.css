@@ -1,0 +1,9 @@
+:root {
+  --x: 0px;
+  --y: 0px;
+}
+
+.target {
+  transform: translate(var(--x), var(--y));
+  transition: transform 100ms ease-out;
+}

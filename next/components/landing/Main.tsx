@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import TagIcon from './svgIcons/TagIcon';
+import JoinButton from './JoinButton';
 
 const Main = () => {
   return (
@@ -46,14 +47,7 @@ const Main = () => {
             <p className="pb-8 text-[hsl(var(--muted-foreground))] max-w-sm md:max-w-2xl md:mx-auto">
               Connect, collaborate, and conquer coding hurdles together.
             </p>
-            <a className="px-10 py-3 mx-auto" href="#">
-              <button
-                className={`shadow-lg transform hover:scale-110 transition ease-in duration-300 active:scale-100 bg-gradient-to-l from-10% from-[#4e059d] via-[74%] via-[#40b7ff] to-[100%] to-[#5046e5] bg-[#5046e5] flex gap-3 rounded-3xl font-medium text-xl py-2 px-10 text-center text-white`}
-              >
-                <TagIcon />
-                Join Now
-              </button>
-            </a>
+            <JoinButton />
             <div className="h-[200px] md:h-[300px]"></div>
           </div>
         </div>
