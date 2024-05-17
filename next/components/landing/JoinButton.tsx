@@ -1,3 +1,4 @@
+//@ts-nocheck
 'use client';
 import React, { useEffect, useRef } from 'react';
 import TagIcon from './svgIcons/TagIcon';
@@ -7,7 +8,7 @@ export default function JoinButton() {
   const prevPos = useRef({ x: 0, y: 0 });
   const vector = useRef({ x: 0, y: 0 });
   const translate = useRef({ x: 0, y: 0 });
-  const buttonRef = useRef<any>(null);
+  const buttonRef = useRef<null | HTMLDivElement>(null);
   useEffect(() => {
     const handleMove = (e: any) => {
       const { clientX, clientY } = e;
@@ -23,18 +24,38 @@ export default function JoinButton() {
   }, []);
   return (
     <div
-      style={{ padding: '50px' }}
+      style={{ padding: '30px' }}
       onMouseMove={() => {
         translate.current.x += vector.current.x;
         translate.current.y += vector.current.y;
-        buttonRef.current.style.setProperty(
-          '--x',
-          translate.current.x * 2 + 'px'
-        );
-        buttonRef.current.style.setProperty(
-          '--y',
-          translate.current.y * 2 + 'px'
-        );
+        let translateX = translate.current.x * 3;
+        let translateY = translate.current.y * 3;
+        buttonRef.current?.style.setProperty('--x', translateX + 'px');
+        buttonRef.current?.style.setProperty('--y', translateY + 'px');
+        setTimeout(() => {
+          const rect = buttonRef.current?.getClientRects()[0];
+          if (!rect || translate.current.x == 0 || translate.current.y == 0)
+            return;
+          const { left, top, bottom, right } = rect;
+          if (
+            left < 0 ||
+            right > screen.availWidth ||
+            top < 0 ||
+            bottom > screen.availHeight
+          ) {
+            translate.current = {
+              x: 0,
+              y: 0,
+            };
+            buttonRef.current.style.scale = 0;
+            buttonRef.current.style.setProperty('--x', 0 + 'px');
+            buttonRef.current.style.setProperty('--y', 0 + 'px');
+
+            setTimeout(() => {
+              buttonRef.current.style.scale = 1;
+            }, 100);
+          }
+        }, 500);
       }}
       className="target"
       ref={buttonRef}
