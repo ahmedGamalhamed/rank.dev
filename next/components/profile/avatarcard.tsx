@@ -16,7 +16,7 @@ import { User } from '@/app/(db)/Schema';
 import useSetProfile from './useSetProfile';
 import { Button } from '../ui/button';
 import { Camera } from 'lucide-react';
-import { saveImage } from './actions';
+// import { saveImage } from './actions';
 
 export function CardWithAvatar(props: { dbUser: User; ownProfile: boolean }) {
   const [isEditMode, setIsEditMode] = useState(false);
