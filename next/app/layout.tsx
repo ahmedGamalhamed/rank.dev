@@ -8,6 +8,7 @@ import { ClerkProvider } from '@clerk/nextjs';
 import SocketProvider from './(socket)/SocketProvider';
 import ContextProvider from './(context)/GlobalContext';
 import { NextUIProvider } from '@nextui-org/react';
+import { updateVisitorCount } from './actions/userActions';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
@@ -20,6 +21,7 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  await updateVisitorCount();
   return (
     <ClerkProvider>
       <html className="h-full" lang="en" suppressHydrationWarning>

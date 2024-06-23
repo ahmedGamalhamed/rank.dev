@@ -1,6 +1,7 @@
 /** @format */
-"use client";
-import React from "react";
+'use client';
+import { getVisitorsCount } from '@/app/actions/userActions';
+import React, { useEffect, useState } from 'react';
 // import {
 //   BarChart as BarGraph,
 //   ResponsiveContainer,
@@ -16,58 +17,64 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-} from "recharts";
+} from 'recharts';
 type Props = {};
 
 const data = [
   {
-    name: "Page A",
+    name: 'Page A',
     uv: 4000,
-    pv: 2400,
-    amt: 2400,
   },
   {
-    name: "Page B",
+    name: 'Page B',
     uv: 3000,
-    pv: 1398,
-    amt: 2210,
   },
   {
-    name: "Page C",
+    name: 'Page C',
     uv: 2000,
-    pv: 9800,
-    amt: 2290,
   },
   {
-    name: "Page D",
+    name: 'Page D',
     uv: 2780,
-    pv: 3908,
-    amt: 2000,
   },
   {
-    name: "Page E",
+    name: 'Page E',
     uv: 1890,
-    pv: 4800,
-    amt: 2181,
   },
   {
-    name: "Page F",
+    name: 'Page F',
     uv: 2390,
-    pv: 3800,
-    amt: 2500,
   },
   {
-    name: "Page G",
+    name: 'Page G',
     uv: 3490,
-    pv: 4300,
-    amt: 2100,
   },
 ];
 
+const ddmmTommdd = (date: string) => {
+  let arr: string[] = date.split('/') || [];
+  [arr[0], arr[1]] = [arr[1], arr[0]];
+  return arr.join('/');
+};
+
 export default function BarChart({}: Props) {
+  const [data, setData] = useState<{ name: string; uv: number }[]>([]);
+
+  useEffect(() => {
+    getVisitorsCount().then((data) => {
+      let chartData = data.map((obj) => ({ name: obj.date, uv: obj.count }));
+      chartData = chartData.sort((a, b) => {
+        return (
+          new Date(ddmmTommdd(a.name)).getTime() -
+          new Date(ddmmTommdd(b.name)).getTime()
+        );
+      });
+      setData(chartData);
+    });
+  }, []);
   return (
     <div className="h-64 md:h-80 h-96 ">
-      <ResponsiveContainer width={"100%"} height={"100%"}>
+      <ResponsiveContainer width={'100%'} height={'100%'}>
         <AreaChart
           width={500}
           height={200}

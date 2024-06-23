@@ -1,8 +1,10 @@
 'use server';
 
 import { auth, currentUser } from '@clerk/nextjs/server';
-import { User, UserModel } from '../(db)/Schema';
+import { User, UserModel, Visitor, VistorsCountModel } from '../(db)/Schema';
 import { stripeClient } from '../(utils)/Stripe';
+import { Utils } from '../(utils)/Utils';
+import { date } from 'zod';
 
 export const getOrCreateUser = async () => {
   const user = await currentUser();
@@ -130,4 +132,20 @@ export const updateUserFavorites = async (
     user.favorites = user.favorites.filter((fav: string) => fav !== tag);
   }
   user.save();
+};
+
+export const updateVisitorCount = async () => {
+  const dateString = Utils.getShortDate();
+  const date = await VistorsCountModel.findOne({ date: dateString });
+  if (date) {
+    date.count += 1;
+    await date.save();
+  } else {
+    await VistorsCountModel.create({ date: dateString, count: 1 });
+  }
+};
+
+export const getVisitorsCount = async (): Promise<Visitor[]> => {
+  const data = (await VistorsCountModel.find()) || [];
+  return JSON.parse(JSON.stringify(data))!;
 };

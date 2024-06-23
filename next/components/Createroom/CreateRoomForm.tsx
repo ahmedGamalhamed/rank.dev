@@ -104,20 +104,22 @@ export function CreateRoomForm({
   }
 
   async function checkPayment(level: string) {
-    if (+level < 15) {
-      setAllowFree(true);
-      return;
-    }
+    if (signedUser?.paid) return setAllowFree(true);
+    else setAllowFree(false);
+    // if (+level < 15) {
+    //   setAllowFree(true);
+    //   return;
+    // }
 
-    if (!paymentChecked) {
-      setAllowFree(false);
-    } else {
-      if (signedUser?.paid) {
-        setAllowFree(true);
-      } else {
-        setAllowFree(false);
-      }
-    }
+    // if (!paymentChecked) {
+    //   setAllowFree(false);
+    // } else {
+    //   if (signedUser?.paid) {
+    //     setAllowFree(true);
+    //   } else {
+    //     setAllowFree(false);
+    //   }
+    // }
   }
 
   if (!isOpen) return null;

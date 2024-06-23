@@ -1,9 +1,13 @@
 import mongoose, { Model, Schema } from 'mongoose';
 import { Document } from 'mongoose';
 import { Variables } from '../Variables';
+import { Utils } from '../(utils)/Utils';
 
 mongoose.connect(Variables.MONGODB_URL);
-
+export type Visitor = {
+  date: string;
+  count: number;
+};
 export type User = {
   authId: string;
   email: string;
@@ -34,6 +38,18 @@ export type User = {
 };
 
 export interface UserDocument extends User, Omit<Document, 'id'> {}
+export interface VisitorsDocument extends Visitor, Omit<Document, 'id'> {}
+
+const VistorsSchema = new Schema({
+  date: {
+    type: String,
+    default: () => Utils.getShortDate(),
+  },
+  count: {
+    type: Number,
+    default: 0,
+  },
+});
 
 const UserSchema = new Schema<User>(
   {
@@ -88,3 +104,7 @@ const UserSchema = new Schema<User>(
 export const UserModel =
   (mongoose.models.user as Model<UserDocument>) ||
   mongoose.model<User>('user', UserSchema);
+
+export const VistorsCountModel =
+  (mongoose.models.vistors as Model<VisitorsDocument>) ||
+  mongoose.model('vistors', VistorsSchema);

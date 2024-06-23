@@ -122,16 +122,16 @@ export default function AdminPage() {
                     Active Users
                   </span>
                   <span className="text-[#64748B] text-xs mt-1 ">
-                    12.04.2023 - 12.05.2023
+                    {/* 12.04.2023 - 12.05.2023 */}
                   </span>
                 </p>
               </div>
               <Tabs defaultValue="day" className="mt-4 sm:mt-0 ">
-                <TabsList>
+                {/* <TabsList>
                   <TabsTrigger value="day">Day</TabsTrigger>
                   <TabsTrigger value="week">Week</TabsTrigger>
                   <TabsTrigger value="month">Month</TabsTrigger>
-                </TabsList>
+                </TabsList> */}
               </Tabs>
             </div>
             <div>

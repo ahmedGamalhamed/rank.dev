@@ -3,6 +3,7 @@
 import React, { useEffect, useRef } from 'react';
 import TagIcon from './svgIcons/TagIcon';
 import './joinButton.css';
+import Link from 'next/link';
 
 export default function JoinButton() {
   const prevPos = useRef({ x: 0, y: 0 });
@@ -19,7 +20,7 @@ export default function JoinButton() {
       prevPos.current = { x: clientX, y: clientY };
     };
 
-    document.addEventListener('mousemove', handleMove);
+    // document.addEventListener('mousemove', handleMove);
     return () => document.removeEventListener('mousemove', handleMove);
   }, []);
   return (
@@ -60,14 +61,14 @@ export default function JoinButton() {
       className="target"
       ref={buttonRef}
     >
-      <a className="px-10 py-3 mx-auto" href="#">
-        <button
+      <Link className="px-10 py-3 mx-auto" href="/rooms">
+        <span
           className={`shadow-lg transform hover:scale-110 transition ease-in duration-300 active:scale-100 bg-gradient-to-l from-10% from-[#4e059d] via-[74%] via-[#40b7ff] to-[100%] to-[#5046e5] bg-[#5046e5] flex gap-3 rounded-3xl font-medium text-xl py-2 px-10 text-center text-white`}
         >
           <TagIcon />
           Join Now
-        </button>
-      </a>
+        </span>
+      </Link>
     </div>
   );
 }
