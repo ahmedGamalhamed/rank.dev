@@ -32,6 +32,7 @@ import {
 } from '../ui/select';
 import { useUser } from '@clerk/nextjs';
 import PayButton from './PayButton';
+import { checkUserPayment } from '@/app/actions/userActions';
 
 const formSchema = z.object({
   roomName: z.string().min(2, {
@@ -75,9 +76,9 @@ export function CreateRoomForm({
   isOpen: boolean;
   setOpen: Function;
 }) {
-  const { signedUser } = useGlobalContext();
+  const { signedUser, setSignedUser } = useGlobalContext();
   const router = useRouter();
-  const [allowFree, setAllowFree] = useState(true);
+  const [allowFree, setAllowFree] = useState(false);
   const [paymentChecked, setPaymentChecked] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -103,9 +104,13 @@ export function CreateRoomForm({
     );
   }
 
-  async function checkPayment(level: string) {
+  async function checkPayment() {
     if (signedUser?.paid) return setAllowFree(true);
-    else setAllowFree(false);
+    if (!signedUser) return;
+    const updatedUser = await checkUserPayment(signedUser.email!);
+    setSignedUser(updatedUser);
+    if (updatedUser.paid) setAllowFree(true);
+    setAllowFree(false);
     // if (+level < 15) {
     //   setAllowFree(true);
     //   return;
@@ -121,6 +126,14 @@ export function CreateRoomForm({
     //   }
     // }
   }
+
+  useEffect(() => {
+    if (!isOpen) return;
+    setPaymentChecked(false);
+    checkPayment().then(() => {
+      setPaymentChecked(true);
+    });
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -165,7 +178,10 @@ export function CreateRoomForm({
                     <Select onValueChange={field.onChange}>
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Select max count" />
+                          <SelectValue
+                            defaultValue={0}
+                            placeholder="Select max count"
+                          />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
@@ -225,7 +241,7 @@ export function CreateRoomForm({
                     <FormLabel>Talent Level</FormLabel>
                     <Select
                       onValueChange={(e) => {
-                        checkPayment(e);
+                        checkPayment();
                         field.onChange(e);
                       }}
                     >

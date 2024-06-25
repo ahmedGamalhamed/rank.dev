@@ -50,7 +50,7 @@ export default function AdminPage() {
   const total_users_in_rooms = roomsData
     ? roomsData
         .map((room) => Object.keys(room.participatns).length)
-        .reduce((acc, arr) => arr.length + acc, 0)
+        .reduce((acc, count) => count + acc, 0)
     : 0;
 
   useEffect(() => {

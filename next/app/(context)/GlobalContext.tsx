@@ -3,6 +3,7 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import { User } from '../(db)/Schema';
 import { useAuth } from '@clerk/nextjs';
 import { getOrCreateUser } from '../actions/userActions';
+import ErrorMsg from '@/components/ErrorMsg';
 
 type TStateChange<T> = React.Dispatch<React.SetStateAction<T>>;
 
@@ -37,7 +38,7 @@ export default function ContextProvider({
 
     const getUserFromDB = () => {
       setUserLoaded(false);
-      getOrCreateUser().then((dbUser: any) => {
+      getOrCreateUser().then((dbUser: User) => {
         setUser(dbUser);
         localStorage.setItem('signedUser', JSON.stringify(dbUser));
       });
@@ -63,6 +64,14 @@ export default function ContextProvider({
       }
     }
   }, [userId, isLoaded]);
+
+  if (signedUser?.blocked) {
+    return (
+      <div className="w-screen h-screen grid place-content-center">
+        <ErrorMsg msg="Oops, It Seems you have been blocked, please contact an admin at support@rank.dev" />
+      </div>
+    );
+  }
 
   return (
     <GlobalContext.Provider

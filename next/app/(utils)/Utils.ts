@@ -18,6 +18,6 @@ export class Utils {
   }
 
   static getShortDate() {
-    return new Date().toLocaleDateString();
+    return new Date().toLocaleDateString('en-US');
   }
 }

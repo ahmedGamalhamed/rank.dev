@@ -15,10 +15,16 @@ import { useGlobalContext } from '@/app/(context)/GlobalContext';
 import { CreateRoomForm } from '../Createroom/CreateRoomForm';
 import { usePathname } from 'next/navigation';
 //
-const ulStyle = ` dark:text-slate-900
+const ulStyle = ` dark:text-white
+dark:bg-black
+bg-opacity-80
+dark:bg-black
+dark:bg-opacity-90
+bg-white
+bg-opacity-80
+backdrop-blur
 dark:lg:text-white
 transition-transform ease-in-out
-
 lg:duration-0 
 fixed top-0 right-0 h-screen w-80 z-20 shadow-2xl
 lg:static lg:h-auto lg:w-auto lg:shadow-none
@@ -26,7 +32,7 @@ flex flex-col items-start justify-start text-black
 lg:flex-row lg:items-center 
 lg:translate-x-0
 lg:flex
-bg-slate-100 lg:bg-transparent order-3 pt-14 lg:pt-0 pb-6 lg:order-1 lg:space-x-2 lg:pb-0 xl:space-x-4 font-semibold overflow-hidden`;
+order-3 pt-14 lg:pt-0 pb-6 lg:order-1 lg:space-x-2 lg:pb-0 xl:space-x-4 font-semibold overflow-hidden`;
 const linkStyle =
   ' font-semibold w-full pl-5 lg:pl-0 hover:bg-gray-200  lg:w-auto lg:hover:bg-transparent py-3 px-2 hover:opacity-100 hover:scale-105 active:scale-100 transition duration-75 opacity-80 ';
 const activeLink =

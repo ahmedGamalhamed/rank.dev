@@ -73,7 +73,7 @@ const columns = [
     accessorKey: 'paid',
     header: 'Subscription',
     cell: ({ row }) => {
-      const isSubscribed = row.original.subscribed; // Assuming you have a boolean field indicating subscription status
+      const isSubscribed = row.original.paid; // Assuming you have a boolean field indicating subscription status
       return <p>{isSubscribed ? 'Subscribed' : 'Not Subscribed'}</p>;
     },
   },
@@ -82,7 +82,14 @@ const columns = [
     accessorKey: 'Admin',
     header: 'Admin',
     cell: ({ row }) => {
-      return <IsAdminSwitch user={row.original} />;
+      return <IsAdminSwitch user={row.original} property="isAdmin" />;
+    },
+  },
+  {
+    accessorKey: 'Blocked',
+    header: 'Blocked',
+    cell: ({ row }) => {
+      return <IsAdminSwitch user={row.original} property="blocked" />;
     },
   },
 ];

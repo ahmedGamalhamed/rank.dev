@@ -70,7 +70,7 @@ export const getUserById = async (id: string) => {
   return await UserModel.findOne({ _id: id });
 };
 
-export const checkUserPayment = async (email: string) => {
+export const checkUserPayment = async (email: string): Promise<User> => {
   const res = await stripeClient.customers.list({
     email,
   });

@@ -35,6 +35,7 @@ export type User = {
   updatedAt: Date;
   id: string;
   favourties: string[];
+  blocked: boolean;
 };
 
 export interface UserDocument extends User, Omit<Document, 'id'> {}
@@ -80,6 +81,10 @@ const UserSchema = new Schema<User>(
     subscriptionId: String,
     paid: Boolean,
     favourties: [String],
+    blocked: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,

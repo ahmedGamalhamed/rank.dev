@@ -24,7 +24,7 @@ export default async function RootLayout({
   await updateVisitorCount();
   return (
     <ClerkProvider>
-      <html className="h-full" lang="en" suppressHydrationWarning>
+      <html className="h-full" lang="en" suppressHydrationWarning={true}>
         <ContextProvider>
           <body
             className={`${inter.className} flex flex-col justify-between min-h-screen overflow-x-hidden has-[.modal-overlay]:overflow-hidden`}
