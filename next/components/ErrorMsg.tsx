@@ -5,7 +5,7 @@ export default function ErrorMsg({ msg }: { msg: string }) {
   return (
     <div className="flex justify-center gap-2 items-center h-fit animate-pulse">
       <Image
-        src={'/images/logo.png'}
+        src={'/images/logo/logo.png'}
         alt={'Logo'}
         height={80}
         width={80}

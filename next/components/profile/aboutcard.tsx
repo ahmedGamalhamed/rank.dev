@@ -93,7 +93,7 @@ export function CardWithAbout(props: {
               <textarea
                 value={aboutText}
                 onChange={(e) => setAboutText(e.target.value)}
-                className="text-m py-4 mb-3 w-[110%] sm:w-[110%] "
+                className="text-m py-4 mb-3 w-[110%] sm:w-[110%]"
                 rows={8}
                 style={{
                   borderRadius: '8px',
