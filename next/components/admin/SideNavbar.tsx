@@ -27,7 +27,7 @@ export default function SideNavbar({}: Props) {
   }
 
   return (
-    <div className="relative min-w-[80px] border-r px-3  pb-10 pt-24 ">
+    <div className="relative min-w-[80px] border-r px-3  pb-10 pt-24 hidden md:block">
       <div className="absolute right-[-20px] top-7 sm:hidden md:block">
         <Button
           onClick={toggleSidebar}

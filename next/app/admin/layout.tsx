@@ -3,6 +3,8 @@ import { Inter } from 'next/font/google';
 import { cn } from '../../lib/utils';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import Link from 'next/link';
+export const metadata = { title: 'Admin Dashboard' };
+
 const inter = Inter({ subsets: ['latin'] });
 export default function Layout({
   children,
@@ -34,9 +36,9 @@ export default function Layout({
           </TabsTrigger>
         </TabsList>
       </Tabs>
-      <div className="hidden md:block">
-        <SideNavbar />
-      </div>
+      {/* <div className="hidden md:block"> */}
+      <SideNavbar />
+      {/* </div> */}
       <main className="p-8 w-full">
         {/* <Sidebar />
         <Header></Header>
