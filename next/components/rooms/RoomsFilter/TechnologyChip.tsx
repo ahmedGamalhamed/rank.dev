@@ -18,7 +18,7 @@ export default function TechnologyChip({
     );
   };
   return (
-    <div className="flex gap-2">
+    <div className="flex gap-2 flex-wrap justify-center">
       {filters.technology.map((tech: string, index: number) => (
         <Chip key={index} onClose={() => handleClose(tech)} variant="flat">
           {tech}

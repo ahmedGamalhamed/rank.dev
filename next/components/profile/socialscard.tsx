@@ -18,7 +18,7 @@ export function CardWithSocials(props: { dbUser: User; ownProfile: boolean }) {
   const { updateFunction } = useSetProfile();
 
   const initialSocialData =
-    Object.keys(props.dbUser.socials).length == 0
+    Object.keys(props.dbUser.socials || {}).length == 0
       ? {
           twitter: 'https://www.twitter.com',
           facebook: 'https://www.facebook.com',

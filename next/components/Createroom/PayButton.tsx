@@ -79,10 +79,6 @@ export default function PayButton({
       >
         Click Here to Subscribe
       </Button>
-
-      <FormDescription className="text-center">
-        A Subscription is need to access talents above level 14
-      </FormDescription>
     </div>
   );
 }

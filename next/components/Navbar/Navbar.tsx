@@ -71,6 +71,7 @@ export default function Navbar() {
           <button
             onClick={(e) => {
               setShowCreateRoomForm(!showCreateRoomForm);
+              setIsOpen(false);
             }}
             className={`${buttonCN}  dark:text-fuchsia-200 dark:border-fuchsia-200 dark:hover:border-transparent border-fuchsia-500`}
           >
@@ -154,6 +155,7 @@ export default function Navbar() {
             const isActive = pathname === link.href;
             return (
               <li
+                onClick={() => setIsOpen(false)}
                 className={`${linkStyle} ${
                   isActive
                     ? activeLink + ' pl-6  text-lg scale-105 font-bold'

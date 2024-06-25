@@ -82,13 +82,13 @@ export default function RoomLayout({ rooms }: { rooms: _IRoom[] }) {
           {/* level filter */}
           <LevelsFilter handleFilterChange={handleFilterChange} />
         </div>
-        <div className=" w-full max-w-[520px]">
+        <div className=" w-full max-w-[520px] z-0">
           {/* search rooms bar */}
           <SearchRoom handleFilterChange={handleFilterChange} />
         </div>
       </div>
 
-      <div className="flex justify-center mb-8 min-h-[30px]">
+      <div className="flex justify-center  mb-8 min-h-[30px]">
         <TechnologyChip
           filters={filters}
           handleFilterChange={handleFilterChange}

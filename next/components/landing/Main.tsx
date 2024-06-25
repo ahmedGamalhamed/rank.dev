@@ -28,9 +28,9 @@ const Main = () => {
           decoding="async"
         />
       </div>
-      <div className="container pt-16 lg:pt-16 relative z-20">
+      <div className="container pt-16 lg:pt-16 relative z-20 ">
         <div className="flex justify-center">
-          <div className="flex flex-col items-start md:items-center justify-center text-start md:text-center lg:col-7">
+          <div className="flex flex-col  items-center justify-center  text-center lg:col-7">
             <div className="h-[100px] md:h-[150px]"></div>
             <header>
               <h4 className="text-2xl md:text-4xl">
