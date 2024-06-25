@@ -15,14 +15,7 @@ import { useGlobalContext } from '@/app/(context)/GlobalContext';
 import { CreateRoomForm } from '../Createroom/CreateRoomForm';
 import { usePathname } from 'next/navigation';
 //
-const ulStyle = ` dark:text-white
-dark:bg-black
-bg-opacity-80
-dark:bg-black
-dark:bg-opacity-90
-bg-white
-bg-opacity-80
-backdrop-blur
+const ulStyle = `dark:text-white
 dark:lg:text-white
 transition-transform ease-in-out
 lg:duration-0 
@@ -132,7 +125,7 @@ export default function Navbar() {
 
   return (
     <header
-      suppressHydrationWarning
+      suppressHydrationWarning={true}
       className="  transition-colors duration-300 z-30 fixed top-0 left-0 right-0 bg-slate-100  dark:bg-black bg-opacity-70 dark:bg-opacity-70 backdrop-blur py-2 shadow-md dark:text-white "
     >
       <nav className="px-2  sm:container flex justify-between items-center ">
@@ -153,7 +146,15 @@ export default function Navbar() {
         <ul
           className={`
           ${ulStyle} 
-          ${isOpen ? 'translate-x-0 duration-300' : 'translate-x-80'}
+          md:dark:bg-transparent
+          md:bg-transparent
+          bg-opacity-95
+          dark:bg-opacity-95
+          ${
+            isOpen
+              ? 'translate-x-0 duration-300 bg-white dark:bg-black'
+              : 'translate-x-80 bg-transparent dark:bg-transparent'
+          }
          
         `}
         >
