@@ -44,18 +44,18 @@ export default function ContextProvider({
       });
     };
 
-    const localStorageUser = localStorage.getItem('signedUser') || 'null';
+    // const localStorageUser = localStorage.getItem('signedUser') || 'null';
     if (userId) {
-      const localStorageUserObj = JSON.parse(localStorageUser) as User | null;
-      if (localStorageUserObj) {
-        if (localStorageUserObj.authId == userId) {
-          setUser(localStorageUserObj);
-        } else {
-          getUserFromDB();
-        }
-      } else {
-        getUserFromDB();
-      }
+      // const localStorageUserObj = JSON.parse(localStorageUser) as User | null;
+      // if (localStorageUserObj) {
+      //   if (localStorageUserObj.authId == userId) {
+      //     setUser(localStorageUserObj);
+      //   } else {
+      //     getUserFromDB();
+      //   }
+      // } else {
+      getUserFromDB();
+      // }
     } else {
       if (isLoaded) {
         setSignedUser(null);
