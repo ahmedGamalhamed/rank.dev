@@ -139,7 +139,7 @@ export function CreateRoomForm({
 
   return (
     <div className="modal-overlay fixed inset-0 h-screen  flex justify-center items-center z-40 bg-black bg-opacity-20 backdrop-blur-md">
-      <div className="modal-content dark:bg-black bg-white bg-opacity-85 backdrop-blur-lg w-full max-w-2xl  px-20 py-10 border rounded-xl relative">
+      <div className="modal-content dark:bg-black bg-white bg-opacity-95 backdrop-blur-lg w-full max-w-2xl  px-20 py-10 border rounded-xl relative">
         <h4 className="text-center text-2xl text-fuchsia-300 font-bold py-4">
           Create A Room
         </h4>
