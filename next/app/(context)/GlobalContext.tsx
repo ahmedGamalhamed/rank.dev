@@ -3,7 +3,7 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import { User } from '../(db)/Schema';
 import { useAuth } from '@clerk/nextjs';
 import { getOrCreateUser } from '../actions/userActions';
-import ErrorMsg from '@/components/ErrorMsg';
+import { redirect, useRouter } from 'next/navigation';
 
 type TStateChange<T> = React.Dispatch<React.SetStateAction<T>>;
 
@@ -29,7 +29,7 @@ export default function ContextProvider({
   const [signedUser, setSignedUser] = useState<User | null>(null);
   const [userLoaded, setUserLoaded] = useState(false);
   const { userId, isLoaded } = useAuth();
-
+  const router = useRouter();
   useEffect(() => {
     const setUser = (dbUser: User | null) => {
       setUserLoaded(true);
@@ -66,11 +66,7 @@ export default function ContextProvider({
   }, [userId, isLoaded]);
 
   if (signedUser?.blocked) {
-    return (
-      <div className="w-screen h-screen grid place-content-center">
-        <ErrorMsg msg="Oops, It Seems you have been blocked, please contact an admin at support@rank.dev" />
-      </div>
-    );
+    router.push('/blocked');
   }
 
   return (
